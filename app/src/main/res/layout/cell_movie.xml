@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/movie_cell_background"
+    android:layout_margin="8dp"
+    android:padding="13dp">
+
+
+    <RatingBar
+        android:id="@+id/rating_bar_movie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:stepSize=".5"
+        android:numStars="5"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+
+    <ImageView
+        android:id="@+id/image_movie_poster"
+        android:layout_width="130dp"
+        android:layout_height="200dp"
+        android:scaleType="fitXY"
+        app:layout_constraintTop_toBottomOf="@+id/rating_bar_movie"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/text_movie_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="13dp"
+        android:fontFamily="@font/aclonica"
+        android:text="The Hateful Eight"
+        android:textColor="@color/text_movie_info_color"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/image_movie_poster"
+        app:layout_constraintTop_toTopOf="@id/image_movie_poster" />
+
+    <TextView
+        android:id="@+id/text_genre_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_genre_header"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/text_movie_name"
+        app:layout_constraintStart_toStartOf="@+id/text_movie_name" />
+
+    <TextView
+        android:id="@+id/text_genre"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="comedy, triller, drama, criminal"
+        android:textColor="@color/text_movie_info_color"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/text_popularity"
+       app:layout_constraintTop_toTopOf="@+id/text_genre_header" />
+
+    <TextView
+        android:id="@+id/text_popularity_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_popularity_header"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/text_genre"
+        app:layout_constraintStart_toStartOf="@+id/text_genre_header" />
+
+    <TextView
+        android:id="@+id/text_popularity"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="245.243"
+        android:textColor="@color/text_movie_info_color"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/text_release_date"
+        app:layout_constraintBottom_toBottomOf="@+id/text_popularity_header" />
+
+    <TextView
+        android:id="@+id/text_release_date_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_release_date_header"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/text_popularity"
+        app:layout_constraintStart_toStartOf="@+id/text_popularity_header" />
+
+    <TextView
+        android:id="@+id/text_release_date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="2021-06-24"
+        android:layout_marginStart="8dp"
+        android:textColor="@color/text_movie_info_color"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/text_release_date_header"
+        app:layout_constraintBottom_toBottomOf="@+id/text_release_date_header" />
+
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

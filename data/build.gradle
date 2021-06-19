@@ -1,10 +1,9 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'kotlin-android-extensions'
     id 'dagger.hilt.android.plugin'
-    id 'kotlinx-serialization'
 }
 
 android {
@@ -12,13 +11,13 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.example.movies"
         minSdkVersion 23
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -40,7 +39,6 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation project(path: ':domain')
-    implementation project(path: ':data')
 
     // core-ktx
     implementation core.coreKtx
@@ -53,7 +51,6 @@ dependencies {
 
     //constraintLayout
     implementation constraintlayout.constraintlayout
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     //junit
     testImplementation junit.junit
@@ -64,27 +61,19 @@ dependencies {
     //espresso
     androidTestImplementation espresso.espressoCore
 
-    //NavigationFragment
-    implementation navigationFragment.navFragment
-    implementation navigationFragment.navigationUi
-    implementation navigationFragment.navigationUiKtx
-
-    //RecyclerView
-    implementation recyclerView.recyclerView
-
-    // Dagger Hilt
-    implementation daggerHilt.daggerHilt
-    kapt daggerHilt.daggerHiltCompiler
+    //Retrofit2
+    implementation retrofit2.retrofit
+    implementation retrofit2.converterGson
 
     //RxJava2
     implementation rxjava2.rxjava2
     implementation rxjava2Android.rxandroid
 
-    //RecyclerView
-    implementation recyclerView.recyclerView
+    // RetrofitRx
+    implementation retrofitAdapterRx.retrofitRx
 
-    // Glide
-    implementation glide.glide
-
+    // Dagger Hilt
+    implementation daggerHilt.daggerHilt
+    kapt daggerHilt.daggerHiltCompiler
 
 }
