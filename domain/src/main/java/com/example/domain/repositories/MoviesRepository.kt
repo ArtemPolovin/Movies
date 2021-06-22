@@ -1,8 +1,9 @@
 package com.example.domain.repositories
 
-import com.example.domain.models.PopularMovieModel
+import com.example.domain.models.PopularMovieWithDetailsModel
 import io.reactivex.Single
 
 interface MoviesRepository {
-    fun getPopularMovies():Single<List<PopularMovieModel>>
+    //fun getMoviesWithDetails(list: List<Int>): Single<List<PopularMovieWithDetails>>
+    fun getMoviesWithDetails() :Single<List<PopularMovieWithDetailsModel>>
 }

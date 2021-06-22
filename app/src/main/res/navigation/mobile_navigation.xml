@@ -9,5 +9,16 @@
         android:id="@+id/homeFragment"
         android:name="com.example.movies.ui.home.HomeFragment"
         android:label="Home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_movieDetailsFragment"
+            app:destination="@id/movieDetailsFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/movieDetailsFragment"
+        android:name="com.example.movies.ui.move_details.MovieDetailsFragment"
+        android:label="Movie details"
+        tools:layout="@layout/fragment_movie_details" />
 </navigation>

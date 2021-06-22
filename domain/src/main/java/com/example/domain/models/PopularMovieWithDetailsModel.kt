@@ -3,7 +3,7 @@ package com.example.domain.models
 import kotlinx.serialization.Serializable
 
 @Serializable
-class PopularMovieModel(
+class PopularMovieWithDetailsModel(
     val releaseData: String,
     val popularityScore: String,
     val movieName: String,
@@ -11,5 +11,6 @@ class PopularMovieModel(
     val poster: String,
     val overview: String,
     val backdropPoster: String,
-    val id : Int
+    val genres: String,
+    val homePageUrl: String
 )

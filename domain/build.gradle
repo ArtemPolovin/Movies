@@ -16,4 +16,7 @@ dependencies {
     //RxJava2
     implementation rxjava2.rxjava2
     implementation rxjava2Android.rxandroid
+
+    // Kotlinx-serialization-json
+    implementation serializationJson.serialization
 }

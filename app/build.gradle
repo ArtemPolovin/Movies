@@ -86,5 +86,8 @@ dependencies {
     // Glide
     implementation glide.glide
 
+    // Kotlinx-serialization-json
+    implementation serializationJson.serialization
+
 
 }

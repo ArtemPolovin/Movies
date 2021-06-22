@@ -5,4 +5,6 @@
     <string name="text_genre_header">Genre:</string>
     <string name="text_popularity_header">Popularity:</string>
     <string name="text_release_date_header">Release date:</string>
+    <string name="text_header_overview">Overview:</string>
+    <string name="text_home_pahe_url">Homepage URL:</string>
 </resources>
