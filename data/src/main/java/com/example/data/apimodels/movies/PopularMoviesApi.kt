@@ -1,4 +1,4 @@
-package com.example.data.apimodels
+package com.example.data.apimodels.movies
 
 data class PopularMoviesApi(
     val page: Int,

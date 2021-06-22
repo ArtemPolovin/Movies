@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.domain.models.PopularMovieModel
+import com.example.domain.models.PopularMovieWithDetailsModel
 import com.example.domain.usecases.GetPopularMoviesUseCase
 import com.example.movies.utils.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,8 +20,8 @@ class HomeViewModel @Inject constructor(
 
     private var disposeBag = CompositeDisposable()
 
-    private val _popularMovies = MutableLiveData<ViewState<List<PopularMovieModel>>>()
-    val popularMovies: LiveData<ViewState<List<PopularMovieModel>>> get() = _popularMovies
+    private val _popularMovies = MutableLiveData<ViewState<List<PopularMovieWithDetailsModel>>>()
+    val popularMovies: LiveData<ViewState<List<PopularMovieWithDetailsModel>>> get() = _popularMovies
 
     private fun fetchPopularMovies() {
 

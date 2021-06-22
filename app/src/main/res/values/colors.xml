@@ -12,4 +12,7 @@
     <color name="text_error_color">#9B271E</color>
     <color name="home_page_background_color">#2B547E</color>
     <color name="text_movie_info_color">#CCCCCC</color>
+    <color name="movie_details_screen_background_color">#000033</color>
+    <color name="text_info_header_color">#A3A2A2</color>
+    <color name="text_url_color">#2668EE</color>
 </resources>
