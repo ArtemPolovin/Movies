@@ -15,3 +15,5 @@ For creating the Movie app I used Clean architecture and MVVM architecture patte
 ⦁	Navigation component - for navigation between fragments
 
 For design I chose RecyclerView for displaying movies on home page, I added Animations to recyclerView and to navigation between fragments.
+
+[](images/Screenshot_20210623-162128_Movies.jpg)
