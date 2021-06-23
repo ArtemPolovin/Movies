@@ -1,4 +1,5 @@
 For creating the Movie app I used Clean architecture and MVVM architecture pattern. Also I used third-party libraries such as:
+
 ⦁	Retrofit - for making HTTP request and fetching data from remote server
 
 ⦁	Coroutines - for processing fetched data from remote server in background.
