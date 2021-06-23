@@ -65,15 +65,17 @@ dependencies {
     implementation retrofit2.retrofit
     implementation retrofit2.converterGson
 
-    //RxJava2
-    implementation rxjava2.rxjava2
-    implementation rxjava2Android.rxandroid
-
-    // RetrofitRx
-    implementation retrofitAdapterRx.retrofitRx
 
     // Dagger Hilt
     implementation daggerHilt.daggerHilt
     kapt daggerHilt.daggerHiltCompiler
+
+    def paging_version = "3.1.0-alpha01"
+    implementation "androidx.paging:paging-runtime-ktx:3.1.0-alpha01"
+
+    //Coroutines
+    implementation coroutines.coroutinesCore
+    implementation coroutines.coroutinesAndroid
+
 
 }

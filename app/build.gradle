@@ -76,18 +76,18 @@ dependencies {
     implementation daggerHilt.daggerHilt
     kapt daggerHilt.daggerHiltCompiler
 
-    //RxJava2
-    implementation rxjava2.rxjava2
-    implementation rxjava2Android.rxandroid
-
-    //RecyclerView
-    implementation recyclerView.recyclerView
-
     // Glide
     implementation glide.glide
 
     // Kotlinx-serialization-json
     implementation serializationJson.serialization
+
+    //Coroutines
+    implementation coroutines.coroutinesCore
+    implementation coroutines.coroutinesAndroid
+
+    def paging_version = "3.0.0-alpha10"
+    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
 
 
 }

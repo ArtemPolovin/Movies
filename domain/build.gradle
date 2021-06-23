@@ -13,10 +13,11 @@ java {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    //RxJava2
-    implementation rxjava2.rxjava2
-    implementation rxjava2Android.rxandroid
-
     // Kotlinx-serialization-json
     implementation serializationJson.serialization
+
+    //Coroutines
+    implementation coroutines.coroutinesCore
+    implementation coroutines.coroutinesAndroid
+
 }

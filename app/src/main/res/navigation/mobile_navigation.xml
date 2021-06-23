@@ -14,7 +14,7 @@
             android:id="@+id/action_homeFragment_to_movieDetailsFragment"
             app:destination="@id/movieDetailsFragment"
             app:enterAnim="@anim/enter_from_right"
-            app:exitAnim="@anim/exit_to_right" />
+            app:exitAnim="@anim/exit_to_right"/>
     </fragment>
     <fragment
         android:id="@+id/movieDetailsFragment"

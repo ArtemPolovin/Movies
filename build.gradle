@@ -37,12 +37,13 @@ ext.versions = [
         navFragment      : "2.2.2",
         recyclerView     : "1.1.0",
         retrofit         : "2.8.1",
-        retrofitRx      : "2.3.0",
-        rxjava2         : "2.2.12",
-        rxjava2Android  : "2.1.1",
+     //   retrofitRx      : "2.3.0",
+      //  rxjava2         : "2.2.12",
+       // rxjava2Android  : "2.1.1",
         daggerHilt       : "2.33-beta",
         glide            : "4.12.0",
         serializationJson: "1.2.1",
+        coroutines      : "1.4.1"
 ]
 
 
@@ -89,17 +90,17 @@ ext.retrofit2 = [
         converterGson: "com.squareup.retrofit2:converter-gson:$versions.retrofit"
 ]
 
-ext.retrofitAdapterRx = [
-        retrofitRx: "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofitRx"
-]
+//ext.retrofitAdapterRx = [
+//        retrofitRx: "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofitRx"
+//]
 
-ext.rxjava2 = [
-        rxjava2: "io.reactivex.rxjava2:rxjava:$versions.rxjava2"
-]
+//ext.rxjava2 = [
+//        rxjava2: "io.reactivex.rxjava2:rxjava:$versions.rxjava2"
+//]
 
-ext.rxjava2Android = [
-        rxandroid: "io.reactivex.rxjava2:rxandroid:$versions.rxjava2Android"
-]
+//ext.rxjava2Android = [
+//        rxandroid: "io.reactivex.rxjava2:rxandroid:$versions.rxjava2Android"
+//]
 
 ext.daggerHilt = [
         daggerHilt        : "com.google.dagger:hilt-android:$versions.daggerHilt",
@@ -116,5 +117,10 @@ ext.glide = [
 
 ext.serializationJson = [
         serialization: "org.jetbrains.kotlinx:kotlinx-serialization-json:$versions.serializationJson"
+]
+
+ext.coroutines = [
+        coroutinesCore   : "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines",
+        coroutinesAndroid: "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutines"
 ]
 
