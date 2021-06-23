@@ -16,6 +16,6 @@ For creating the Movie app I used Clean architecture and MVVM architecture patte
 
 For design I chose RecyclerView for displaying movies on home page, I added Animations to recyclerView and to navigation between fragments.
 
-<img src="https://user-images.githubusercontent.com/65748653/123181812-ed5a9a00-d442-11eb-9267-479a100f53ac.jpg" width="100" height="200">
+<img src="https://user-images.githubusercontent.com/65748653/123181812-ed5a9a00-d442-11eb-9267-479a100f53ac.jpg" width="200" height="300">
 
 ![Screenshot_20210623-161707_Movies](https://user-images.githubusercontent.com/65748653/123181812-ed5a9a00-d442-11eb-9267-479a100f53ac.jpg)
