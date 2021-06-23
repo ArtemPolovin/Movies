@@ -18,4 +18,5 @@ For design I chose RecyclerView for displaying movies on home page, I added Anim
 
 <img src="https://user-images.githubusercontent.com/65748653/123181812-ed5a9a00-d442-11eb-9267-479a100f53ac.jpg" width="200" height="380">
 
+<img src="https://user-images.githubusercontent.com/65748653/123182206-c6e92e80-d443-11eb-989f-f80ffa981e1f.jpg" width="200" height="380">
 
