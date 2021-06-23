@@ -1,55 +1,31 @@
 package com.example.movies.ui.home
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.domain.models.PopularMovieModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.example.data.datasource.MoviePagingSource
+import com.example.data.repositories_impl.MoviesRepositoryImpl
 import com.example.domain.models.PopularMovieWithDetailsModel
-import com.example.domain.usecases.GetPopularMoviesUseCase
-import com.example.movies.utils.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getPopularMoviesUseCase: GetPopularMoviesUseCase
+    private val moviePagingSource: MoviePagingSource
 ) : ViewModel() {
 
-    private var disposeBag = CompositeDisposable()
+     fun fetchPopularMoviesWithDetails(): Flow<PagingData<PopularMovieWithDetailsModel>>{
 
-    private val _popularMovies = MutableLiveData<ViewState<List<PopularMovieWithDetailsModel>>>()
-    val popularMovies: LiveData<ViewState<List<PopularMovieWithDetailsModel>>> get() = _popularMovies
-
-    private fun fetchPopularMovies() {
-
-        _popularMovies.value = ViewState.Loading
-
-        val single = getPopularMoviesUseCase()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {
-                    _popularMovies.value = ViewState.Success(it)
-                },
-                {
-                    _popularMovies.value = ViewState.Failure(message = "An error occured")
-                    Log.i("mLog", "error = ${it.printStackTrace()}")
-                }
-            )
-        disposeBag.add(single)
-    }
-
-    fun refreshMoviesList() {
-        fetchPopularMovies()
-    }
-
-
-
-    override fun onCleared() {
-        super.onCleared()
-        disposeBag.clear()
-    }
+             return Pager(config = PagingConfig(
+                 pageSize = 20,
+                 enablePlaceholders = false
+             ),
+                 pagingSourceFactory = { moviePagingSource }
+             ).flow
+         }
 
 }

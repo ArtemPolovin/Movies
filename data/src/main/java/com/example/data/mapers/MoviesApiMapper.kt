@@ -27,7 +27,8 @@ class MoviesApiMapper {
                             backdropPoster = "${POSTER_BASE_URL}${movieDetails.backdrop_path}",
                             overview = movieDetails.overview,
                             genres = movieDetails.genres.joinToString(", ") { it.name },
-                            homePageUrl = movieDetails.homepage
+                            homePageUrl = movieDetails.homepage,
+                            id = movieDetails.id
                         )
                     )
                 }

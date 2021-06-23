@@ -7,4 +7,6 @@
     <string name="text_release_date_header">Release date:</string>
     <string name="text_header_overview">Overview:</string>
     <string name="text_home_pahe_url">Homepage URL:</string>
+    <string name="button_retry">Retry</string>
+    <string name="text_erro">Some error has occured</string>
 </resources>
