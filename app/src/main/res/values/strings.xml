@@ -9,4 +9,5 @@
     <string name="text_home_pahe_url">Homepage URL:</string>
     <string name="button_retry">Retry</string>
     <string name="text_erro">Some error has occured</string>
+    <string name="retry">Retry</string>
 </resources>
