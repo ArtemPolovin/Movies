@@ -13,6 +13,8 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.domain.models.PopularMovieWithDetailsModel
 import com.example.movies.R
+import com.example.movies.ui.home.adapter.MovieAdapter
+import com.example.movies.ui.home.adapter.MovieLoadStateAdapter
 import com.example.movies.utils.putKSerializable
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -38,8 +40,7 @@ class HomeFragment : Fragment() {
 
         button_retry.setOnClickListener { moviesAdapter.retry() }
 
-        setupRecyclerView()
-        setupLoadState()
+        setupAdapter()
         setupMoviesList()
         openMovieDetailsScreen()
 
@@ -54,22 +55,23 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setupLoadState() {
-        lifecycleScope.launch {
-            moviesAdapter.loadStateFlow.collectLatest { loadState ->
-                progress_bar.isVisible = loadState.refresh is LoadState.Loading
-                button_retry.isVisible = loadState.refresh is LoadState.Error
-                text_error.isVisible = loadState.refresh is LoadState.Error
-            }
-        }
-    }
 
-    private fun setupRecyclerView() {
+    private fun setupAdapter() {
         moviesAdapter = MovieAdapter()
         rv_movies.run {
-            adapter = moviesAdapter
+            adapter = moviesAdapter.withLoadStateHeaderAndFooter(
+                header = MovieLoadStateAdapter{moviesAdapter.retry()},
+                footer = MovieLoadStateAdapter{moviesAdapter.retry()}
+            )
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        }
+
+        moviesAdapter.addLoadStateListener { loadState ->
+            rv_movies.isVisible = loadState.source.refresh is LoadState.NotLoading
+            progress_bar.isVisible = loadState.source.refresh is LoadState.Loading
+            text_error.isVisible = loadState.source.refresh is LoadState.Error
+            button_retry.isVisible = loadState.source.refresh is LoadState.Error
         }
     }
 
