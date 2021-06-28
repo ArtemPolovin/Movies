@@ -65,7 +65,6 @@ dependencies {
     implementation retrofit2.retrofit
     implementation retrofit2.converterGson
 
-
     // Dagger Hilt
     implementation daggerHilt.daggerHilt
     kapt daggerHilt.daggerHiltCompiler
@@ -76,6 +75,15 @@ dependencies {
     //Coroutines
     implementation coroutines.coroutinesCore
     implementation coroutines.coroutinesAndroid
+
+    //Room
+    implementation room.roomRuntime
+    kapt room.roomCompiler
+    implementation room.roomKtx
+
+
+
+
 
 
 }

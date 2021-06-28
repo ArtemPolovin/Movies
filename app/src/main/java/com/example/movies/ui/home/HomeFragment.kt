@@ -4,15 +4,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
+import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.domain.models.PopularMovieWithDetailsModel
 import com.example.movies.R
+import com.example.movies.ui.MainActivity
 import com.example.movies.ui.home.adapter.MovieAdapter
 import com.example.movies.ui.home.adapter.MovieLoadStateAdapter
 import com.example.movies.utils.putKSerializable
@@ -32,14 +38,18 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        (requireActivity() as MainActivity).setupActionBar(toolbar)
 
         button_retry.setOnClickListener { moviesAdapter.retry() }
 
+        setupToolbar()
         setupAdapter()
         setupMoviesList()
         openMovieDetailsScreen()
@@ -68,10 +78,10 @@ class HomeFragment : Fragment() {
         }
 
         moviesAdapter.addLoadStateListener { loadState ->
-            rv_movies.isVisible = loadState.source.refresh is LoadState.NotLoading
-            progress_bar.isVisible = loadState.source.refresh is LoadState.Loading
-            text_error.isVisible = loadState.source.refresh is LoadState.Error
-            button_retry.isVisible = loadState.source.refresh is LoadState.Error
+            rv_movies?.let{it.isVisible = loadState.source.refresh is LoadState.NotLoading}
+            progress_bar?.let{it.isVisible = loadState.source.refresh is LoadState.Loading}
+            text_error?.let{it.isVisible = loadState.source.refresh is LoadState.Error}
+            button_retry?.let{it.isVisible = loadState.source.refresh is LoadState.Error}
         }
     }
 
@@ -87,6 +97,11 @@ class HomeFragment : Fragment() {
             }
 
         })
+    }
+
+    private fun setupToolbar() {
+        (activity as? AppCompatActivity)?.setSupportActionBar(toolbar)
+
     }
 
 }

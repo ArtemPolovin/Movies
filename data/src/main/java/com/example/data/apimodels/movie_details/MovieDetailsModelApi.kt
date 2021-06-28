@@ -4,11 +4,11 @@ data class MovieDetailsModelApi(
     val backdrop_path: String,
     val genres: List<Genre>,
     val homepage: String,
-    val id: Long,
+    val id: Int,
     val overview: String,
     val popularity: Double,
     val poster_path: String,
     val release_date: String,
-    val title: String,
+    val original_title: String,
     val vote_average: Double
 )

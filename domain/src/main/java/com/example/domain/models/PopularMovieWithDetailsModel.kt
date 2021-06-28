@@ -13,5 +13,5 @@ class PopularMovieWithDetailsModel(
     val backdropPoster: String,
     val genres: String,
     val homePageUrl: String,
-    val id: Long
+    val id: Int
 )

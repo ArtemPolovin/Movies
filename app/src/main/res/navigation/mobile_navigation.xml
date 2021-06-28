@@ -19,6 +19,10 @@
     <fragment
         android:id="@+id/movieDetailsFragment"
         android:name="com.example.movies.ui.move_details.MovieDetailsFragment"
-        android:label="Movie details"
         tools:layout="@layout/fragment_movie_details" />
+    <fragment
+        android:id="@+id/saved_movies"
+        android:name="com.example.movies.ui.saved_movie.SavedMovieFragment"
+        android:label="Saved movies"
+        tools:layout="@layout/fragment_saved_movie" />
 </navigation>

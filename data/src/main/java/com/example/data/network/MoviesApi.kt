@@ -19,7 +19,7 @@ interface MoviesApi {
    suspend fun getPopularMovies(@Query("page") page: Int): PopularMoviesApi
 
     @GET("/3/movie/{movie_id}")
-   suspend fun getMoviesDetails(@Path("movie_id") movieId: Long): MovieDetailsModelApi
+   suspend fun getMoviesDetails(@Path("movie_id") movieId: Int): MovieDetailsModelApi
 
     companion object{
         operator fun invoke(): MoviesApi{

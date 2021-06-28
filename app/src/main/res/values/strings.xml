@@ -10,4 +10,8 @@
     <string name="button_retry">Retry</string>
     <string name="text_erro">Some error has occured</string>
     <string name="retry">Retry</string>
+    <string name="menu_title_save_movie">Save movie</string>
+    <string name="title_home">Home</string>
+    <string name="title_saved_movies">Saved movies</string>
+    <string name="rating_header_text">Rating:</string>
 </resources>
