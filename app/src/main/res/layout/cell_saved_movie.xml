@@ -8,16 +8,6 @@
     android:padding="13dp"
     app:cardCornerRadius="15dp">
 
-   <!-- <RatingBar
-        android:id="@+id/rating_bar_movie"
-        style="?android:attr/ratingBarStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:numStars="10"
-        android:stepSize="0.1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />-->
-
     <TextView
         android:id="@+id/text_rating_header"
         android:layout_width="wrap_content"
@@ -61,66 +51,5 @@
         app:layout_constraintStart_toStartOf="@+id/image_movie_poster"
         app:layout_constraintEnd_toEndOf="@+id/image_movie_poster"
         app:layout_constraintTop_toBottomOf="@+id/image_movie_poster"/>
-
-   <!-- <TextView
-        android:id="@+id/text_genre_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/text_genre_header"
-        app:layout_constraintStart_toStartOf="@+id/text_movie_name"
-        app:layout_constraintTop_toBottomOf="@+id/text_movie_name" />
-
-    <TextView
-        android:id="@+id/text_genre"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="comedy, triller, drama, criminal"
-        android:textColor="@color/text_movie_info_color"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/text_popularity"
-        app:layout_constraintTop_toTopOf="@+id/text_genre_header" />
-
-    <TextView
-        android:id="@+id/text_popularity_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/text_popularity_header"
-        app:layout_constraintStart_toStartOf="@+id/text_genre_header"
-        app:layout_constraintTop_toBottomOf="@+id/text_genre" />
-
-    <TextView
-        android:id="@+id/text_popularity"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="245.243"
-        android:textColor="@color/text_movie_info_color"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/text_popularity_header"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/text_release_date" />
-
-    <TextView
-        android:id="@+id/text_release_date_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/text_release_date_header"
-        app:layout_constraintStart_toStartOf="@+id/text_popularity_header"
-        app:layout_constraintTop_toBottomOf="@+id/text_popularity" />
-
-    <TextView
-        android:id="@+id/text_release_date"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="2021-06-24"
-        android:textColor="@color/text_movie_info_color"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/text_release_date_header"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/text_release_date_header" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

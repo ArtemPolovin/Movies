@@ -12,7 +12,7 @@ class MoviesEntityMapper {
             movieName = movie.movieName,
             rating = movie.rating,
             poster = movie.poster,
-            overview = movie.poster,
+            overview = movie.overview,
             backdropPoster = movie.backdropPoster,
             genres = movie.genres,
             homePageUrl = movie.homePageUrl,
@@ -27,7 +27,7 @@ class MoviesEntityMapper {
             movieName = movieEntity.movieName,
             rating = movieEntity.rating,
             poster = movieEntity.poster,
-            overview = movieEntity.poster,
+            overview = movieEntity.overview,
             backdropPoster = movieEntity.backdropPoster,
             genres = movieEntity.genres,
             homePageUrl = movieEntity.homePageUrl
@@ -43,7 +43,7 @@ class MoviesEntityMapper {
                 movieName = movieEntity.movieName,
                 rating = movieEntity.rating,
                 poster = movieEntity.poster,
-                overview = movieEntity.poster,
+                overview = movieEntity.overview,
                 backdropPoster = movieEntity.backdropPoster,
                 genres = movieEntity.genres,
                 homePageUrl = movieEntity.homePageUrl

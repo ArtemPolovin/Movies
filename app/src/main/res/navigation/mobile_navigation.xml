@@ -24,5 +24,11 @@
         android:id="@+id/saved_movies"
         android:name="com.example.movies.ui.saved_movie.SavedMovieFragment"
         android:label="Saved movies"
-        tools:layout="@layout/fragment_saved_movie" />
+        tools:layout="@layout/fragment_saved_movie" >
+        <action
+            android:id="@+id/action_saved_movies_to_movieDetailsFragment"
+            app:destination="@id/movieDetailsFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_right" />
+    </fragment>
 </navigation>

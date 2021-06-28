@@ -9,11 +9,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.domain.models.PopularMovieWithDetailsModel
 import com.example.movies.R
+import com.example.movies.utils.OnClickAdapterPopularMovieListener
 import kotlinx.android.synthetic.main.cell_movie.view.*
 
-class SavedMovieAdapter: RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesViewHolder>() {
+class SavedMovieAdapter : RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesViewHolder>() {
 
     private val savedMoviesList = mutableListOf<PopularMovieWithDetailsModel>()
+
+    private lateinit var onclickAdapterPopularMovieListener: OnClickAdapterPopularMovieListener
+
+    fun onclick(onclickAdapterPopularMovieListener: OnClickAdapterPopularMovieListener) {
+        this.onclickAdapterPopularMovieListener = onclickAdapterPopularMovieListener
+    }
 
     fun setupList(newSavedMovieList: List<PopularMovieWithDetailsModel>) {
         savedMoviesList.clear()
@@ -24,7 +31,7 @@ class SavedMovieAdapter: RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesViewH
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SavedMoviesViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.cell_saved_movie, parent, false)
-        return SavedMoviesViewHolder(view, parent.context)
+        return SavedMoviesViewHolder(view, parent.context, onclickAdapterPopularMovieListener)
     }
 
     override fun onBindViewHolder(holder: SavedMoviesViewHolder, position: Int) {
@@ -33,24 +40,34 @@ class SavedMovieAdapter: RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesViewH
         holder.itemView.apply {
             holder.loadImage(image_movie_poster, movieModel.poster)
             text_movie_name.text = movieModel.movieName
-//            text_popularity.text = movieModel.popularityScore
-          //  text_release_date.text = movieModel.releaseData
             text_rating.text = movieModel.rating.toString()
-          //  rating_bar_movie.rating = movieModel.rating.toFloat()
-          //  text_genre.text = movieModel.genres
         }
+
+        holder.click(movieModel)
     }
 
     override fun getItemCount(): Int {
-       return savedMoviesList.size
+        return savedMoviesList.size
     }
 
-    inner class SavedMoviesViewHolder(itemView: View, private val context: Context) : RecyclerView.ViewHolder(itemView) {
+    inner class SavedMoviesViewHolder(
+        itemView: View,
+        private val context: Context,
+        private val onclickAdapterPopularMovieListener: OnClickAdapterPopularMovieListener
+    ) : RecyclerView.ViewHolder(itemView) {
 
         fun loadImage(image: ImageView, imageUrl: String?) {
             Glide.with(context)
                 .load(imageUrl)
                 .into(image)
         }
+
+        fun click(movieModel: PopularMovieWithDetailsModel) {
+            itemView.setOnClickListener {
+                onclickAdapterPopularMovieListener.getPopularMovie(movieModel)
+            }
+        }
     }
+
+
 }

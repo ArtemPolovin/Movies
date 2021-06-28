@@ -5,16 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.domain.models.PopularMovieWithDetailsModel
 import com.example.domain.models.utils.ResponseResult
 import com.example.movies.R
 import com.example.movies.ui.MainActivity
+import com.example.movies.utils.OnClickAdapterPopularMovieListener
+import com.example.movies.utils.putKSerializable
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_saved_movie.*
 import kotlinx.android.synthetic.main.fragment_saved_movie.button_retry
 import kotlinx.android.synthetic.main.fragment_saved_movie.progress_bar
@@ -41,6 +41,7 @@ class SavedMovieFragment : Fragment() {
 
         setupAdapter()
         setupSavedMoviesList()
+        openMovieDetailsScreen()
     }
 
     private fun setupSavedMoviesList() {
@@ -80,5 +81,21 @@ class SavedMovieFragment : Fragment() {
             adapter = savedMoviesAdapter
             layoutManager = GridLayoutManager(requireContext(),2)
         }
+    }
+
+
+    private fun openMovieDetailsScreen() {
+        savedMoviesAdapter.onclick(object : OnClickAdapterPopularMovieListener {
+            override fun getPopularMovie(movie: PopularMovieWithDetailsModel) {
+                val bundle = Bundle()
+                bundle.putKSerializable("movieObject", movie)
+                bundle.putBoolean("showSavedIcon", false)
+                findNavController().navigate(
+                    R.id.action_saved_movies_to_movieDetailsFragment,
+                    bundle
+                )
+            }
+        })
+
     }
 }

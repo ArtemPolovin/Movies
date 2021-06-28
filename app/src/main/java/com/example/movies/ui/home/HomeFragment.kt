@@ -9,11 +9,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.domain.models.PopularMovieWithDetailsModel
@@ -21,6 +17,7 @@ import com.example.movies.R
 import com.example.movies.ui.MainActivity
 import com.example.movies.ui.home.adapter.MovieAdapter
 import com.example.movies.ui.home.adapter.MovieLoadStateAdapter
+import com.example.movies.utils.OnClickAdapterPopularMovieListener
 import com.example.movies.utils.putKSerializable
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -86,10 +83,11 @@ class HomeFragment : Fragment() {
     }
 
     private fun openMovieDetailsScreen() {
-        moviesAdapter.onClickItem(object : MovieAdapter.OnclickMovieItemListener {
-            override fun getMovieModel(movieWithDetailsModel: PopularMovieWithDetailsModel) {
+        moviesAdapter.onClickItem(object : OnClickAdapterPopularMovieListener {
+            override fun  getPopularMovie(movie: PopularMovieWithDetailsModel) {
                 val bundle = Bundle()
-                bundle.putKSerializable("movieObject", movieWithDetailsModel)
+                bundle.putKSerializable("movieObject", movie)
+                bundle.putBoolean("showSavedIcon", true)
                 findNavController().navigate(
                     R.id.action_homeFragment_to_movieDetailsFragment,
                     bundle
