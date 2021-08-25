@@ -6,32 +6,48 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.domain.models.PopularMovieWithDetailsModel
 import com.example.movies.R
+import com.example.movies.ui.MainActivity
 import com.example.movies.utils.getKSerializable
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 
+@AndroidEntryPoint
 class MovieDetailsFragment : Fragment() {
+
+    private val viewModel: MovieDetailsViewModel by viewModels()
+
+    private var movieWithDetails: PopularMovieWithDetailsModel? = null
+
+    private var showMenuSaveIcon: Boolean = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        setHasOptionsMenu(true)
+
         return inflater.inflate(R.layout.fragment_movie_details, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        val model = arguments?.getKSerializable<PopularMovieWithDetailsModel>("movieObject")
-        model?.let { setupMovieDetails(it, requireContext()) }
+        (requireActivity() as MainActivity).setupActionBar(toolbar, false)
+        arguments?.let {
+            movieWithDetails = it.getKSerializable<PopularMovieWithDetailsModel>("movieObject")
+            showMenuSaveIcon = it.getBoolean("showSavedIcon")
+        }
+
+        movieWithDetails = arguments?.getKSerializable<PopularMovieWithDetailsModel>("movieObject")
+        movieWithDetails?.let { setupMovieDetails(it, requireContext()) }
 
         openWebHomePage()
     }
@@ -46,7 +62,7 @@ class MovieDetailsFragment : Fragment() {
             text_rating_details.text = rating.toString()
             loadImage(context, image_movie_details, backdropPoster)
             text_genre.text = genres
-            underlineText(text_homepage_url,homePageUrl)
+            underlineText(text_homepage_url, homePageUrl)
         }
 
     }
@@ -65,10 +81,29 @@ class MovieDetailsFragment : Fragment() {
 
     private fun openWebHomePage() {
         text_homepage_url.setOnClickListener {
-            val  browserIntent =  Intent(Intent.ACTION_VIEW, Uri.parse(text_homepage_url.text.toString()))
-            startActivity(browserIntent);
+            val browserIntent =
+                Intent(Intent.ACTION_VIEW, Uri.parse(text_homepage_url.text.toString()))
+            startActivity(browserIntent)
         }
 
-
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.details_screen_tool_bar_menu, menu)
+            val item: MenuItem = menu.findItem(R.id.save_movie)
+            item.isVisible = showMenuSaveIcon
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.save_movie -> {
+                movieWithDetails?.let { viewModel.insertMovieToDb(it) }
+                Toast.makeText(requireContext(), "The movie was saved", Toast.LENGTH_LONG).show()
+                true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
 }

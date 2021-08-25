@@ -13,40 +13,32 @@ import com.example.domain.models.PopularMovieWithDetailsModel
 import com.example.movies.R
 import com.example.movies.utils.DATA_VIEWTYPE
 import com.example.movies.utils.LOADSTATE_VIEW_TYPE
+import com.example.movies.utils.OnClickAdapterPopularMovieListener
 import kotlinx.android.synthetic.main.cell_movie.view.*
 
-class MovieAdapter : PagingDataAdapter<PopularMovieWithDetailsModel, MovieAdapter.MoviesViewHolder>(
-    MovieDiffUtilCallback()
-) {
+class MovieAdapter : PagingDataAdapter<PopularMovieWithDetailsModel, MovieAdapter.MoviesViewHolder>(MovieDiffUtilCallback()) {
 
-    private lateinit var onClickMovieItemListener: OnclickMovieItemListener
+    private lateinit var onClickAdapterPopularMovieListener: OnClickAdapterPopularMovieListener
 
-    fun onClickItem(onClickMovieItemListener: OnclickMovieItemListener) {
-        this.onClickMovieItemListener = onClickMovieItemListener
+    fun onClickItem(onClickAdapterPopularMovieListener: OnClickAdapterPopularMovieListener) {
+        this.onClickAdapterPopularMovieListener = onClickAdapterPopularMovieListener
     }
 
-    class MoviesViewHolder(
-        itemView: View,
-        private val context: Context,
-        private val onClickMovieItemListener: OnclickMovieItemListener
-    ) : RecyclerView.ViewHolder(itemView) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.cell_movie, parent, false)
+        return MoviesViewHolder(view, parent.context, onClickAdapterPopularMovieListener)
+    }
 
-        fun onClick(movieWithDetailsModel: PopularMovieWithDetailsModel) {
-            itemView.setOnClickListener {
-                onClickMovieItemListener.getMovieModel(movieWithDetailsModel)
-            }
+    override fun getItemViewType(position: Int): Int {
+        return if (position == itemCount) {
+            DATA_VIEWTYPE
+        } else {
+            LOADSTATE_VIEW_TYPE
         }
-
-        fun loadImage(image: ImageView, imageUrl: String?) {
-            Glide.with(context)
-                .load(imageUrl)
-                .into(image)
-        }
-
     }
 
     override fun onBindViewHolder(holder: MoviesViewHolder, position: Int) {
-         getItem(position)?.let {popularMovie ->
+        getItem(position)?.let {popularMovie ->
 
             holder.itemView.apply {
                 holder.loadImage(image_movie_poster, popularMovie.poster)
@@ -63,17 +55,24 @@ class MovieAdapter : PagingDataAdapter<PopularMovieWithDetailsModel, MovieAdapte
 
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.cell_movie, parent, false)
-        return MoviesViewHolder(view, parent.context, onClickMovieItemListener)
-    }
+    class MoviesViewHolder(
+        itemView: View,
+        private val context: Context,
+        private val onClickAdapterPopularMovieListener: OnClickAdapterPopularMovieListener
+    ) : RecyclerView.ViewHolder(itemView) {
 
-    override fun getItemViewType(position: Int): Int {
-        return if (position == itemCount) {
-            DATA_VIEWTYPE
-        } else {
-            LOADSTATE_VIEW_TYPE
+        fun onClick(movieWithDetailsModel: PopularMovieWithDetailsModel) {
+            itemView.setOnClickListener {
+                onClickAdapterPopularMovieListener.getPopularMovie(movieWithDetailsModel)
+            }
         }
+
+        fun loadImage(image: ImageView, imageUrl: String?) {
+            Glide.with(context)
+                .load(imageUrl)
+                .into(image)
+        }
+
     }
 
     class MovieDiffUtilCallback : DiffUtil.ItemCallback<PopularMovieWithDetailsModel>() {
@@ -91,10 +90,6 @@ class MovieAdapter : PagingDataAdapter<PopularMovieWithDetailsModel, MovieAdapte
             return oldItem.id == newItem.id
         }
 
-    }
-
-    interface OnclickMovieItemListener {
-        fun getMovieModel(movieWithDetailsModel: PopularMovieWithDetailsModel)
     }
 
 }

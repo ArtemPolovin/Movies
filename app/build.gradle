@@ -89,5 +89,14 @@ dependencies {
     def paging_version = "3.0.0-alpha10"
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
 
+    //Room
+    implementation room.roomRuntime
+    implementation room.roomKtx
+    kapt room.roomCompiler
+
+    //Support Design (toolbar)
+   // implementation "com.androidx.support:design:28.0.0"
+
+
 
 }

@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Movies" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.Movies" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -17,4 +17,17 @@
     <style name="MyRatingBar" parent="Widget.AppCompat.RatingBar">
         <item name="android:colorControlNormal">#D8D8DC</item>
     </style>
+
+    <style name="Theme.Movies.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <!-- Customize color of navigation drawer icon and back arrow -->
+        <item name="colorControlNormal">@color/toolbar_color_control_normal</item>
+    </style>
+
+
+    <color name="toolbar_color_control_normal">#FFFFFF</color>
 </resources>
