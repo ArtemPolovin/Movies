@@ -10,6 +10,8 @@ import com.example.domain.usecases.movie_usecase.DeleteMovieByIdFromDbUseCase
 import com.example.domain.usecases.movie_usecase.GetAllSavedMoviesFromDbUseCase
 import com.example.domain.usecases.movie_usecase.InsertMovieToDbUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,7 +21,7 @@ class SavedMovieViewModel @Inject constructor(
     private val getAllSavedMoviesFromDbUseCase: GetAllSavedMoviesFromDbUseCase,
 ) : ViewModel() {
 
-    private val _savedMoviesList = MutableLiveData<ResponseResult<List<PopularMovieWithDetailsModel>>>()
+    private val _savedMoviesList = MutableLiveData< ResponseResult<List<PopularMovieWithDetailsModel>>>()
     val savedMoviesList: LiveData<ResponseResult<List<PopularMovieWithDetailsModel>>> get() = _savedMoviesList
 
     init {
@@ -28,15 +30,20 @@ class SavedMovieViewModel @Inject constructor(
 
 
     private fun fetchSavedMoviesFromDb() {
-        _savedMoviesList.value = ResponseResult.Loading
-
         viewModelScope.launch {
-            _savedMoviesList.value = getAllSavedMoviesFromDbUseCase()
+            getAllSavedMoviesFromDbUseCase().collect {
+                _savedMoviesList.value = ResponseResult.Loading
+                _savedMoviesList.value = it
+            }
         }
     }
 
-    fun deleteMovieByIdFromDb(movieId: Int) {
+    fun deleteMovieByIdFromDb(movieId: List<Int>) {
         viewModelScope.launch { deleteMovieByIdFromDbUseCase(movieId) }
+    }
+
+    fun refreshSaveMoviesList() {
+        fetchSavedMoviesFromDb()
     }
 
 

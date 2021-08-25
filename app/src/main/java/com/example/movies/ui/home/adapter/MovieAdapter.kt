@@ -16,9 +16,7 @@ import com.example.movies.utils.LOADSTATE_VIEW_TYPE
 import com.example.movies.utils.OnClickAdapterPopularMovieListener
 import kotlinx.android.synthetic.main.cell_movie.view.*
 
-class MovieAdapter : PagingDataAdapter<PopularMovieWithDetailsModel, MovieAdapter.MoviesViewHolder>(
-    MovieDiffUtilCallback()
-) {
+class MovieAdapter : PagingDataAdapter<PopularMovieWithDetailsModel, MovieAdapter.MoviesViewHolder>(MovieDiffUtilCallback()) {
 
     private lateinit var onClickAdapterPopularMovieListener: OnClickAdapterPopularMovieListener
 

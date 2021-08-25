@@ -4,9 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:background="@drawable/cell_saved_movie_background"
+    android:background="@drawable/background_selector"
+    android:foreground="@drawable/ripple_effect"
     android:padding="13dp"
-    app:cardCornerRadius="15dp">
+    app:cardCornerRadius="15dp"
+    android:id="@+id/constrain_layout">
 
     <TextView
         android:id="@+id/text_rating_header"

@@ -14,4 +14,5 @@
     <string name="title_home">Home</string>
     <string name="title_saved_movies">Saved movies</string>
     <string name="rating_header_text">Rating:</string>
+    <string name="menu_title_delete_movie">Delete moive</string>
 </resources>

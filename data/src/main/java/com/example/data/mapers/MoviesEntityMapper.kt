@@ -2,6 +2,8 @@ package com.example.data.mapers
 
 import com.example.data.db.tables.movie_tables.SavedMovieEntity
 import com.example.domain.models.PopularMovieWithDetailsModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 
 class MoviesEntityMapper {
     fun mapMovieModelToEntity(movie: PopularMovieWithDetailsModel): SavedMovieEntity {
@@ -34,7 +36,8 @@ class MoviesEntityMapper {
         )
     }
 
-    fun mapMovieEntityListToModelList(movieEntityList: List<SavedMovieEntity>): List<PopularMovieWithDetailsModel> {
+    fun mapMovieEntityListToModelList(movieEntityList: List<SavedMovieEntity>):List<PopularMovieWithDetailsModel> {
+
         return movieEntityList.map { movieEntity ->
             PopularMovieWithDetailsModel(
                 id = movieEntity.movieId,

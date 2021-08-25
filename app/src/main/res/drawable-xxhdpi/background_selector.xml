@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_pressed="false"  android:state_selected="true">
+        <shape>
+            <solid android:color="@color/white" />
+        </shape>
+    </item>
+
+    <item android:state_selected="false">
+
+        <shape>
+            <solid android:color="@color/cell_saved_movie_background_color" />
+            <corners android:radius="8dp" />
+            <stroke
+                android:color="@color/move_cell_stroke_color"
+                android:width="0.5dp" />
+        </shape>
+
+    </item>
+
+
+</selector>
