@@ -15,4 +15,10 @@
     <string name="title_saved_movies">Saved movies</string>
     <string name="rating_header_text">Rating:</string>
     <string name="menu_title_delete_movie">Delete moive</string>
+    <string name="text_header_login">Login</string>
+    <string name="text_hint_user_name">user name</string>
+    <string name="text_hint_password">password</string>
+    <string name="text_btn_login">login</string>
+    <string name="text_new_user">New user?</string>
+    <string name="text_signup">Sign Up</string>
 </resources>

@@ -58,11 +58,11 @@ class MovieDetailsFragment : Fragment() {
             text_popularity.text = popularityScore
             text_release_date.text = releaseData
             text_overview.text = overview
-            rating_bar_movie.rating = rating.toFloat()
+            rating?.let {  rating_bar_movie.rating = it.toFloat() }
             text_rating_details.text = rating.toString()
             loadImage(context, image_movie_details, backdropPoster)
             text_genre.text = genres
-            underlineText(text_homepage_url, homePageUrl)
+            homePageUrl?.let { underlineText(text_homepage_url, it) }
         }
 
     }
