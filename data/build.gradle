@@ -81,6 +81,9 @@ dependencies {
     kapt room.roomCompiler
     implementation room.roomKtx
 
+    // Jackson
+    implementation 'com.squareup.retrofit2:converter-jackson:2.9.0'
+
 
 
 
