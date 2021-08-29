@@ -10,7 +10,7 @@ class SharedPreferencesLogin(
         sharedPref.edit().putBoolean(REMEMBER_ME,isRememberMeChecked).apply()
     }
 
-    fun loadIsRememberMeChecked() {
+    fun loadIsRememberMeChecked() =
         sharedPref.getBoolean(REMEMBER_ME, false)
-    }
+
 }
