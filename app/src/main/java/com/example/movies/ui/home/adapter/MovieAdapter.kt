@@ -46,7 +46,9 @@ class MovieAdapter : PagingDataAdapter<PopularMovieWithDetailsModel, MovieAdapte
                 text_popularity.text = popularMovie.popularityScore
                 text_release_date.text = popularMovie.releaseData
                 text_rating.text = popularMovie.rating.toString()
-                rating_bar_movie.rating = popularMovie.rating.toFloat()
+                popularMovie.rating?.let {
+                    rating_bar_movie.rating = it.toFloat()
+                }
                 text_genre.text = popularMovie.genres
             }
 

@@ -1,4 +1,4 @@
-package com.example.domain.models.utils
+package com.example.domain.utils
 
 sealed class ResponseResult<out T: Any> {
     object Loading: ResponseResult<Nothing>()

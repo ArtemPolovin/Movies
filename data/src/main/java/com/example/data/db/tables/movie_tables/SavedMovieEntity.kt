@@ -7,13 +7,13 @@ import androidx.room.PrimaryKey
 class SavedMovieEntity(
     @PrimaryKey(autoGenerate = false)
     val movieId: Int,
-    val releaseData: String,
-    val popularityScore: String,
-    val movieName: String,
-    val rating: Double,
-    val poster: String,
-    val overview: String,
-    val backdropPoster: String,
-    val genres: String,
-    val homePageUrl: String,
+    val releaseData: String?,
+    val popularityScore: String?,
+    val movieName: String?,
+    val rating: Double?,
+    val poster: String?,
+    val overview: String?,
+    val backdropPoster: String?,
+    val genres: String?,
+    val homePageUrl: String?,
 )

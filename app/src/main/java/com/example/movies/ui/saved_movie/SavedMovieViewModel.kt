@@ -5,12 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.models.PopularMovieWithDetailsModel
-import com.example.domain.models.utils.ResponseResult
+import com.example.domain.utils.ResponseResult
 import com.example.domain.usecases.movie_usecase.DeleteMovieByIdFromDbUseCase
 import com.example.domain.usecases.movie_usecase.GetAllSavedMoviesFromDbUseCase
-import com.example.domain.usecases.movie_usecase.InsertMovieToDbUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject

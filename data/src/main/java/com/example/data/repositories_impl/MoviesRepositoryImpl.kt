@@ -6,7 +6,7 @@ import com.example.data.mapers.MoviesApiMapper
 import com.example.data.mapers.MoviesEntityMapper
 import com.example.data.network.MoviesApi
 import com.example.domain.models.PopularMovieWithDetailsModel
-import com.example.domain.models.utils.ResponseResult
+import com.example.domain.utils.ResponseResult
 import com.example.domain.repositories.MoviesRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

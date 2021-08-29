@@ -1,7 +1,7 @@
 package com.example.domain.repositories
 
 import com.example.domain.models.PopularMovieWithDetailsModel
-import com.example.domain.models.utils.ResponseResult
+import com.example.domain.utils.ResponseResult
 import kotlinx.coroutines.flow.Flow
 
 interface MoviesRepository {

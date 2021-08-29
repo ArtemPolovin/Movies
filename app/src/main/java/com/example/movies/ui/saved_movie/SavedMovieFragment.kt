@@ -9,11 +9,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.domain.models.PopularMovieWithDetailsModel
-import com.example.domain.models.utils.ResponseResult
+import com.example.domain.utils.ResponseResult
 import com.example.movies.R
 import com.example.movies.ui.MainActivity
 import com.example.movies.utils.OnClickAdapterPopularMovieListener
-import com.example.movies.utils.OnLongClickAdapterItme
 import com.example.movies.utils.putKSerializable
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_saved_movie.*
