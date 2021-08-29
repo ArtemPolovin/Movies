@@ -97,35 +97,28 @@
         android:id="@+id/checkbox_remember_me"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/text_remember_me"
+        android:textSize="18sp"
+        android:textColor="@color/login_screen_text_color"
         app:layout_constraintStart_toStartOf="@+id/btn_login"
         app:layout_constraintTop_toBottomOf="@+id/btn_login"
         android:layout_marginStart="13dp"
         android:layout_marginTop="12dp"/>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/text_remember_me"
-        android:textSize="18sp"
-        android:textColor="@color/login_screen_text_color"
-        app:layout_constraintStart_toEndOf="@+id/checkbox_remember_me"
-        app:layout_constraintTop_toTopOf="@+id/checkbox_remember_me"
-        app:layout_constraintBottom_toBottomOf="@+id/checkbox_remember_me" />
-
-
-    <TextView
         android:id="@+id/text_new_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:layout_marginStart="26dp"
         android:text="@string/text_new_user"
         android:textColor="@color/login_screen_text_color"
         android:textSize="18sp"
         app:layout_constraintTop_toBottomOf="@+id/checkbox_remember_me"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintStart_toStartOf="@+id/checkbox_remember_me" />
 
     <TextView
+        android:id="@+id/text_signup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -133,6 +126,7 @@
         android:clickable="true"
         android:focusable="true"
         android:text="@string/text_signup"
+        android:background="@drawable/ripple_signup_text"
         android:textColor="@color/color_end"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/text_new_user"

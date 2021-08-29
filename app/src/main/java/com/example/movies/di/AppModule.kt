@@ -1,4 +1,4 @@
-package com.example.data.di
+package com.example.movies.di
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -25,6 +25,8 @@ import com.example.domain.usecases.auth.SaveSessionIdUseCase
 import com.example.domain.usecases.movie_usecase.DeleteMovieByIdFromDbUseCase
 import com.example.domain.usecases.movie_usecase.GetAllSavedMoviesFromDbUseCase
 import com.example.domain.usecases.movie_usecase.InsertMovieToDbUseCase
+import com.example.movies.utils.SharedPrefLoginAndPassword
+import com.example.movies.utils.SharedPreferencesLoginRememberMe
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -136,9 +138,13 @@ object AppModule {
     @Singleton
     fun provideSessionIdDataCache(sharedPref: SharedPreferences) = SessionIdDataCache(sharedPref)
 
-//    @Provides
-//    @Singleton
-//    fun provideSharedPreferencesLogin() = SharedPreferencesLogin()
+    @Provides
+    @Singleton
+    fun provideSharedPreferencesLogin(sharedPref: SharedPreferences) = SharedPreferencesLoginRememberMe(sharedPref)
+
+    @Provides
+    @Singleton
+    fun provideSharedPrefLoginAndPassword(sharedPref: SharedPreferences) = SharedPrefLoginAndPassword(sharedPref)
 
 
 }

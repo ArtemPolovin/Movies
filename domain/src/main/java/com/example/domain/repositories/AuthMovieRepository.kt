@@ -7,7 +7,7 @@ import com.example.domain.utils.ResponseResult
 
 interface AuthMovieRepository {
 
-    suspend fun saveRequestToken()
+    suspend fun saveRequestToken(): String
     suspend fun login(loginBodyModel: LoginBodyModel): ResponseResult<Boolean>
     suspend fun saveSessionId(sessionIdModel: SessionIdRequestBodyModel): Boolean
     suspend fun logout(logoutRequestBodyModel: LogoutRequestBodyModel): Boolean

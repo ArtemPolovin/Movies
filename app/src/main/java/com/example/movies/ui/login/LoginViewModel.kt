@@ -11,7 +11,10 @@ import com.example.domain.usecases.auth.LoginUseCase
 import com.example.domain.usecases.auth.SaveRequestTokenUseCase
 import com.example.domain.usecases.auth.SaveSessionIdUseCase
 import com.example.domain.utils.ResponseResult
+import com.example.movies.utils.SharedPrefLoginAndPassword
+import com.example.movies.utils.SharedPreferencesLoginRememberMe
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,22 +23,29 @@ class LoginViewModel @Inject constructor(
     private val saveRequestTokenUseCase: SaveRequestTokenUseCase,
     private val requestTokenDataCache: RequestTokenDataCache,
     private val loginUseCase: LoginUseCase,
-    private val saveSessionIdUseCase: SaveSessionIdUseCase
+    private val saveSessionIdUseCase: SaveSessionIdUseCase,
+    private val sharedPrefLoginRememberMe: SharedPreferencesLoginRememberMe,
+    private val sharedPrefLoginAndPassword: SharedPrefLoginAndPassword,
 ) : ViewModel() {
 
     init {
-        callSavingRequestToken()
+        skipLoginIfRememberMeChecked()
     }
 
     private val _isLoginSuccess = MutableLiveData<ResponseResult<Boolean>>()
     val isLoginSuccess: LiveData<ResponseResult<Boolean>> get() = _isLoginSuccess
 
     private val _isSessionIdSaved = MutableLiveData<Boolean>().apply { value = false }
-    val isSessionIdSaved: LiveData<Boolean>get() = _isSessionIdSaved
+    val isSessionIdSaved: LiveData<Boolean> get() = _isSessionIdSaved
 
-    private fun callSavingRequestToken() {
+    private val _isRememberMeChecked = MutableLiveData<Boolean>().apply { value = false }
+    val isRememberMeChecked: LiveData<Boolean> get() = _isRememberMeChecked
+
+    private fun skipLoginIfRememberMeChecked() {
         viewModelScope.launch {
-            saveRequestTokenUseCase()
+            val requestToken = viewModelScope.async { saveRequestTokenUseCase() }
+            val isChecked = sharedPrefLoginRememberMe.loadIsRememberMeChecked()
+            if(isChecked) skipLoginScreen(requestToken.await())
         }
     }
 
@@ -55,8 +65,26 @@ class LoginViewModel @Inject constructor(
     fun saveSessionId() {
         viewModelScope.launch {
             val model = SessionIdRequestBodyModel(requestTokenDataCache.loadRequestToken())
-           _isSessionIdSaved.value =  saveSessionIdUseCase.save(model)
+            _isSessionIdSaved.value = saveSessionIdUseCase.save(model)
         }
     }
+
+    private fun skipLoginScreen(requestToken: String) {
+            viewModelScope.launch {
+                val userName = sharedPrefLoginAndPassword.loadUserName()
+                val password = sharedPrefLoginAndPassword.loadPassword()
+                val loginBodyModel = LoginBodyModel(password, requestToken, userName)
+                val sessionIdRequestBodyModel = SessionIdRequestBodyModel(requestToken)
+
+                when (loginUseCase.execute(loginBodyModel)) {
+                    is ResponseResult.Success -> {
+                        if (saveSessionIdUseCase.save(sessionIdRequestBodyModel)) {
+                            _isRememberMeChecked.value = true
+                        }
+                    }
+                }
+            }
+    }
+
 
 }

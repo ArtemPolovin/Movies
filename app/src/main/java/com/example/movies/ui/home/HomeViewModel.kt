@@ -13,6 +13,8 @@ import com.example.data.utils.SessionIdDataCache
 import com.example.domain.models.LogoutRequestBodyModel
 import com.example.domain.models.PopularMovieWithDetailsModel
 import com.example.domain.usecases.auth.LogoutUseCase
+import com.example.movies.utils.SharedPrefLoginAndPassword
+import com.example.movies.utils.SharedPreferencesLoginRememberMe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -22,7 +24,9 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val moviePagingSource: MoviePagingSource,
     private val logoutUseCase: LogoutUseCase,
-    private val sessionIdDataCache: SessionIdDataCache
+    private val sessionIdDataCache: SessionIdDataCache,
+    private val loginSharedPreferencesRememberMe: SharedPreferencesLoginRememberMe,
+    private val sharedPrefLoginAndPassword: SharedPrefLoginAndPassword
 ) : ViewModel() {
 
     private var lastFetchedMovieResult: Flow<PagingData<PopularMovieWithDetailsModel>>? = null
@@ -49,14 +53,18 @@ class HomeViewModel @Inject constructor(
 
     fun logout() {
         viewModelScope.launch {
-            val b = sessionIdDataCache.loadSessionId()
-            println("mLog: session key = $b")
+            val logoutRequestBodyModel = LogoutRequestBodyModel(sessionIdDataCache.loadSessionId())
 
-            val logoutRequestBodyModel = LogoutRequestBodyModel(b)
-            val a = logoutUseCase.execute(logoutRequestBodyModel)
-            _isLoggedOut.value = a
-
+            val isLoggedOutFormApi = logoutUseCase.execute(logoutRequestBodyModel)
+            if (isLoggedOutFormApi) clearLoginRememberMeData()
+            _isLoggedOut.value = isLoggedOutFormApi
         }
+    }
+
+    private fun clearLoginRememberMeData() {
+        loginSharedPreferencesRememberMe.saveIsRememberMeChecked(false)
+        sharedPrefLoginAndPassword.clearUserName()
+        sharedPrefLoginAndPassword.clearPassword()
     }
 
 }

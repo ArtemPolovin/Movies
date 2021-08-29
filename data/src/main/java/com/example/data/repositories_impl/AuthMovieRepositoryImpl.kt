@@ -17,12 +17,14 @@ class AuthMovieRepositoryImpl(
     private val sessionIdDataCache: SessionIdDataCache
 ) : AuthMovieRepository {
 
-    override suspend fun saveRequestToken() {
+    override suspend fun saveRequestToken(): String {
+        var requestToken = ""
         try {
             val response = authMovieApiService.getRequestToken()
             if (response.isSuccessful) {
                 response.body()?.let { body ->
                     requestTokenDataCache.saveRequestToken(body.request_token)
+                    requestToken =  body.request_token
                 }
             } else {
                 Throwable(response.errorBody().toString())
@@ -30,6 +32,7 @@ class AuthMovieRepositoryImpl(
         } catch (e: Exception) {
             e.printStackTrace()
         }
+        return requestToken
     }
 
     override suspend fun login(loginBodyModel: LoginBodyModel): ResponseResult<Boolean> {

@@ -7,7 +7,7 @@ class SessionIdDataCache(
 ) {
 
     fun saveSessionId(sessionId: String) {
-        sharedPref.edit().putString(SESSION_ID,sessionId).apply()
+        sharedPref.edit().putString(SESSION_ID,sessionId).commit()
     }
 
     fun loadSessionId(): String{

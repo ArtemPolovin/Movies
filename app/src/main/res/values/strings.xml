@@ -20,7 +20,7 @@
     <string name="text_hint_password">password</string>
     <string name="text_btn_login">login</string>
     <string name="text_new_user">New user?</string>
-    <string name="text_signup">Sign Up</string>
+    <string name="text_signup">Sign Up on Web page</string>
     <string name="text_log_out">Log out</string>
     <string name="text_remember_me">Remember me</string>
 </resources>

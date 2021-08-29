@@ -2,7 +2,7 @@ package com.example.movies.utils
 
 import android.content.SharedPreferences
 
-class SharedPreferencesLogin(
+class SharedPreferencesLoginRememberMe(
     private val sharedPref: SharedPreferences
 ) {
 

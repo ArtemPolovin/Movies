@@ -10,6 +10,6 @@ class RequestTokenDataCache(
         sharedPref.getString(REQUEST_TOKEN, "" ) ?: ""
 
     fun saveRequestToken(requestToken: String) {
-        sharedPref.edit().putString(REQUEST_TOKEN, requestToken).apply()
+        sharedPref.edit().putString(REQUEST_TOKEN, requestToken).commit()
     }
 }

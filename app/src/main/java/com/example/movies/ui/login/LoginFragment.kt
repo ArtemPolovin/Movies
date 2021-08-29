@@ -1,5 +1,7 @@
 package com.example.movies.ui.login
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,18 +11,29 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.domain.utils.ResponseResult
 import com.example.movies.R
+import com.example.movies.utils.SIGNUP_WEB_PAGE_URL
+import com.example.movies.utils.SharedPrefLoginAndPassword
+import com.example.movies.utils.SharedPreferencesLoginRememberMe
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_login.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
 
     private val viewModel: LoginViewModel by viewModels()
 
+    @Inject
+    lateinit var loginSharedPreferencesRememberMe: SharedPreferencesLoginRememberMe
+
+    @Inject
+    lateinit var sharedPrefLoginAndPassword: SharedPrefLoginAndPassword
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_login, container, false)
     }
@@ -34,9 +47,11 @@ class LoginFragment : Fragment() {
             )
         }
 
+        skipLoginScreen()
         rememberLoginAndPassword()
         checkIfLoginIsSuccess()
         openHomePage()
+        openSignupWebPage()
     }
 
     private fun checkIfLoginIsSuccess() {
@@ -55,7 +70,12 @@ class LoginFragment : Fragment() {
 
     private fun openHomePage() {
         viewModel.isSessionIdSaved.observe(viewLifecycleOwner) { sessionIdSaved ->
-            if (sessionIdSaved){
+            if (sessionIdSaved) {
+                val isRememberMeChecked = loginSharedPreferencesRememberMe.loadIsRememberMeChecked()
+                if (isRememberMeChecked) {
+                    sharedPrefLoginAndPassword.saveUserName(edit_user_name.text.toString())
+                    sharedPrefLoginAndPassword.savePassword(edit_password.text.toString())
+                }
                 findNavController().navigate(R.id.action_nav_login_fragment_to_homeFragment)
             }
         }
@@ -63,9 +83,27 @@ class LoginFragment : Fragment() {
 
     private fun rememberLoginAndPassword() {
         checkbox_remember_me.setOnCheckedChangeListener { buttonView, isChecked ->
-            if(isChecked) println("mLog: true")
-            else println("mLog: false")
+            if (isChecked) {
+                loginSharedPreferencesRememberMe.saveIsRememberMeChecked(isChecked)
+            } else {
+                loginSharedPreferencesRememberMe.saveIsRememberMeChecked(false)
+            }
         }
     }
+
+    private fun skipLoginScreen() {
+        viewModel.isRememberMeChecked.observe(viewLifecycleOwner) {
+            if (it) findNavController().navigate(R.id.action_nav_login_fragment_to_homeFragment)
+        }
+    }
+
+    private fun openSignupWebPage() {
+        text_signup.setOnClickListener {
+            val intent =
+                Intent(Intent.ACTION_VIEW).setData(Uri.parse(SIGNUP_WEB_PAGE_URL))
+            startActivity(intent)
+        }
+    }
+
 
 }
