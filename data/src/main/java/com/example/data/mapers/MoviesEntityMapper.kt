@@ -1,12 +1,10 @@
 package com.example.data.mapers
 
 import com.example.data.db.tables.movie_tables.SavedMovieEntity
-import com.example.domain.models.PopularMovieWithDetailsModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
+import com.example.domain.models.MovieWithDetailsModel
 
 class MoviesEntityMapper {
-    fun mapMovieModelToEntity(movie: PopularMovieWithDetailsModel): SavedMovieEntity {
+    fun mapMovieModelToEntity(movie: MovieWithDetailsModel): SavedMovieEntity {
         return SavedMovieEntity(
             movieId = movie.id,
             releaseData = movie.releaseData,
@@ -21,8 +19,8 @@ class MoviesEntityMapper {
         )
     }
 
-    fun mapMovieEntityToMovieModel(movieEntity: SavedMovieEntity): PopularMovieWithDetailsModel {
-        return PopularMovieWithDetailsModel(
+    fun mapMovieEntityToMovieModel(movieEntity: SavedMovieEntity): MovieWithDetailsModel {
+        return MovieWithDetailsModel(
             id = movieEntity.movieId,
             releaseData = movieEntity.releaseData,
             popularityScore = movieEntity.popularityScore,
@@ -36,10 +34,10 @@ class MoviesEntityMapper {
         )
     }
 
-    fun mapMovieEntityListToModelList(movieEntityList: List<SavedMovieEntity>):List<PopularMovieWithDetailsModel> {
+    fun mapMovieEntityListToModelList(movieEntityList: List<SavedMovieEntity>):List<MovieWithDetailsModel> {
 
         return movieEntityList.map { movieEntity ->
-            PopularMovieWithDetailsModel(
+            MovieWithDetailsModel(
                 id = movieEntity.movieId,
                 releaseData = movieEntity.releaseData,
                 popularityScore = movieEntity.popularityScore,

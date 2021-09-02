@@ -47,4 +47,13 @@
             app:popUpTo="@id/nav_login_fragment"
             app:popUpToInclusive="true"/>
     </fragment>
+    <fragment
+        android:id="@+id/movie_categories"
+        android:name="com.example.movies.ui.movie_categories.MovieCategoriesFragment"
+        android:label="Categories"
+        tools:layout="@layout/fragment_movie_categories" >
+        <action
+            android:id="@+id/action_movie_categories_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>

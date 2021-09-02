@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.models.PopularMovieWithDetailsModel
+import com.example.domain.models.MovieWithDetailsModel
 import com.example.domain.utils.ResponseResult
 import com.example.domain.usecases.movie_usecase.DeleteMovieByIdFromDbUseCase
 import com.example.domain.usecases.movie_usecase.GetAllSavedMoviesFromDbUseCase
@@ -19,8 +19,8 @@ class SavedMovieViewModel @Inject constructor(
     private val getAllSavedMoviesFromDbUseCase: GetAllSavedMoviesFromDbUseCase,
 ) : ViewModel() {
 
-    private val _savedMoviesList = MutableLiveData< ResponseResult<List<PopularMovieWithDetailsModel>>>()
-    val savedMoviesList: LiveData<ResponseResult<List<PopularMovieWithDetailsModel>>> get() = _savedMoviesList
+    private val _savedMoviesList = MutableLiveData< ResponseResult<List<MovieWithDetailsModel>>>()
+    val savedMovie: LiveData<ResponseResult<List<MovieWithDetailsModel>>> get() = _savedMoviesList
 
     init {
         fetchSavedMoviesFromDb()
@@ -28,9 +28,11 @@ class SavedMovieViewModel @Inject constructor(
 
 
     private fun fetchSavedMoviesFromDb() {
+
+        _savedMoviesList.value = ResponseResult.Loading
+
         viewModelScope.launch {
             getAllSavedMoviesFromDbUseCase().collect {
-                _savedMoviesList.value = ResponseResult.Loading
                 _savedMoviesList.value = it
             }
         }

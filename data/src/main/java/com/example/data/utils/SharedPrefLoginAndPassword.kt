@@ -1,4 +1,4 @@
-package com.example.movies.utils
+package com.example.data.utils
 
 import android.content.SharedPreferences
 

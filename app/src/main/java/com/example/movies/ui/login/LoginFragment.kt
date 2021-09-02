@@ -12,8 +12,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.domain.utils.ResponseResult
 import com.example.movies.R
 import com.example.movies.utils.SIGNUP_WEB_PAGE_URL
-import com.example.movies.utils.SharedPrefLoginAndPassword
-import com.example.movies.utils.SharedPreferencesLoginRememberMe
+import com.example.data.utils.SharedPrefLoginAndPassword
+import com.example.data.utils.SharedPreferencesLoginRememberMe
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_login.*
 import javax.inject.Inject

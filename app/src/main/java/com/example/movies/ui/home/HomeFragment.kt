@@ -10,7 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.domain.models.PopularMovieWithDetailsModel
+import com.example.data.utils.SharedPrefMovieCategory
+import com.example.domain.models.MovieWithDetailsModel
 import com.example.movies.R
 import com.example.movies.ui.MainActivity
 import com.example.movies.ui.home.adapter.MovieAdapter
@@ -21,6 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -28,6 +30,9 @@ class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
 
     private lateinit var moviesAdapter: MovieAdapter
+
+    @Inject
+    lateinit var sharedPrefMovieCategory: SharedPrefMovieCategory
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -83,7 +88,7 @@ class HomeFragment : Fragment() {
 
     private fun openMovieDetailsScreen() {
         moviesAdapter.onClickItem(object : OnClickAdapterPopularMovieListener {
-            override fun  getPopularMovie(movie: PopularMovieWithDetailsModel) {
+            override fun  getPopularMovie(movie: MovieWithDetailsModel) {
                 val bundle = Bundle()
                 bundle.putKSerializable("movieObject", movie)
                 bundle.putBoolean("showSavedIcon", true)
@@ -103,10 +108,11 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupToolbar() {
+        toolbar.title = sharedPrefMovieCategory.loadMovieCategory()
         (activity as? AppCompatActivity)?.setSupportActionBar(toolbar)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+   /* override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.toolbar_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
@@ -116,6 +122,6 @@ class HomeFragment : Fragment() {
             R.id.text_log_out -> viewModel.logout()
         }
         return super.onOptionsItemSelected(item)
-    }
+    }*/
 
 }

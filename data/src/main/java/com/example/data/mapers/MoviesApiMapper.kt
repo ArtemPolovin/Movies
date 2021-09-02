@@ -1,24 +1,25 @@
 package com.example.data.mapers
 
+import com.example.data.apimodels.movie_details.Genre
 import com.example.data.apimodels.movie_details.MovieDetailsModelApi
 import com.example.data.apimodels.movies.Result
 import com.example.data.utils.POSTER_BASE_URL
-import com.example.domain.models.PopularMovieWithDetailsModel
+import com.example.domain.models.MovieWithDetailsModel
 
 class MoviesApiMapper {
 
     fun mapMovieDetailsAndMoviesToModelList(
         movieDetailsList: List<MovieDetailsModelApi>,
-        popularMoviesIdList: List<Result>
-    ): List<PopularMovieWithDetailsModel> {
+        moviesIdList: List<Result>
+    ): List<MovieWithDetailsModel> {
 
-        val movieWithDetails = mutableListOf<PopularMovieWithDetailsModel>()
+        val movieWithDetails = mutableListOf<MovieWithDetailsModel>()
 
-        popularMoviesIdList.forEach { popularMovie ->
+        moviesIdList.forEach { movieId ->
             movieDetailsList.forEach { movieDetails ->
-                if (popularMovie.id == movieDetails.id) {
+                if (movieId.id == movieDetails.id) {
                     movieWithDetails.add(
-                        PopularMovieWithDetailsModel(
+                        MovieWithDetailsModel(
                             releaseData = movieDetails.release_date,
                             popularityScore = movieDetails.popularity.toString(),
                             movieName = movieDetails.original_title,
@@ -26,7 +27,7 @@ class MoviesApiMapper {
                             poster = "${POSTER_BASE_URL}${movieDetails.poster_path}",
                             backdropPoster = "${POSTER_BASE_URL}${movieDetails.backdrop_path}",
                             overview = movieDetails.overview,
-                            genres = movieDetails.genres.joinToString(", ") { it.name },
+                            genres = movieDetails.genres?.joinToString(", ") { it.name ?: "" },
                             homePageUrl = movieDetails.homepage,
                             id = movieDetails.id
                         )
