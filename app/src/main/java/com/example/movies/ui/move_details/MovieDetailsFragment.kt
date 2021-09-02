@@ -13,7 +13,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
-import com.example.domain.models.PopularMovieWithDetailsModel
+import com.example.domain.models.MovieWithDetailsModel
 import com.example.movies.R
 import com.example.movies.ui.MainActivity
 import com.example.movies.utils.getKSerializable
@@ -25,7 +25,7 @@ class MovieDetailsFragment : Fragment() {
 
     private val viewModel: MovieDetailsViewModel by viewModels()
 
-    private var movieWithDetails: PopularMovieWithDetailsModel? = null
+    private var movieWithDetails: MovieWithDetailsModel? = null
 
     private var showMenuSaveIcon: Boolean = true
 
@@ -42,17 +42,17 @@ class MovieDetailsFragment : Fragment() {
 
         (requireActivity() as MainActivity).setupActionBar(toolbar, false)
         arguments?.let {
-            movieWithDetails = it.getKSerializable<PopularMovieWithDetailsModel>("movieObject")
+            movieWithDetails = it.getKSerializable<MovieWithDetailsModel>("movieObject")
             showMenuSaveIcon = it.getBoolean("showSavedIcon")
         }
 
-        movieWithDetails = arguments?.getKSerializable<PopularMovieWithDetailsModel>("movieObject")
+        movieWithDetails = arguments?.getKSerializable<MovieWithDetailsModel>("movieObject")
         movieWithDetails?.let { setupMovieDetails(it, requireContext()) }
 
         openWebHomePage()
     }
 
-    private fun setupMovieDetails(movieModel: PopularMovieWithDetailsModel, context: Context) {
+    private fun setupMovieDetails(movieModel: MovieWithDetailsModel, context: Context) {
         movieModel.apply {
             text_movie_name_details.text = movieName
             text_popularity.text = popularityScore

@@ -1,5 +1,6 @@
 package com.example.movies.ui.login
 
+import androidx.core.content.SharedPreferencesCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,8 +12,9 @@ import com.example.domain.usecases.auth.LoginUseCase
 import com.example.domain.usecases.auth.SaveRequestTokenUseCase
 import com.example.domain.usecases.auth.SaveSessionIdUseCase
 import com.example.domain.utils.ResponseResult
-import com.example.movies.utils.SharedPrefLoginAndPassword
-import com.example.movies.utils.SharedPreferencesLoginRememberMe
+import com.example.data.utils.SharedPrefLoginAndPassword
+import com.example.data.utils.SharedPrefMovieCategory
+import com.example.data.utils.SharedPreferencesLoginRememberMe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -25,7 +27,7 @@ class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val saveSessionIdUseCase: SaveSessionIdUseCase,
     private val sharedPrefLoginRememberMe: SharedPreferencesLoginRememberMe,
-    private val sharedPrefLoginAndPassword: SharedPrefLoginAndPassword,
+    private val sharedPrefLoginAndPassword: SharedPrefLoginAndPassword
 ) : ViewModel() {
 
     init {

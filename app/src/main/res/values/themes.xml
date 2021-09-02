@@ -3,7 +3,7 @@
     <style name="Theme.Movies" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimaryVariant">@color/home_page_toolbar_color</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -12,6 +12,19 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+
+        <item name="android:navigationBarColor">@color/navigation_bar_color</item>
+        <item name="android:windowLightNavigationBar">true</item>
+
+    </style>
+
+    <!-- ToolBar -->
+    <style name="ToolBarStyle" parent="Theme.AppCompat">
+        <item name="android:textColorPrimary">@color/white_toolbar_text</item>
+        <item name="android:textColorSecondary">@color/white_toolbar_text</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
+      <!--  <item name="actionOverflowButtonStyle">@style/ActionButtonOverflowStyle</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>-->
     </style>
 
     <style name="MyRatingBar" parent="Widget.AppCompat.RatingBar">
@@ -30,4 +43,6 @@
 
 
     <color name="toolbar_color_control_normal">#FFFFFF</color>
+    <color name="navigation_bar_color">#FFFFFF</color>
+    <color name="white_toolbar_text">#ECECEC</color>
 </resources>

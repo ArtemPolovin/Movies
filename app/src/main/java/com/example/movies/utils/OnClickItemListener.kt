@@ -1,9 +1,9 @@
 package com.example.movies.utils
 
-import com.example.domain.models.PopularMovieWithDetailsModel
+import com.example.domain.models.MovieWithDetailsModel
 
 interface OnClickAdapterPopularMovieListener {
-    fun getPopularMovie(movie: PopularMovieWithDetailsModel)
+    fun getPopularMovie(movie: MovieWithDetailsModel)
 }
 
 interface OnLongClickAdapterItme {

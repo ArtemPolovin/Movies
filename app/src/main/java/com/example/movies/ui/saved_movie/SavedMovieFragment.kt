@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.domain.models.PopularMovieWithDetailsModel
+import com.example.domain.models.MovieWithDetailsModel
 import com.example.domain.utils.ResponseResult
 import com.example.movies.R
 import com.example.movies.ui.MainActivity
@@ -51,7 +51,7 @@ class SavedMovieFragment : Fragment() {
 
     private fun setupSavedMoviesList() {
 
-        viewModel.savedMoviesList.observe(viewLifecycleOwner, {
+        viewModel.savedMovie.observe(viewLifecycleOwner, {
 
             text_error.visibility = View.GONE
             progress_bar.visibility = View.GONE
@@ -90,7 +90,7 @@ class SavedMovieFragment : Fragment() {
 
     private fun openMovieDetailsScreen() {
         savedMoviesAdapter.onclick(object : OnClickAdapterPopularMovieListener {
-            override fun getPopularMovie(movie: PopularMovieWithDetailsModel) {
+            override fun getPopularMovie(movie: MovieWithDetailsModel) {
                 val bundle = Bundle()
                 bundle.putKSerializable("movieObject", movie)
                 bundle.putBoolean("showSavedIcon", false)

@@ -9,17 +9,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.domain.models.PopularMovieWithDetailsModel
+import com.example.domain.models.MovieWithDetailsModel
 import com.example.movies.R
 import com.example.movies.utils.OnClickAdapterPopularMovieListener
-import com.example.movies.utils.OnLongClickAdapterItme
 import kotlinx.android.synthetic.main.cell_movie.view.image_movie_poster
 import kotlinx.android.synthetic.main.cell_movie.view.text_movie_name
 import kotlinx.android.synthetic.main.cell_movie.view.text_rating
 
 class SavedMovieAdapter : RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesViewHolder>() {
 
-    private val savedMoviesList = mutableListOf<PopularMovieWithDetailsModel>()
+    private val savedMoviesList = mutableListOf<MovieWithDetailsModel>()
 
     private lateinit var onclickAdapterPopularMovieListener: OnClickAdapterPopularMovieListener
     //private lateinit var onLongClickAdapterItem: OnLongClickAdapterItme
@@ -45,7 +44,7 @@ class SavedMovieAdapter : RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesView
         elementsIdList.clear()
     }
 
-    fun setupList(newSavedMovieList: List<PopularMovieWithDetailsModel>) {
+    fun setupList(newSavedMovieList: List<MovieWithDetailsModel>) {
         savedMoviesList.clear()
         savedMoviesList.addAll(newSavedMovieList)
         notifyDataSetChanged()
@@ -109,7 +108,7 @@ class SavedMovieAdapter : RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesView
             }
         }
 
-        fun click(movieModel: PopularMovieWithDetailsModel) {
+        fun click(movieModel: MovieWithDetailsModel) {
             itemView.setOnClickListener {
                 if(itemView.isSelected){
                     elementsIdList.remove(itemId.toInt())

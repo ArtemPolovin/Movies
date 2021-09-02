@@ -28,4 +28,6 @@
     <color name="login_text_hint_color">#7C7B7B</color>
     <color name="color_login_edit_text">#DDDAD9</color>
     <color name="login_screen_text_color">#B4B3B3</color>
+    <color name="movie_category_title_text_color">#000000</color>
+    <color name="ripple_category_cell_color">#81E26259</color>
 </resources>

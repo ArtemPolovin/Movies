@@ -9,14 +9,14 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.domain.models.PopularMovieWithDetailsModel
+import com.example.domain.models.MovieWithDetailsModel
 import com.example.movies.R
 import com.example.movies.utils.DATA_VIEWTYPE
 import com.example.movies.utils.LOADSTATE_VIEW_TYPE
 import com.example.movies.utils.OnClickAdapterPopularMovieListener
 import kotlinx.android.synthetic.main.cell_movie.view.*
 
-class MovieAdapter : PagingDataAdapter<PopularMovieWithDetailsModel, MovieAdapter.MoviesViewHolder>(MovieDiffUtilCallback()) {
+class MovieAdapter : PagingDataAdapter<MovieWithDetailsModel, MovieAdapter.MoviesViewHolder>(MovieDiffUtilCallback()) {
 
     private lateinit var onClickAdapterPopularMovieListener: OnClickAdapterPopularMovieListener
 
@@ -63,7 +63,7 @@ class MovieAdapter : PagingDataAdapter<PopularMovieWithDetailsModel, MovieAdapte
         private val onClickAdapterPopularMovieListener: OnClickAdapterPopularMovieListener
     ) : RecyclerView.ViewHolder(itemView) {
 
-        fun onClick(movieWithDetailsModel: PopularMovieWithDetailsModel) {
+        fun onClick(movieWithDetailsModel: MovieWithDetailsModel) {
             itemView.setOnClickListener {
                 onClickAdapterPopularMovieListener.getPopularMovie(movieWithDetailsModel)
             }
@@ -77,17 +77,17 @@ class MovieAdapter : PagingDataAdapter<PopularMovieWithDetailsModel, MovieAdapte
 
     }
 
-    class MovieDiffUtilCallback : DiffUtil.ItemCallback<PopularMovieWithDetailsModel>() {
+    class MovieDiffUtilCallback : DiffUtil.ItemCallback<MovieWithDetailsModel>() {
         override fun areItemsTheSame(
-            oldItem: PopularMovieWithDetailsModel,
-            newItem: PopularMovieWithDetailsModel
+            oldItem: MovieWithDetailsModel,
+            newItem: MovieWithDetailsModel
         ): Boolean {
             return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(
-            oldItem: PopularMovieWithDetailsModel,
-            newItem: PopularMovieWithDetailsModel
+            oldItem: MovieWithDetailsModel,
+            newItem: MovieWithDetailsModel
         ): Boolean {
             return oldItem.id == newItem.id
         }

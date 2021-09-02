@@ -23,4 +23,5 @@
     <string name="text_signup">Sign Up on Web page</string>
     <string name="text_log_out">Log out</string>
     <string name="text_remember_me">Remember me</string>
+    <string name="title_movie_categories">Categories</string>
 </resources>

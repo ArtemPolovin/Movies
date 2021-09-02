@@ -6,17 +6,19 @@ import androidx.room.Room
 import com.example.data.datasource.MoviePagingSource
 import com.example.data.db.AppDatabase
 import com.example.data.db.dao.MoviesDao
+import com.example.data.mapers.BackendLessMapper
 import com.example.data.mapers.ErrorLoginMapper
 import com.example.data.mapers.MoviesApiMapper
 import com.example.data.mapers.MoviesEntityMapper
 import com.example.data.network.AuthMovieAPIService
+import com.example.data.network.BackendLessService
 import com.example.data.network.MoviesApi
 import com.example.data.repositories_impl.AuthMovieRepositoryImpl
+import com.example.data.repositories_impl.BackendLessRepositoryImpl
 import com.example.data.repositories_impl.MoviesRepositoryImpl
-import com.example.data.utils.RequestTokenDataCache
-import com.example.data.utils.SHARED_PREF
-import com.example.data.utils.SessionIdDataCache
+import com.example.data.utils.*
 import com.example.domain.repositories.AuthMovieRepository
+import com.example.domain.repositories.BackendLessRepository
 import com.example.domain.repositories.MoviesRepository
 import com.example.domain.usecases.auth.LoginUseCase
 import com.example.domain.usecases.auth.LogoutUseCase
@@ -24,9 +26,8 @@ import com.example.domain.usecases.auth.SaveRequestTokenUseCase
 import com.example.domain.usecases.auth.SaveSessionIdUseCase
 import com.example.domain.usecases.movie_usecase.DeleteMovieByIdFromDbUseCase
 import com.example.domain.usecases.movie_usecase.GetAllSavedMoviesFromDbUseCase
+import com.example.domain.usecases.movie_usecase.GetMoviesCategoriesCellsUseCase
 import com.example.domain.usecases.movie_usecase.InsertMovieToDbUseCase
-import com.example.movies.utils.SharedPrefLoginAndPassword
-import com.example.movies.utils.SharedPreferencesLoginRememberMe
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -64,8 +65,18 @@ object AppModule {
         )
 
     @Provides
-    fun provideMoviePagingSource(movieRepository: MoviesRepository) =
-        MoviePagingSource(movieRepository)
+    @Singleton
+    fun provideBackendLessRepositoryImpl(
+        backendLessService: BackendLessService,
+        backendLessMapper: BackendLessMapper
+    ): BackendLessRepository =
+        BackendLessRepositoryImpl(backendLessService,backendLessMapper)
+
+    @Provides
+    fun provideMoviePagingSource(
+        movieRepository: MoviesRepository,
+        sharedPrefMovieCategory: SharedPrefMovieCategory
+    ) = MoviePagingSource(movieRepository,sharedPrefMovieCategory)
 
     @Provides
     @Singleton
@@ -74,6 +85,10 @@ object AppModule {
     @Provides
     @Singleton
     fun provideAuthMovieApiService(): AuthMovieAPIService = AuthMovieAPIService()
+
+    @Provides
+    @Singleton
+    fun provideBackendLessApiService() = BackendLessService()
 
     @Provides
     @Singleton
@@ -94,6 +109,9 @@ object AppModule {
 
     @Provides
     fun provideErrorLoginMapper() = ErrorLoginMapper()
+
+    @Provides
+    fun provideBackendLessMapper() = BackendLessMapper()
 
     @Provides
     fun provideDeleteMovieByIdFromDbUseCase(movieRepository: MoviesRepository) =
@@ -123,6 +141,9 @@ object AppModule {
     fun provideLogoutUseCase(authMovieRepository: AuthMovieRepository) = LogoutUseCase(authMovieRepository)
 
     @Provides
+    fun provideGetMoviesCategoriesCells(backendLessRepo: BackendLessRepository) = GetMoviesCategoriesCellsUseCase(backendLessRepo)
+
+    @Provides
     @Singleton
     fun provideSharedPreferences(
         @ApplicationContext context: Context
@@ -145,6 +166,10 @@ object AppModule {
     @Provides
     @Singleton
     fun provideSharedPrefLoginAndPassword(sharedPref: SharedPreferences) = SharedPrefLoginAndPassword(sharedPref)
+
+    @Provides
+    @Singleton
+    fun provideSharedPrefMovieCategory(sharedPref: SharedPreferences)= SharedPrefMovieCategory(sharedPref)
 
 
 }
