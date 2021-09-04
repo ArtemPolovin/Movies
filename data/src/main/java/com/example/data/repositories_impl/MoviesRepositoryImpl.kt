@@ -6,6 +6,7 @@ import com.example.data.db.dao.MoviesDao
 import com.example.data.mapers.MoviesApiMapper
 import com.example.data.mapers.MoviesEntityMapper
 import com.example.data.network.MoviesApi
+import com.example.data.utils.SettingsDataCache
 import com.example.domain.models.MovieWithDetailsModel
 import com.example.domain.repositories.MoviesRepository
 import com.example.domain.utils.ResponseResult
@@ -21,7 +22,8 @@ class MoviesRepositoryImpl(
     private val moviesApi: MoviesApi,
     private val moviesApiMapper: MoviesApiMapper,
     private val moviesDao: MoviesDao,
-    private val movieEntityMapper: MoviesEntityMapper
+    private val movieEntityMapper: MoviesEntityMapper,
+    private val settingsDataCache: SettingsDataCache
 ) : MoviesRepository {
 
     override suspend fun getPopularMoviesWithDetails(page: Int): List<MovieWithDetailsModel> {
@@ -108,7 +110,7 @@ class MoviesRepositoryImpl(
     private suspend fun getMovieDetails(movieId: Int): MovieDetailsModelApi {
 
         return try {
-            val response = moviesApi.getMoviesDetails(movieId)
+            val response = moviesApi.getMoviesDetails(movieId,settingsDataCache.getLanguage())
             if (response.isSuccessful) {
                 response.body()?.let { body ->
                     return@let body

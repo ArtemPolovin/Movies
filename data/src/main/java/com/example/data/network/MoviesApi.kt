@@ -26,7 +26,10 @@ interface MoviesApi {
     suspend fun getTopRatedMovies(@Query("page") page: Int): Response<MoviesListApiModel>
 
     @GET("/3/movie/{movie_id}")
-   suspend fun getMoviesDetails(@Path("movie_id") movieId: Int): Response<MovieDetailsModelApi>
+   suspend fun getMoviesDetails(
+        @Path("movie_id") movieId: Int,
+        @Query("language") language: String?
+    ): Response<MovieDetailsModelApi>
 
     companion object{
         operator fun invoke(): MoviesApi{

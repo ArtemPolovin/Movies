@@ -56,4 +56,12 @@
             android:id="@+id/action_movie_categories_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/settings"
+        android:name="com.example.movies.ui.settings.SettingsFragment"
+        android:label="Settings" >
+        <action
+            android:id="@+id/action_settings_to_nav_login_fragment"
+            app:destination="@id/nav_login_fragment" />
+    </fragment>
 </navigation>

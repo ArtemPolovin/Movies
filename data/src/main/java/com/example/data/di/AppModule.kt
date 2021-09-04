@@ -1,7 +1,8 @@
-package com.example.movies.di
+package com.example.data.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
 import androidx.room.Room
 import com.example.data.datasource.MoviePagingSource
 import com.example.data.db.AppDatabase
@@ -33,6 +34,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -45,9 +47,10 @@ object AppModule {
         moviesApi: MoviesApi,
         moviesApiMapper: MoviesApiMapper,
         movieDao: MoviesDao,
-        movieEntityMapper: MoviesEntityMapper
+        movieEntityMapper: MoviesEntityMapper,
+        settingsDataCache: SettingsDataCache
     ): MoviesRepository =
-        MoviesRepositoryImpl(moviesApi, moviesApiMapper, movieDao, movieEntityMapper)
+        MoviesRepositoryImpl(moviesApi, moviesApiMapper, movieDao, movieEntityMapper,settingsDataCache)
 
     @Provides
     @Singleton
@@ -161,6 +164,11 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideSettingsDataCache(@Named("SettingsPrefManager") sharedPrefManger: SharedPreferences) =
+        SettingsDataCache(sharedPrefManger)
+
+    @Provides
+    @Singleton
     fun provideSharedPreferencesLogin(sharedPref: SharedPreferences) = SharedPreferencesLoginRememberMe(sharedPref)
 
     @Provides
@@ -170,6 +178,12 @@ object AppModule {
     @Provides
     @Singleton
     fun provideSharedPrefMovieCategory(sharedPref: SharedPreferences)= SharedPrefMovieCategory(sharedPref)
+
+    @Provides
+    @Singleton
+    @Named("SettingsPrefManager")
+    fun providePreferenceManager(@ApplicationContext context: Context): SharedPreferences =
+        PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
 
 
 }

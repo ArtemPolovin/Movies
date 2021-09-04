@@ -22,7 +22,7 @@ class MoviesApiMapper {
                         MovieWithDetailsModel(
                             releaseData = movieDetails.release_date,
                             popularityScore = movieDetails.popularity.toString(),
-                            movieName = movieDetails.original_title,
+                            movieName = movieDetails.title,
                             rating = movieDetails.vote_average,
                             poster = "${POSTER_BASE_URL}${movieDetails.poster_path}",
                             backdropPoster = "${POSTER_BASE_URL}${movieDetails.backdrop_path}",

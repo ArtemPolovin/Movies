@@ -49,7 +49,6 @@ class HomeFragment : Fragment() {
 
         button_retry.setOnClickListener { moviesAdapter.retry() }
 
-        logOut()
         setupToolbar()
         setupAdapter()
         setupMoviesList()
@@ -101,27 +100,9 @@ class HomeFragment : Fragment() {
         })
     }
 
-    private fun logOut() {
-        viewModel.isLoggedOut.observe(viewLifecycleOwner){
-            if(it) findNavController().navigate(R.id.action_homeFragment_to_nav_login_fragment)
-        }
-    }
-
     private fun setupToolbar() {
         toolbar.title = sharedPrefMovieCategory.loadMovieCategory()
         (activity as? AppCompatActivity)?.setSupportActionBar(toolbar)
     }
-
-   /* override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.toolbar_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
-            R.id.text_log_out -> viewModel.logout()
-        }
-        return super.onOptionsItemSelected(item)
-    }*/
 
 }
