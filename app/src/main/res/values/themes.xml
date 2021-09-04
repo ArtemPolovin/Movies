@@ -18,6 +18,11 @@
 
     </style>
 
+    <!-- Dialog alert -->
+    <style name="AlertDialogThem" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+    </style>
+
     <!-- ToolBar -->
     <style name="ToolBarStyle" parent="Theme.AppCompat">
         <item name="android:textColorPrimary">@color/white_toolbar_text</item>

@@ -84,6 +84,9 @@ dependencies {
     // Jackson
     implementation 'com.squareup.retrofit2:converter-jackson:2.9.0'
 
+    //SharedPrefManager
+    implementation 'androidx.preference:preference-ktx:1.1.1'
+
 
 
 

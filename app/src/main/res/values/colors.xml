@@ -30,4 +30,6 @@
     <color name="login_screen_text_color">#B4B3B3</color>
     <color name="movie_category_title_text_color">#000000</color>
     <color name="ripple_category_cell_color">#81E26259</color>
+    <color name="settings_background_color">#ECECEC</color>
+    <color name="settings_item_ripple_color">#C4C4C4</color>
 </resources>
