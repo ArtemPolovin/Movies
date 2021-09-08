@@ -2,6 +2,7 @@ package com.example.data.repositories_impl
 
 import com.example.data.apimodels.movie_details.MovieDetailsModelApi
 import com.example.data.apimodels.movies.Result
+import com.example.data.apimodels.video.VideoApiModel
 import com.example.data.db.dao.MoviesDao
 import com.example.data.mapers.MoviesApiMapper
 import com.example.data.mapers.MoviesEntityMapper
@@ -29,7 +30,8 @@ class MoviesRepositoryImpl(
     override suspend fun getPopularMoviesWithDetails(page: Int): List<MovieWithDetailsModel> {
         val moviesIdList = moviesApi.getPopularMovies(page).results
         val movieDetails = getMovieDetailsList(moviesIdList)
-        return moviesApiMapper.mapMovieDetailsAndMoviesToModelList(movieDetails, moviesIdList)
+        val videosList = getVideosList(moviesIdList)
+        return moviesApiMapper.mapMovieDetailsAndMoviesToModelList(movieDetails, moviesIdList,videosList)
     }
 
     override suspend fun getUpcomingMoviesWithDetails(page: Int): List<MovieWithDetailsModel> {
@@ -39,9 +41,11 @@ class MoviesRepositoryImpl(
                 response.body()?.let { body ->
                     val moviesIdList = body.results
                     val movieDetails = getMovieDetailsList(moviesIdList)
+                    val videosList = getVideosList(moviesIdList)
                     return@let moviesApiMapper.mapMovieDetailsAndMoviesToModelList(
                             movieDetails,
-                            moviesIdList
+                            moviesIdList,
+                            videosList
                         )
                 } ?: throw  IllegalArgumentException("An unknown error occured")
             } else throw  IllegalArgumentException("${response.errorBody()?.string()}")
@@ -58,9 +62,11 @@ class MoviesRepositoryImpl(
                 response.body()?.let { body ->
                     val moviesIdList = body.results
                     val movieDetails = getMovieDetailsList(moviesIdList)
+                    val videosList = getVideosList(moviesIdList)
                     return@let moviesApiMapper.mapMovieDetailsAndMoviesToModelList(
                         movieDetails,
-                        moviesIdList
+                        moviesIdList,
+                        videosList
                     )
                 } ?: throw  IllegalArgumentException("An unknown error occured")
             } else throw  IllegalArgumentException("${response.errorBody()?.string()}")
@@ -124,9 +130,29 @@ class MoviesRepositoryImpl(
         }
     }
 
+    private suspend fun getVideo(movieId: Int): VideoApiModel {
+        return try {
+            val response = moviesApi.getVideo(movieId,settingsDataCache.getLanguage())
+            if (response.isSuccessful) {
+                response.body()?.let { body ->
+                    return@let body
+                } ?: throw IllegalArgumentException("An unknown error occured")
+            } else {
+                throw IllegalArgumentException("Response was not successful")
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+            throw IllegalArgumentException("Some problem with API connection")
+        }
+    }
+
     private suspend fun getMovieDetailsList(movieIdList: List<Result>): List<MovieDetailsModelApi> {
            return movieIdList.map { getMovieDetails(it.id) }
 
+    }
+
+    private suspend fun getVideosList(movieIdList: List<Result>): List<VideoApiModel> {
+        return movieIdList.map { getVideo(it.id) }
     }
 
 

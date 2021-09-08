@@ -7,33 +7,50 @@
     android:background="@color/movie_details_screen_background_color"
     tools:context=".ui.move_details.MovieDetailsFragment">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/transparent"
+        android:elevation="4dp"
+        android:theme="@style/ToolbarTheme"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RelativeLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+            android:id="@+id/youtube_player"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            app:showFullScreenButton="true"
+            app:showYouTubeButton="false"
+            app:autoPlay="false"
+            app:useWebUi="false" />
+
+        <ImageView
+            android:id="@+id/image_movie_details"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:scaleType="fitXY"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
 
     <ScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/container">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@android:color/transparent"
-                android:elevation="4dp"
-                android:theme="@style/ToolbarTheme"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/image_movie_details"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:background="@color/white"
-                android:scaleType="fitXY"
-                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_info_container"
@@ -42,7 +59,7 @@
                 android:paddingStart="8dp"
                 android:paddingTop="10dp"
                 android:paddingEnd="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/image_movie_details">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <RatingBar
                     android:id="@+id/rating_bar_movie"
@@ -204,5 +221,11 @@
 
     </ScrollView>
 
+   <!-- <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_views"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="toolbar,layout_info_container,text_overview_header,text_overview,text_homepage_url_header,text_homepage_url"
+        tools:ignore="NotSibling" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

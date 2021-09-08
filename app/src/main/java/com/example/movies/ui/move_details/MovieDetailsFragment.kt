@@ -1,13 +1,15 @@
 package com.example.movies.ui.move_details
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
 import android.view.*
-import android.widget.ImageView
+import android.view.View.*
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -17,7 +19,11 @@ import com.example.domain.models.MovieWithDetailsModel
 import com.example.movies.R
 import com.example.movies.ui.MainActivity
 import com.example.movies.utils.getKSerializable
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerFullScreenListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 
 @AndroidEntryPoint
@@ -38,39 +44,64 @@ class MovieDetailsFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_movie_details, container, false)
     }
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         (requireActivity() as MainActivity).setupActionBar(toolbar, false)
-        arguments?.let {
-            movieWithDetails = it.getKSerializable<MovieWithDetailsModel>("movieObject")
-            showMenuSaveIcon = it.getBoolean("showSavedIcon")
-        }
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
+        showMenuSaveIcon = arguments?.getBoolean("showSavedIcon") ?: false
+
 
         movieWithDetails = arguments?.getKSerializable<MovieWithDetailsModel>("movieObject")
-        movieWithDetails?.let { setupMovieDetails(it, requireContext()) }
+        movieWithDetails?.let { setupMovieDetails(it) }
 
         openWebHomePage()
+        fullScreenListener()
     }
 
-    private fun setupMovieDetails(movieModel: MovieWithDetailsModel, context: Context) {
+    private fun setupMovieDetails(movieModel: MovieWithDetailsModel) {
+
+        youtube_player.visibility = GONE
+        image_movie_details.visibility = GONE
+
         movieModel.apply {
             text_movie_name_details.text = movieName
             text_popularity.text = popularityScore
             text_release_date.text = releaseData
             text_overview.text = overview
-            rating?.let {  rating_bar_movie.rating = it.toFloat() }
+            rating?.let { rating_bar_movie.rating = it.toFloat() }
             text_rating_details.text = rating.toString()
-            loadImage(context, image_movie_details, backdropPoster)
             text_genre.text = genres
             homePageUrl?.let { underlineText(text_homepage_url, it) }
+            showVideoOrPoster(movieModel)
         }
+    }
+
+    private fun showVideoOrPoster(movieModel: MovieWithDetailsModel) {
+       movieModel.video?.let { video ->
+           if (video.isNotBlank()) {
+               youtube_player.visibility = VISIBLE
+               showVideo(video)
+           } else {
+               image_movie_details.visibility = VISIBLE
+
+               Glide.with(requireActivity())
+                   .load(movieModel.backdropPoster)
+                   .into(image_movie_details)
+           }
+       }
 
     }
 
-    private fun loadImage(context: Context, image: ImageView, imageUrl: String?) {
-        Glide.with(context)
-            .load(imageUrl)
-            .into(image)
+    private fun showVideo(videoId: String) {
+        viewLifecycleOwner.lifecycle.addObserver(youtube_player)
+
+        youtube_player.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+            override fun onReady(youTubePlayer: YouTubePlayer) {
+                youTubePlayer.cueVideo(videoId, 0f)
+            }
+        })
     }
 
     private fun underlineText(textView: TextView, text: String) {
@@ -90,8 +121,8 @@ class MovieDetailsFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.details_screen_tool_bar_menu, menu)
-            val item: MenuItem = menu.findItem(R.id.save_movie)
-            item.isVisible = showMenuSaveIcon
+        val item: MenuItem = menu.findItem(R.id.save_movie)
+        item.isVisible = showMenuSaveIcon
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -104,6 +135,53 @@ class MovieDetailsFragment : Fragment() {
             }
             else -> return super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun fullScreenListener() {
+
+        val decorView = activity?.window?.decorView?.let {
+            val screenListener = object : YouTubePlayerFullScreenListener {
+                override fun onYouTubePlayerEnterFullScreen() {
+                    youtube_player.enterFullScreen()
+                    hideSystemUi(it)
+                }
+
+                override fun onYouTubePlayerExitFullScreen() {
+                    showSystemUi(it)
+                }
+
+            }
+            youtube_player.addFullScreenListener(screenListener)
+        }
+
+    }
+
+    private fun hideSystemUi(view: View) {
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+
+        (requireActivity() as MainActivity).bottom_nav.visibility = GONE
+        toolbar.visibility = GONE
+
+        view.systemUiVisibility =
+                SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
+                SYSTEM_UI_FLAG_FULLSCREEN or
+                SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+    }
+
+    @SuppressLint("SourceLockedOrientationActivity")
+    private fun showSystemUi(view: View) {
+
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
+        view.systemUiVisibility = SYSTEM_UI_FLAG_LAYOUT_STABLE or SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+        (requireActivity() as MainActivity).bottom_nav.visibility = VISIBLE
+        toolbar.visibility = VISIBLE
+    }
+
+    override fun onStop() {
+        super.onStop()
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER
     }
 
 }
