@@ -95,6 +95,9 @@ dependencies {
     implementation room.roomKtx
     kapt room.roomCompiler
 
+    // YoutubePlayer
+    implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.5'
+
     //Support Design (toolbar)
    // implementation "com.androidx.support:design:28.0.0"
 

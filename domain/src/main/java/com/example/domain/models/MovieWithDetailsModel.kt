@@ -13,5 +13,6 @@ class MovieWithDetailsModel(
     val backdropPoster: String?,
     val genres: String?,
     val homePageUrl: String?,
+    val video: String?,
     val id: Int
 )
