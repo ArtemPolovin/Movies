@@ -19,7 +19,6 @@ import com.example.movies.R
 import com.example.movies.ui.MainActivity
 import com.example.movies.ui.home.adapter.MovieAdapter
 import com.example.movies.ui.home.adapter.MovieLoadStateAdapter
-import com.example.movies.utils.OnClickAdapterPopularMovieListener
 import com.example.movies.utils.putKSerializable
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -93,8 +92,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun openMovieDetailsScreen() {
-        moviesAdapter.onClickItem(object : OnClickAdapterPopularMovieListener {
-            override fun  getPopularMovie(movie: MovieWithDetailsModel) {
+        moviesAdapter.onClickItem(object : MovieAdapter.OnClickAdapterPopularMovieListener {
+            override fun  getMovie(movie: MovieWithDetailsModel) {
                 val bundle = Bundle()
                 bundle.putKSerializable("movieObject", movie)
                 bundle.putBoolean("showSavedIcon", true)

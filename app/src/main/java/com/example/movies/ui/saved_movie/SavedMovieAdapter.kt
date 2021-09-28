@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.domain.models.MovieWithDetailsModel
 import com.example.movies.R
-import com.example.movies.utils.OnClickAdapterPopularMovieListener
 import kotlinx.android.synthetic.main.cell_movie.view.image_movie_poster
 import kotlinx.android.synthetic.main.cell_movie.view.text_movie_name
 import kotlinx.android.synthetic.main.cell_movie.view.text_rating
@@ -20,7 +19,8 @@ class SavedMovieAdapter : RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesView
 
     private val savedMoviesList = mutableListOf<MovieWithDetailsModel>()
 
-    private lateinit var onclickAdapterPopularMovieListener: OnClickAdapterPopularMovieListener
+    private val _selectedMovie = MutableLiveData<MovieWithDetailsModel>()
+    val selectedMovie: LiveData<MovieWithDetailsModel> get() = _selectedMovie
 
     private val elementsIdList = mutableListOf<Int>()
     private val _selectedElementsId = MutableLiveData<List<Int>>()
@@ -29,10 +29,6 @@ class SavedMovieAdapter : RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesView
 
     init {
         setHasStableIds(true)
-    }
-
-    fun onclick(onclickAdapterPopularMovieListener: OnClickAdapterPopularMovieListener) {
-        this.onclickAdapterPopularMovieListener = onclickAdapterPopularMovieListener
     }
 
     fun clearSelectedElementsList() {
@@ -48,11 +44,7 @@ class SavedMovieAdapter : RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesView
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SavedMoviesViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.cell_saved_movie, parent, false)
-        return SavedMoviesViewHolder(
-            view,
-            parent.context,
-            onclickAdapterPopularMovieListener,
-        )
+        return SavedMoviesViewHolder(view, parent.context)
     }
 
     override fun onBindViewHolder(holder: SavedMoviesViewHolder, position: Int) {
@@ -82,7 +74,6 @@ class SavedMovieAdapter : RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesView
     inner class SavedMoviesViewHolder(
         itemView: View,
         private val context: Context,
-        private val onclickAdapterPopularMovieListener: OnClickAdapterPopularMovieListener,
     ) : RecyclerView.ViewHolder(itemView) {
 
         fun loadImage(image: ImageView, imageUrl: String?) {
@@ -107,7 +98,7 @@ class SavedMovieAdapter : RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesView
                     _selectedElementsId.value = elementsIdList
                     itemView.isSelected = false
                 }else{
-                    onclickAdapterPopularMovieListener.getPopularMovie(movieModel)
+                   _selectedMovie.value = movieModel
                 }
 
             }

@@ -8,11 +8,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.domain.models.MovieWithDetailsModel
 import com.example.domain.utils.ResponseResult
 import com.example.movies.R
 import com.example.movies.ui.MainActivity
-import com.example.movies.utils.OnClickAdapterPopularMovieListener
 import com.example.movies.utils.putKSerializable
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_saved_movie.*
@@ -88,18 +86,15 @@ class SavedMovieFragment : Fragment() {
 
 
     private fun openMovieDetailsScreen() {
-        savedMoviesAdapter.onclick(object : OnClickAdapterPopularMovieListener {
-            override fun getPopularMovie(movie: MovieWithDetailsModel) {
-                val bundle = Bundle()
-                bundle.putKSerializable("movieObject", movie)
-                bundle.putBoolean("showSavedIcon", false)
-                findNavController().navigate(
-                    R.id.action_saved_movies_to_movieDetailsFragment,
-                    bundle
-                )
-            }
-        })
-
+        savedMoviesAdapter.selectedMovie.observe(viewLifecycleOwner){ selectedMovie ->
+            val bundle = Bundle()
+            bundle.putKSerializable("movieObject", selectedMovie)
+            bundle.putBoolean("showSavedIcon", false)
+            findNavController().navigate(
+                R.id.action_saved_movies_to_movieDetailsFragment,
+                bundle
+            )
+        }
     }
 
     private fun receiveSelectedItemsFromAdapter() {

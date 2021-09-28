@@ -13,7 +13,6 @@ import com.example.domain.models.MovieWithDetailsModel
 import com.example.movies.R
 import com.example.movies.utils.DATA_VIEWTYPE
 import com.example.movies.utils.LOADSTATE_VIEW_TYPE
-import com.example.movies.utils.OnClickAdapterPopularMovieListener
 import kotlinx.android.synthetic.main.cell_movie.view.*
 
 class MovieAdapter : PagingDataAdapter<MovieWithDetailsModel, MovieAdapter.MoviesViewHolder>(MovieDiffUtilCallback()) {
@@ -65,7 +64,7 @@ class MovieAdapter : PagingDataAdapter<MovieWithDetailsModel, MovieAdapter.Movie
 
         fun onClick(movieWithDetailsModel: MovieWithDetailsModel) {
             itemView.setOnClickListener {
-                onClickAdapterPopularMovieListener.getPopularMovie(movieWithDetailsModel)
+                onClickAdapterPopularMovieListener.getMovie(movieWithDetailsModel)
             }
         }
 
@@ -92,6 +91,10 @@ class MovieAdapter : PagingDataAdapter<MovieWithDetailsModel, MovieAdapter.Movie
             return oldItem.id == newItem.id
         }
 
+    }
+
+    interface OnClickAdapterPopularMovieListener{
+        fun getMovie(movie: MovieWithDetailsModel)
     }
 
 }
