@@ -75,7 +75,8 @@ class MovieCategoriesFragment : Fragment() {
 
     private fun openHomePage() {
         adapterMovieCategory.category.observe(viewLifecycleOwner){
-            sharedPrefMovieCategory.saveMovieCategory(it)
+            sharedPrefMovieCategory.saveMovieCategory(it.category)
+            sharedPrefMovieCategory.saveGenreId(it.genreId)
             findNavController().navigate(R.id.action_movie_categories_to_homeFragment)
         }
     }

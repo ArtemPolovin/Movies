@@ -71,9 +71,10 @@ object AppModule {
     @Singleton
     fun provideBackendLessRepositoryImpl(
         backendLessService: BackendLessService,
-        backendLessMapper: BackendLessMapper
+        backendLessMapper: BackendLessMapper,
+        moviesApi: MoviesApi
     ): BackendLessRepository =
-        BackendLessRepositoryImpl(backendLessService,backendLessMapper)
+        BackendLessRepositoryImpl(backendLessService,backendLessMapper,moviesApi)
 
     @Provides
     fun provideMoviePagingSource(

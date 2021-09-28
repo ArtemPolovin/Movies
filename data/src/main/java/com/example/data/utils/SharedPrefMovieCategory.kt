@@ -12,4 +12,10 @@ class SharedPrefMovieCategory(
 
     fun loadMovieCategory() =
         sharedPref.getString(MOVIE_CATEGORY,"")?: ""
+
+    fun saveGenreId(genreId: String) {
+        sharedPref.edit().putString(GENRE_ID, genreId).apply()
+    }
+
+    fun loadGenreId() = sharedPref.getString(GENRE_ID,"")?: ""
 }

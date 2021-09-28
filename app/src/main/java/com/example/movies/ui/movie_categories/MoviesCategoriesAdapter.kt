@@ -18,8 +18,8 @@ class MoviesCategoriesAdapter :
 
     private val movieCategoriesList = mutableListOf<MovieCategoriesCellModel>()
 
-    private val _category = MutableLiveData<String>()
-    val category: LiveData<String>get() = _category
+    private val _category = MutableLiveData<MovieCategoriesCellModel>()
+    val category: LiveData<MovieCategoriesCellModel>get() = _category
 
     fun setUpList(newList: List<MovieCategoriesCellModel>) {
         movieCategoriesList.clear()
@@ -63,7 +63,7 @@ class MoviesCategoriesAdapter :
 
         fun onClick(movieCategoryModel: MovieCategoriesCellModel) {
             itemView.card_view.setOnClickListener {
-                _category.value = movieCategoryModel.category
+                _category.value = movieCategoryModel
             }
         }
     }

@@ -12,4 +12,5 @@ interface MoviesRepository {
     suspend fun saveMovieToEntity(movie: MovieWithDetailsModel)
     suspend fun getMovieListFromDb(): Flow<ResponseResult<List<MovieWithDetailsModel>>>
     suspend fun deleteMovieById(movieId: List<Int>)
+    suspend fun getMoviesByGenre(genreId: String): List<MovieWithDetailsModel>
 }

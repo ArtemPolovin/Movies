@@ -113,6 +113,27 @@ class MoviesRepositoryImpl(
         }
     }
 
+    override suspend fun getMoviesByGenre(genreId: String): List<MovieWithDetailsModel> {
+      return  try {
+            val response = moviesApi.getMoviesByGenre(genreId)
+            if (response.isSuccessful) {
+                response.body()?.let {body ->
+                    val moviesIdList = body.results
+                    val movieDetails = getMovieDetailsList(moviesIdList)
+                    val videosList = getVideosList(moviesIdList)
+                    return@let moviesApiMapper.mapMovieDetailsAndMoviesToModelList(
+                        movieDetails,
+                        moviesIdList,
+                        videosList
+                    )
+                }?: throw  IllegalArgumentException("An unknown error occured")
+            } else throw  IllegalArgumentException("${response.errorBody()?.string()}")
+        } catch (e: IOException) {
+            e.printStackTrace()
+            throw  IllegalArgumentException("Please check the internet connection")
+        }
+    }
+
     private suspend fun getMovieDetails(movieId: Int): MovieDetailsModelApi {
 
         return try {

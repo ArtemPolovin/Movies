@@ -21,6 +21,7 @@ class MoviePagingSource(
         val page = params.key ?: START_PAGE
         val moviesWithDetailsList = mutableListOf<MovieWithDetailsModel>()
         val movieCategory = sharedPrefMovieCategory.loadMovieCategory()
+        val genreId = sharedPrefMovieCategory.loadGenreId()
 
         return try {
 
@@ -28,12 +29,16 @@ class MoviePagingSource(
                 MovieCategories.Upcoming.category -> {
                     moviesWithDetailsList.addAll(movieRepository.getUpcomingMoviesWithDetails(page))
                 }
-                MovieCategories.TopRated.category ->{
+                MovieCategories.TopRated.category -> {
                     moviesWithDetailsList.addAll(movieRepository.getTopRatedMoviesWithDetails(page))
                 }
-                else -> {
+                MovieCategories.Popular.category -> {
                     moviesWithDetailsList.addAll(movieRepository.getPopularMoviesWithDetails(page))
                 }
+                else -> {
+                    moviesWithDetailsList.addAll(movieRepository.getMoviesByGenre(genreId))
+                }
+
 
             }
 
