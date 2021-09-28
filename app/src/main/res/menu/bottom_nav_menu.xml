@@ -6,22 +6,24 @@
         android:id="@+id/homeFragment"
         android:icon="@drawable/ic_home"
         android:title="@string/title_home"
-        app:showAsAction ="always" />
+        />
 
     <item
         android:id="@+id/saved_movies"
         android:icon="@drawable/ic_saved_movies"
         android:title="@string/title_saved_movies"
-        />
+       />
 
     <item
         android:id="@+id/movie_categories"
         android:icon="@drawable/ic_movie_categories"
-        android:title="@string/title_movie_categories" />
+        android:title="@string/title_movie_categories"
+       />
 
     <item
         android:id="@+id/settings"
         android:icon="@drawable/ic_settings"
-        android:title="@string/title_movie_settings" />
+        android:title="@string/title_movie_settings"
+      />
 
 </menu>
