@@ -20,21 +20,6 @@ class MoviesEntityMapper {
         )
     }
 
-//    fun mapMovieEntityToMovieModel(movieEntity: SavedMovieEntity): MovieWithDetailsModel {
-//        return MovieWithDetailsModel(
-//            id = movieEntity.movieId,
-//            releaseData = movieEntity.releaseData,
-//            popularityScore = movieEntity.popularityScore,
-//            movieName = movieEntity.movieName,
-//            rating = movieEntity.rating,
-//            poster = movieEntity.poster,
-//            overview = movieEntity.overview,
-//            backdropPoster = movieEntity.backdropPoster,
-//            genres = movieEntity.genres,
-//            homePageUrl = movieEntity.homePageUrl
-//        )
-//    }
-
     fun mapMovieEntityListToModelList(movieEntityList: List<SavedMovieEntity>):List<MovieWithDetailsModel> {
 
         return movieEntityList.map { movieEntity ->

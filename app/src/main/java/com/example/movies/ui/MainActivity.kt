@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        hideSystemUi()
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -59,10 +60,19 @@ class MainActivity : AppCompatActivity() {
     private fun hideBottomNavBar() {
         navController.addOnDestinationChangedListener { _, distination, _ ->
             bottom_nav.visibility = when (distination.id) {
-                R.id.nav_login_fragment -> View.GONE
+                R.id.nav_login_fragment, R.id.welcome_screen -> View.GONE
                 else -> View.VISIBLE
             }
         }
+    }
+
+    private fun hideSystemUi() {
+
+        window.decorView.systemUiVisibility =
+            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
+                    View.SYSTEM_UI_FLAG_FULLSCREEN or
+                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
     }
 
 }

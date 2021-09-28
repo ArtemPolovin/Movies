@@ -25,7 +25,7 @@ class SavedMovieFragment : Fragment() {
     private lateinit var savedMoviesAdapter: SavedMovieAdapter
 
     private var showDeleteMenuIcon = MutableLiveData<Boolean>()
-   // private var movieAdapterPosition = 0
+
     private var popularMovieId  = mutableListOf<Int>()
 
     override fun onCreateView(
@@ -45,7 +45,6 @@ class SavedMovieFragment : Fragment() {
         setupAdapter()
         setupSavedMoviesList()
         openMovieDetailsScreen()
-        //getItemPositionAndId()
         receiveSelectedItemsFromAdapter()
     }
 
@@ -102,20 +101,6 @@ class SavedMovieFragment : Fragment() {
         })
 
     }
-
-//    private fun getItemPositionAndId() {
-//        popularMovieId.clear()
-//
-//        savedMoviesAdapter.onLongClick(object : OnLongClickAdapterItme {
-//            override fun getMoviePositionAndId(adapterPosition: Int, movieId: List<Int>) {
-//                println("mLog: size = ${movieId.size}")
-//                movieAdapterPosition = adapterPosition
-//                popularMovieId.addAll(movieId)
-//                showDeleteMenuIcon.value = true
-//            }
-//
-//        })
-//    }
 
     private fun receiveSelectedItemsFromAdapter() {
         savedMoviesAdapter.selectedElementsId.observe(viewLifecycleOwner){

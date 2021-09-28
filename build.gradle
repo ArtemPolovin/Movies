@@ -116,7 +116,7 @@ ext.coroutines = [
 ext.room = [
         roomRuntime : "androidx.room:room-runtime:$versions.room",
         roomCompiler: "androidx.room:room-compiler:$versions.room",
-        roomKtx: "androidx.room:room-ktx:$versions.room"
+        roomKtx:       "androidx.room:room-ktx:$versions.room"
 ]
 
 
