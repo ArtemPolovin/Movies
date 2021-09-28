@@ -34,7 +34,7 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        // Inflate the layout for this fragment
+        showSystemUI()
         return inflater.inflate(R.layout.fragment_login, container, false)
     }
 
@@ -102,6 +102,12 @@ class LoginFragment : Fragment() {
             val intent =
                 Intent(Intent.ACTION_VIEW).setData(Uri.parse(SIGNUP_WEB_PAGE_URL))
             startActivity(intent)
+        }
+    }
+
+    private fun showSystemUI() {
+        activity?.window?.decorView?.let {
+            it.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
         }
     }
 

@@ -21,7 +21,6 @@ class SavedMovieAdapter : RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesView
     private val savedMoviesList = mutableListOf<MovieWithDetailsModel>()
 
     private lateinit var onclickAdapterPopularMovieListener: OnClickAdapterPopularMovieListener
-    //private lateinit var onLongClickAdapterItem: OnLongClickAdapterItme
 
     private val elementsIdList = mutableListOf<Int>()
     private val _selectedElementsId = MutableLiveData<List<Int>>()
@@ -35,10 +34,6 @@ class SavedMovieAdapter : RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesView
     fun onclick(onclickAdapterPopularMovieListener: OnClickAdapterPopularMovieListener) {
         this.onclickAdapterPopularMovieListener = onclickAdapterPopularMovieListener
     }
-
-//    fun onLongClick(onLongClickAdapterItem: OnLongClickAdapterItme) {
-//        this.onLongClickAdapterItem = onLongClickAdapterItem
-//    }
 
     fun clearSelectedElementsList() {
         elementsIdList.clear()
@@ -57,7 +52,6 @@ class SavedMovieAdapter : RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesView
             view,
             parent.context,
             onclickAdapterPopularMovieListener,
-            //onLongClickAdapterItem
         )
     }
 
@@ -89,7 +83,6 @@ class SavedMovieAdapter : RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesView
         itemView: View,
         private val context: Context,
         private val onclickAdapterPopularMovieListener: OnClickAdapterPopularMovieListener,
-       // private val onLongClickAdapterItem: OnLongClickAdapterItme
     ) : RecyclerView.ViewHolder(itemView) {
 
         fun loadImage(image: ImageView, imageUrl: String?) {
@@ -103,7 +96,6 @@ class SavedMovieAdapter : RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesView
                 notifyItemChanged(itemPosition)
                 elementsIdList.add(itemId.toInt())
                 _selectedElementsId.value = elementsIdList
-              //  onLongClickAdapterItem.getMoviePositionAndId(itemPosition, elementsIdList)
                 true
             }
         }

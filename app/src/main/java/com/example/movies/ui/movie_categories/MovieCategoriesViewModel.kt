@@ -24,10 +24,6 @@ class MovieCategoriesViewModel @Inject constructor(
         fetchMovieCategoriesCellsList()
     }
 
-//    private val _movieCategoriesCellsList =
-//        MutableLiveData<ResponseResult<List<MovieCategoriesCellModel>>>()
-//    val movieCategoriesCellsList: LiveData<ResponseResult<List<MovieCategoriesCellModel>>> get() = _movieCategoriesCellsList
-
     private fun fetchMovieCategoriesCellsList() {
         _movieCategoriesCellsList.value = ResponseResult.Loading
 

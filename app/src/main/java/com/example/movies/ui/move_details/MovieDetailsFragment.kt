@@ -1,7 +1,6 @@
 package com.example.movies.ui.move_details
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.net.Uri

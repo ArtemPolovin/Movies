@@ -7,9 +7,12 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.data.utils.SessionIdDataCache
 import com.example.data.utils.SharedPrefMovieCategory
 import com.example.domain.models.MovieWithDetailsModel
 import com.example.movies.R
@@ -38,6 +41,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        showSystemUI()
         setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
@@ -53,6 +57,9 @@ class HomeFragment : Fragment() {
         setupAdapter()
         setupMoviesList()
         openMovieDetailsScreen()
+
+
+
 
     }
 
@@ -103,6 +110,12 @@ class HomeFragment : Fragment() {
     private fun setupToolbar() {
         toolbar.title = sharedPrefMovieCategory.loadMovieCategory()
         (activity as? AppCompatActivity)?.setSupportActionBar(toolbar)
+    }
+
+    private fun showSystemUI() {
+        activity?.window?.decorView?.let {
+            it.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+        }
     }
 
 }
