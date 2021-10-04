@@ -69,6 +69,7 @@ class MovieDetailsFragment : Fragment() {
             text_popularity.text = popularityScore
             text_release_date.text = releaseData
             text_overview.text = overview
+            text_vote_count_details.text = "(${voteCount})"
             rating?.let { rating_bar_movie.rating = it.toFloat() }
             text_rating_details.text = rating.toString()
             text_genre.text = genres

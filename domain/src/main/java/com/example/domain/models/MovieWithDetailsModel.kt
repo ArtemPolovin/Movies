@@ -14,5 +14,6 @@ class MovieWithDetailsModel(
     val genres: String?,
     val homePageUrl: String?,
     val video: String?,
-    val id: Int
+    val id: Int,
+    val voteCount: String?
 )

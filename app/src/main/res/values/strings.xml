@@ -42,4 +42,12 @@
     <string name="text_log_out_question">Are you sure you want to log out?</string>
     <string name="text_button_yes">Yes</string>
     <string name="text_button_no">No</string>
+    <string name="filter_menu_title_string">Filter</string>
+    <string name="check_box_rate_text">Minimum rating number</string>
+    <string name="filter_text_title">Filter</string>
+    <string name="button_submit_text">Submit</string>
+    <string name="check_box_release_year_text">Specific release year</string>
+    <string name="release_year_edit_text_hint">e.g 2005</string>
+    <string name="check_box_genres_text">Genre</string>
+    <string name="check_box_popularity_text">Sort by popularity</string>
 </resources>

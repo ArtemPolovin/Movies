@@ -30,7 +30,8 @@ class MoviesApiMapper {
                             genres = movieDetails.genres?.joinToString(", ") { it.name ?: "" },
                             homePageUrl = movieDetails.homepage,
                             video = getVideoKeyByMovieId(movieDetails.id,videosList),
-                            id = movieDetails.id
+                            id = movieDetails.id,
+                            voteCount = movieDetails.vote_count.toString()
                         )
                     )
             }

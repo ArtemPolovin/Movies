@@ -8,15 +8,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.data.utils.SharedPrefMovieCategory
-import com.example.domain.utils.ResponseResult
+import com.example.data.cache.SharedPrefMovieCategory
+import com.example.data.cache.SharedPrefMovieFilter
+import com.example.data.cache.clearMovieFilterCache
 import com.example.movies.R
 import com.example.movies.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_movie_categories.*
-import kotlinx.android.synthetic.main.fragment_movie_categories.button_retry
-import kotlinx.android.synthetic.main.fragment_movie_categories.progress_bar
-import kotlinx.android.synthetic.main.fragment_movie_categories.text_error
 import kotlinx.android.synthetic.main.fragment_movie_categories.toolbar
 import javax.inject.Inject
 
@@ -28,6 +26,8 @@ class MovieCategoriesFragment : Fragment() {
 
     @Inject
     lateinit var sharedPrefMovieCategory: SharedPrefMovieCategory
+    @Inject
+    lateinit var sharedPrefMovieFilter: SharedPrefMovieFilter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,32 +50,14 @@ class MovieCategoriesFragment : Fragment() {
     }
 
     private fun setUpMovieCategoriesList() {
-        viewModel.movieCategoriesCellsList.observe(viewLifecycleOwner){
-            text_error.visibility = View.GONE
-            button_retry.visibility = View.GONE
-            progress_bar.visibility = View.GONE
-            rv_movie_categories.visibility = View.GONE
-
-            when (it) {
-                is ResponseResult.Loading ->{
-                    progress_bar.visibility = View.VISIBLE
-                }
-                is ResponseResult.Failure ->{
-                    text_error.visibility = View.VISIBLE
-                    text_error.text = it.message
-                    button_retry.visibility = View.VISIBLE
-                }
-                is ResponseResult.Success ->{
-                    rv_movie_categories.visibility = View.VISIBLE
-                    adapterMovieCategory.setUpList(it.data)
-                }
-            }
-        }
+        adapterMovieCategory.setUpList(viewModel.fetchMovieCategoriesList())
     }
 
     private fun openHomePage() {
         adapterMovieCategory.category.observe(viewLifecycleOwner){
-            sharedPrefMovieCategory.saveMovieCategory(it)
+            sharedPrefMovieCategory.saveMovieCategory(it.categoryName)
+            sharedPrefMovieCategory.saveGenreId(it.genreId)
+            clearMovieFilterCache(sharedPrefMovieFilter)
             findNavController().navigate(R.id.action_movie_categories_to_homeFragment)
         }
     }

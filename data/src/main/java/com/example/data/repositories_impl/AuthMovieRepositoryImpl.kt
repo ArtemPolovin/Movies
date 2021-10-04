@@ -2,8 +2,8 @@ package com.example.data.repositories_impl
 
 import com.example.data.mapers.ErrorLoginMapper
 import com.example.data.network.AuthMovieAPIService
-import com.example.data.utils.RequestTokenDataCache
-import com.example.data.utils.SessionIdDataCache
+import com.example.data.cache.RequestTokenDataCache
+import com.example.data.cache.SessionIdDataCache
 import com.example.domain.models.LoginBodyModel
 import com.example.domain.models.LogoutRequestBodyModel
 import com.example.domain.models.SessionIdRequestBodyModel

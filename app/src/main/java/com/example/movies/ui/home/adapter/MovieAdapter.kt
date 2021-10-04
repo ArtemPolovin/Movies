@@ -49,6 +49,7 @@ class MovieAdapter : PagingDataAdapter<MovieWithDetailsModel, MovieAdapter.Movie
                     rating_bar_movie.rating = it.toFloat()
                 }
                 text_genre.text = popularMovie.genres
+                text_vote_count.text = "(${popularMovie.voteCount})"
             }
 
             holder.onClick(popularMovie)

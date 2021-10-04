@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.data.utils.SessionIdDataCache
-import com.example.data.utils.SharedPrefLoginAndPassword
-import com.example.data.utils.SharedPreferencesLoginRememberMe
+import com.example.data.cache.SessionIdDataCache
+import com.example.data.cache.SharedPrefLoginAndPassword
+import com.example.data.cache.SharedPreferencesLoginRememberMe
 import com.example.domain.models.LogoutRequestBodyModel
 import com.example.domain.usecases.auth.LogoutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +20,7 @@ class SettingsViewModel @Inject constructor(
     private val loginSharedPreferencesRememberMe: SharedPreferencesLoginRememberMe,
     private val sharedPrefLoginAndPassword: SharedPrefLoginAndPassword,
 
-): ViewModel() {
+    ): ViewModel() {
 
     private val _isLoggedOut = MutableLiveData<Boolean>().apply { value = false }
     val isLoggedOut: LiveData<Boolean> get() = _isLoggedOut
