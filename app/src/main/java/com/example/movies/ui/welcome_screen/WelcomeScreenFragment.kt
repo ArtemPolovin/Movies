@@ -6,10 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
-import com.example.data.utils.SharedPreferencesLoginRememberMe
+import com.example.data.cache.SharedPrefMovieCategory
+import com.example.data.cache.SharedPrefMovieFilter
+import com.example.data.cache.SharedPreferencesLoginRememberMe
+import com.example.data.cache.clearMovieFilterCache
 import com.example.movies.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -22,6 +23,11 @@ class WelcomeScreenFragment : Fragment() {
     @Inject
     lateinit var isLoginRememberMe: SharedPreferencesLoginRememberMe
 
+    @Inject
+    lateinit var sharedPrefMovieFilter: SharedPrefMovieFilter
+
+    @Inject lateinit var sharedPrefMovieCategory: SharedPrefMovieCategory
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,7 +36,8 @@ class WelcomeScreenFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+        sharedPrefMovieCategory.clearMovieCategory()
+        clearMovieFilterCache(sharedPrefMovieFilter)
         delayWelcomeScreen()
     }
 

@@ -95,6 +95,9 @@ dependencies {
     implementation room.roomKtx
     kapt room.roomCompiler
 
+    // Gson
+    implementation gson.gson
+
     // YoutubePlayer
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.5'
 

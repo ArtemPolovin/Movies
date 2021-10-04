@@ -31,6 +31,17 @@
         app:layout_constraintStart_toEndOf="@+id/text_rating_header"
         app:layout_constraintTop_toTopOf="@+id/text_rating_header" />
 
+    <TextView
+        android:id="@+id/text_vote_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="(245)"
+        android:textColor="@color/vote_count_text_color"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toEndOf="@id/text_rating"
+        app:layout_constraintTop_toTopOf="@id/text_rating"
+        app:layout_constraintBottom_toBottomOf="@id/text_rating" />
+
 
     <ImageView
         android:id="@+id/image_movie_poster"

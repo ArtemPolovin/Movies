@@ -1,6 +1,7 @@
-package com.example.data.utils
+package com.example.data.cache
 
 import android.content.SharedPreferences
+import com.example.data.utils.REMEMBER_ME
 
 class SharedPreferencesLoginRememberMe(
     private val sharedPref: SharedPreferences

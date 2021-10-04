@@ -32,4 +32,7 @@
     <color name="ripple_category_cell_color">#81E26259</color>
     <color name="settings_background_color">#ECECEC</color>
     <color name="settings_item_ripple_color">#C4C4C4</color>
+    <color name="spinner_filter_color">#6ABBBBBB</color>
+    <color name="submit_button_color">#62A037</color>
+    <color name="vote_count_text_color">#94AFAEAE</color>
 </resources>

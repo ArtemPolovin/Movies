@@ -21,27 +21,43 @@ interface MoviesApi {
     @GET("/3/movie/popular")
     suspend fun getPopularMovies(
         @Query("page") page: Int,
-       // @Query("vote_average.gte") vote: Int = 8,
-        //@Query("with_genres") gener: String = "18,53"
+        @Query("vote_average.gte") rating: Int? = null,
+        @Query("primary_release_year") year: String? = null,
+       // @Query("with_genres") gener: String = "53",
         // @Query("certification") sert: String = "R",
         // @Query("vote_count") voteCount : Int? = null,
-//         @Query("primary_release_date.lte") date : String? = "2021-09-16",
-//         @Query("sort_by") sortBy: String = "primary_release_date.asc",
-         //@Query("primary_release_year") year: Int = 2018
 
-        // @Query("vote_count.gte") voteCount : Int = 8
-    ): MoviesListApiModel
+        /*@Query("primary_release_date.lte") date : String? = "2020-10-01",
+        @Query("primary_release_date.gte") date2 : String? = "2018-10-01",
+        @Query("sort_by") sortBy: String = "primary_release_date.desc",
+        @Query("sort_by") popular: String = "popularity.desc",*/
+
+    ): Response<MoviesListApiModel>
 
     @GET("/3/movie/upcoming")
-    suspend fun getUpcomingMovies(@Query("page") page: Int): Response<MoviesListApiModel>
+    suspend fun getUpcomingMovies(
+        @Query("page") page: Int,
+        @Query("vote_average.gte") rating: Int? = null,
+        @Query("primary_release_year") year: String? = null
+    ): Response<MoviesListApiModel>
 
     @GET("/3/movie/top_rated")
     suspend fun getTopRatedMovies(
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("vote_average.gte") rating: Int? = null,
+        @Query("primary_release_year") year: String? = null
         /*@Query("primary_release_year") year: Int = 2010,
         @Query("with_genres") gener: Int = 53,
         @Query("sort_by") vote : String = "vote_average.desc",
         @Query("vote_count") voteCount : Int = 10*/
+    ): Response<MoviesListApiModel>
+
+    @GET("/3/discover/movie")
+    suspend fun getMoviesByGenre(
+        @Query("with_genres") genreId: String?,
+        @Query("vote_average.gte") rating: Int? = null,
+        @Query("primary_release_year") year: String? = null,
+        @Query("sort_by") vote : String? = null
     ): Response<MoviesListApiModel>
 
     @GET("/3/movie/{movie_id}/videos")
@@ -56,11 +72,6 @@ interface MoviesApi {
         @Query("language") language: String?
     ): Response<MovieDetailsModelApi>
 
-    @GET("/3/genre/movie/list")
-    suspend fun getGenresList(@Query("language") language: String? = null): Response<GenresApiModel>
-
-    @GET("/3/discover/movie")
-    suspend fun getMoviesByGenre(@Query("with_genres") genreId: String): Response<MoviesListApiModel>
 
     companion object {
         operator fun invoke(): MoviesApi {

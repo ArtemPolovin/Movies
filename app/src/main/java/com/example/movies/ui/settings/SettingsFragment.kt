@@ -11,7 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import com.example.data.utils.SharedPreferencesLoginRememberMe
+import com.example.data.cache.SharedPreferencesLoginRememberMe
 import com.example.movies.R
 import com.example.movies.utils.LOG_OUT_KEY
 import dagger.hilt.android.AndroidEntryPoint

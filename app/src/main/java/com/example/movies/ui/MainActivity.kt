@@ -1,8 +1,6 @@
 package com.example.movies.ui
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -11,11 +9,9 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.data.utils.SharedPreferencesLoginRememberMe
 import com.example.movies.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -36,7 +32,6 @@ class MainActivity : AppCompatActivity() {
         bottom_nav.setupWithNavController(navController)
 
         hideBottomNavBar()
-
     }
 
     fun setupActionBar(toolbar: Toolbar, isTitleVisible: Boolean = true) {
@@ -60,7 +55,7 @@ class MainActivity : AppCompatActivity() {
     private fun hideBottomNavBar() {
         navController.addOnDestinationChangedListener { _, distination, _ ->
             bottom_nav.visibility = when (distination.id) {
-                R.id.nav_login_fragment, R.id.welcome_screen -> View.GONE
+                R.id.nav_login_fragment, R.id.welcome_screen, R.id.moviesFilterFragment -> View.GONE
                 else -> View.VISIBLE
             }
         }

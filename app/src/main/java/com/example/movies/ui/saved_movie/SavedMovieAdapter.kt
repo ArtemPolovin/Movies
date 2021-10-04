@@ -14,6 +14,7 @@ import com.example.movies.R
 import kotlinx.android.synthetic.main.cell_movie.view.image_movie_poster
 import kotlinx.android.synthetic.main.cell_movie.view.text_movie_name
 import kotlinx.android.synthetic.main.cell_movie.view.text_rating
+import kotlinx.android.synthetic.main.cell_saved_movie.view.*
 
 class SavedMovieAdapter : RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesViewHolder>() {
 
@@ -54,6 +55,7 @@ class SavedMovieAdapter : RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesView
             holder.loadImage(image_movie_poster, movieModel.poster)
             text_movie_name.text = movieModel.movieName
             text_rating.text = movieModel.rating.toString()
+            text_vote_count.text = "(${movieModel.voteCount})"
         }
 
         holder.click(movieModel)

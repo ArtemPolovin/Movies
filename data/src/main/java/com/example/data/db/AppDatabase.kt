@@ -7,7 +7,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.data.db.dao.MoviesDao
 import com.example.data.db.tables.movie_tables.SavedMovieEntity
 
-@Database(entities = [SavedMovieEntity::class], version = 3, exportSchema = false)
+@Database(entities = [SavedMovieEntity::class], version = 4, exportSchema = false)
 abstract class AppDatabase: RoomDatabase() {
 
     abstract fun getMoviesDao(): MoviesDao
