@@ -20,4 +20,7 @@ dependencies {
     implementation coroutines.coroutinesCore
     implementation coroutines.coroutinesAndroid
 
+    //Retrofit2
+    implementation retrofit2.retrofit
+
 }

@@ -13,8 +13,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.domain.models.MovieWithDetailsModel
+import com.example.domain.utils.ResponseResult
 import com.example.movies.R
 import com.example.movies.ui.MainActivity
 import com.example.movies.utils.getKSerializable
@@ -29,6 +31,8 @@ import kotlinx.android.synthetic.main.fragment_movie_details.*
 class MovieDetailsFragment : Fragment() {
 
     private val viewModel: MovieDetailsViewModel by viewModels()
+
+    private val args: MovieDetailsFragmentArgs by navArgs()
 
     private var movieWithDetails: MovieWithDetailsModel? = null
 
@@ -51,16 +55,45 @@ class MovieDetailsFragment : Fragment() {
 
         showMenuSaveIcon = arguments?.getBoolean("showSavedIcon") ?: false
 
-
-        movieWithDetails = arguments?.getKSerializable<MovieWithDetailsModel>("movieObject")
-        movieWithDetails?.let { setupMovieDetails(it) }
-
+        receiveMovieDetailsData()
         openWebHomePage()
         fullScreenListener()
     }
 
-    private fun setupMovieDetails(movieModel: MovieWithDetailsModel) {
+    private fun receiveMovieDetailsData() {
+        movieWithDetails = arguments?.getKSerializable<MovieWithDetailsModel>("movieObject")
+        if (movieWithDetails == null) {
+//            val clickedMovieId = arguments?.getInt("movieId")
+//            clickedMovieId?.let { checkMovieWithDetailsResponseState(it)  }
+            checkMovieWithDetailsResponseState(args.movieId)
+        }else{
+            movieWithDetails?.let { setupMovieDetails(it) }
+        }
+    }
 
+    private fun checkMovieWithDetailsResponseState(movieId: Int) {
+        viewModel.fetchMovieDetails(movieId)
+        viewModel.movieDetailsModel.observe(viewLifecycleOwner){
+            group_error_views.visibility = GONE
+            when (it) {
+                is ResponseResult.Loading ->{
+                    progress_bar.visibility = VISIBLE
+                }
+                is ResponseResult.Failure ->{
+                    text_error.visibility = VISIBLE
+                    text_error.text = it.message
+                    button_retry.visibility = VISIBLE
+                }
+                is ResponseResult.Success ->{
+                    setupMovieDetails(it.data)
+                }
+            }
+        }
+
+    }
+
+    private fun setupMovieDetails(movieModel: MovieWithDetailsModel) {
+        group_error_views.visibility = GONE
         youtube_player.visibility = GONE
         image_movie_details.visibility = GONE
 
@@ -81,10 +114,13 @@ class MovieDetailsFragment : Fragment() {
     private fun showVideoOrPoster(movieModel: MovieWithDetailsModel) {
        movieModel.video?.let { video ->
            if (video.isNotBlank()) {
+               image_movie_details.visibility = GONE
+               view_image_shadow.visibility = GONE
                youtube_player.visibility = VISIBLE
                showVideo(video)
            } else {
                image_movie_details.visibility = VISIBLE
+               view_image_shadow.visibility = VISIBLE
 
                Glide.with(requireActivity())
                    .load(movieModel.backdropPoster)

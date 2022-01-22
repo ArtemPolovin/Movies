@@ -10,6 +10,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:2.33-beta"
         classpath "org.jetbrains.kotlin:kotlin-serialization:1.4.32"
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.3.5"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -35,8 +36,8 @@ ext.versions = [
         junitTest        : "1.1.2",
         espressoCore     : "3.3.0",
         navFragment      : "2.2.2",
-        recyclerView     : "1.1.0",
-        retrofit         : "2.8.1",
+        recyclerView     : "1.2.1",
+        retrofit         : "2.9.0",
         //   retrofitRx      : "2.3.0",
         //  rxjava2         : "2.2.12",
         // rxjava2Android  : "2.1.1",

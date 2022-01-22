@@ -4,6 +4,8 @@ import com.example.data.db.tables.movie_tables.SavedMovieEntity
 import com.example.domain.models.MovieWithDetailsModel
 
 class MoviesEntityMapper {
+
+    //This function maps MovieWithDetailsModel to Entity model
     fun mapMovieModelToEntity(movie: MovieWithDetailsModel): SavedMovieEntity {
         return SavedMovieEntity(
             movieId = movie.id,
@@ -21,6 +23,7 @@ class MoviesEntityMapper {
         )
     }
 
+    //This function takes all saved movies from DB and maps the list to model list
     fun mapMovieEntityListToModelList(movieEntityList: List<SavedMovieEntity>):List<MovieWithDetailsModel> {
 
         return movieEntityList.map { movieEntity ->

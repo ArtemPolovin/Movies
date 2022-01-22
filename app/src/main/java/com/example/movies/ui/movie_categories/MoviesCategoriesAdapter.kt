@@ -7,19 +7,19 @@ import android.view.ViewGroup
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
-import com.example.domain.models.CategoryModel
+import com.example.domain.models.MovieCategoryModel
 import com.example.movies.R
 import kotlinx.android.synthetic.main.movie_category_cell.view.*
 
 class MoviesCategoriesAdapter :
     RecyclerView.Adapter<MoviesCategoriesAdapter.MovieCategoriesViewHolder>() {
 
-    private val movieCategoriesList = mutableListOf<CategoryModel>()
+    private val movieCategoriesList = mutableListOf<MovieCategoryModel>()
 
-    private val _category = MutableLiveData<CategoryModel>()
-    val category: LiveData<CategoryModel>get() = _category
+    private val _category = MutableLiveData<MovieCategoryModel>()
+    val movieCategory: LiveData<MovieCategoryModel>get() = _category
 
-    fun setUpList(newList: List<CategoryModel>) {
+    fun setUpList(newList: List<MovieCategoryModel>) {
         movieCategoriesList.clear()
         movieCategoriesList.addAll(newList)
         notifyDataSetChanged()
@@ -45,17 +45,17 @@ class MoviesCategoriesAdapter :
     inner class MovieCategoriesViewHolder(itemView: View, private val context: Context) :
         RecyclerView.ViewHolder(itemView) {
 
-        fun bind(movieCategoryModel: CategoryModel) {
+        fun bind(movieMovieCategoryModel: MovieCategoryModel) {
             itemView.apply {
-                image_movie_category.setImageResource(movieCategoryModel.image)
-                text_title.text = movieCategoryModel.categoryName
+                image_movie_category.setImageResource(movieMovieCategoryModel.image)
+                text_title.text = movieMovieCategoryModel.categoryName
             }
 
         }
 
-        fun onClick(movieCategoryModel: CategoryModel) {
+        fun onClick(movieMovieCategoryModel: MovieCategoryModel) {
             itemView.card_view.setOnClickListener {
-                _category.value = movieCategoryModel
+                _category.value = movieMovieCategoryModel
             }
         }
     }

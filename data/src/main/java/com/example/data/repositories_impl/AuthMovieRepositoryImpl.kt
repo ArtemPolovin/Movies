@@ -17,6 +17,7 @@ class AuthMovieRepositoryImpl(
     private val sessionIdDataCache: SessionIdDataCache
 ) : AuthMovieRepository {
 
+    // This function fetches request token from server and saves it to local cache
     override suspend fun saveRequestToken(): String {
         var requestToken = ""
         try {
@@ -35,6 +36,8 @@ class AuthMovieRepositoryImpl(
         return requestToken
     }
 
+    // This function takes user's username and password and request token and sends this data to server.
+    // If login is success, the function return true
     override suspend fun login(loginBodyModel: LoginBodyModel): ResponseResult<Boolean> {
         return try {
             val response = authMovieApiService.login(loginBodyModel)
@@ -57,6 +60,7 @@ class AuthMovieRepositoryImpl(
         }
     }
 
+    // This function takes request token and sends it to server and receives session id and saves it to local cache
     override suspend fun saveSessionId(sessionIdModel: SessionIdRequestBodyModel): Boolean {
 
         return try {
@@ -76,6 +80,8 @@ class AuthMovieRepositoryImpl(
         }
     }
 
+    // This function takes session id and sends it with logout request to the server.
+    // If the logout is success, the function returns true
     override suspend fun logout(logoutRequestBodyModel: LogoutRequestBodyModel): Boolean {
         return try {
             val response = authMovieApiService.logout(logoutRequestBodyModel)

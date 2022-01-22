@@ -9,7 +9,7 @@ import com.example.data.datasource.MoviePagingSource
 import com.example.data.db.AppDatabase
 import com.example.data.db.dao.MoviesDao
 import com.example.data.mapers.ErrorLoginMapper
-import com.example.data.mapers.MovieCategoriesMapper
+import com.example.data.mapers.MovieGenresMapper
 import com.example.data.mapers.MoviesApiMapper
 import com.example.data.mapers.MoviesEntityMapper
 import com.example.data.network.AuthMovieAPIService
@@ -47,14 +47,16 @@ object AppModule {
         moviesApiMapper: MoviesApiMapper,
         movieDao: MoviesDao,
         movieEntityMapper: MoviesEntityMapper,
-        settingsDataCache: SettingsDataCache
+        settingsDataCache: SettingsDataCache,
+        movieCategoriesRepository: MovieCategoriesRepository
     ): MoviesRepository =
         MoviesRepositoryImpl(
             moviesApi,
             moviesApiMapper,
             movieDao,
             movieEntityMapper,
-            settingsDataCache
+            settingsDataCache,
+            movieCategoriesRepository
         )
 
     @Provides
@@ -75,9 +77,11 @@ object AppModule {
     @Provides
     @Singleton
     fun provideBackendLessRepositoryImpl(
-        movieCategoriesMapper: MovieCategoriesMapper
+        movieGenresMapper: MovieGenresMapper,
+        settingsDataCache: SettingsDataCache,
+        moviesApi: MoviesApi
     ): MovieCategoriesRepository =
-        MovieCategoriesRepositoryImpl(movieCategoriesMapper)
+        MovieCategoriesRepositoryImpl(movieGenresMapper,settingsDataCache,moviesApi)
 
     @Provides
     fun provideMoviePagingSource(
@@ -119,7 +123,7 @@ object AppModule {
     fun provideMovieCategoriesMapper(
         gson: Gson,
         @ApplicationContext context: Context
-    ) = MovieCategoriesMapper(gson, context)
+    ) = MovieGenresMapper(gson, context)
 
     @Provides
     fun provideDeleteMovieByIdFromDbUseCase(movieRepository: MoviesRepository) =
@@ -152,6 +156,17 @@ object AppModule {
     @Provides
     fun provideGetGenresUseCase(movieCategoriesRepo: MovieCategoriesRepository) =
         GetGenresUseCase(movieCategoriesRepo)
+
+    @Provides
+    fun provideGetMoviesSortedByGenreUseCase(moviesRepo: MoviesRepository) =
+        GetMoviesSortedByGenreUseCase(moviesRepo)
+
+    @Provides
+    fun provideGetMovieDetailsUseCase(moviesRepo: MoviesRepository) =
+        GetMovieDetailsUseCase(moviesRepo)
+
+    @Provides
+    fun provideGetUpcomingMoviesUseCase(moviesRepository: MoviesRepository) = GetUpComingMoviesUseCase(moviesRepository)
 
     @Provides
     fun provideGetMoviesCategoriesCells(movieCategoriesRepo: MovieCategoriesRepository) =

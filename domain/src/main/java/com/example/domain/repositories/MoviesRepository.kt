@@ -1,6 +1,8 @@
 package com.example.domain.repositories
 
+import com.example.domain.models.GenreModel
 import com.example.domain.models.MovieWithDetailsModel
+import com.example.domain.models.MoviesSortedByGenreContainerModel
 import com.example.domain.utils.ResponseResult
 import kotlinx.coroutines.flow.Flow
 
@@ -31,6 +33,11 @@ interface MoviesRepository {
         genreId: String?,
         rating: Int? = null,
         releaseYear: String? = null,
-        sortByPopularity: String? = null
+        sortByPopularity: String? = null,
+        page: Int? = null
     ): List<MovieWithDetailsModel>
+
+    suspend fun getMoviesSortedByGenre(): ResponseResult<List<MoviesSortedByGenreContainerModel>>
+
+    suspend fun getMovieDetailsForDetailsPage(movieId: Int): ResponseResult<MovieWithDetailsModel>
 }

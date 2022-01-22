@@ -45,7 +45,8 @@ class WelcomeScreenFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             delay(3000)
             if (isLoginRememberMe.loadIsRememberMeChecked()) {
-                findNavController().navigate(R.id.action_welcomeScreenFragment_to_homeFragment)
+                //findNavController().navigate(R.id.action_welcomeScreenFragment_to_homeFragment)
+                findNavController().navigate(R.id.action_welcome_screen_to_homeFragment)
             } else {
                 findNavController().navigate(R.id.action_welcomeScreenFragment_to_nav_login_fragment)
             }
