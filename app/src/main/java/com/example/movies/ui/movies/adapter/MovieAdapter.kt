@@ -1,4 +1,4 @@
-package com.example.movies.ui.home.adapter
+package com.example.movies.ui.movies.adapter
 
 import android.content.Context
 import android.view.LayoutInflater

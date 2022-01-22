@@ -42,7 +42,7 @@ class MoviePagingSource(
                     moviesWithDetailsList.addAll(movieRepository.getPopularMoviesWithDetails(page,rating,releaseYear))
                 }
                 else -> {
-                    moviesWithDetailsList.addAll(movieRepository.getMoviesByGenre(genreId,rating,releaseYear,sortByPopulation))
+                    moviesWithDetailsList.addAll(movieRepository.getMoviesByGenre(genreId,rating,releaseYear,sortByPopulation,page))
                 }
 
 
@@ -54,10 +54,13 @@ class MoviePagingSource(
                 nextKey = if (moviesWithDetailsList.isEmpty()) null else page + 1
             )
         } catch (e: IOException) {
+            e.printStackTrace()
             LoadResult.Error(e)
         } catch (e: HttpException) {
+            e.printStackTrace()
             LoadResult.Error(e)
         }catch (e: IllegalArgumentException){
+            e.printStackTrace()
             LoadResult.Error(e)
         }
     }
@@ -65,6 +68,5 @@ class MoviePagingSource(
     override fun getRefreshKey(state: PagingState<Int, MovieWithDetailsModel>): Int? {
         return state.anchorPosition
     }
-
 
 }

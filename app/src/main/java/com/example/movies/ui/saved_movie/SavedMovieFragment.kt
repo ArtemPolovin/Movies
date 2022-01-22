@@ -8,12 +8,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.domain.utils.ResponseResult
 import com.example.movies.R
 import com.example.movies.ui.MainActivity
 import com.example.movies.utils.putKSerializable
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_saved_movie.*
+import kotlinx.android.synthetic.main.fragment_saved_movie.button_retry
+import kotlinx.android.synthetic.main.fragment_saved_movie.progress_bar
+import kotlinx.android.synthetic.main.fragment_saved_movie.text_error
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint

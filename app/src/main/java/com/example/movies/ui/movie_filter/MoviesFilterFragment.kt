@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -16,7 +18,7 @@ import kotlinx.android.synthetic.main.fragment_movies_filter.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MoviesFilterFragment : Fragment() {
+class MoviesFilterFragment : Fragment(){
 
     @Inject
     lateinit var sharedPrefMovieFilter: SharedPrefMovieFilter
@@ -38,6 +40,7 @@ class MoviesFilterFragment : Fragment() {
 
 
         loadFilterState()
+        setupGenresSpinner()
         removeFocusFromEditText()
         openHomePage()
 
@@ -51,11 +54,26 @@ class MoviesFilterFragment : Fragment() {
         checkbox_release_year.isChecked = sharedPrefMovieFilter.loadReleaseYearCheckBoxState()
         edit_text_release_year.setText(sharedPrefMovieFilter.loadReleaseYear().toString())
 
-        spinner_genres.setSelection(sharedPrefMovieFilter.loadGenreSpinnerPosition())
+        /*spinner_genres.setSelection(sharedPrefMovieFilter.loadGenreSpinnerPosition())*/
         checkbox_genres.isChecked = sharedPrefMovieFilter.loadGenreCheckBoxState()
 
         checkbox_popularity.isChecked = sharedPrefMovieFilter.loadSortByPopularityCheckBoxState()
 
+    }
+
+    private fun setupGenresSpinner() {
+        viewModel.genreNames.observe(viewLifecycleOwner) { genresList ->
+         val arrayAdapter = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                genresList
+            ).also { adapter ->
+              adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+          }
+            spinner_genres.adapter = arrayAdapter
+            spinner_genres.setSelection(sharedPrefMovieFilter.loadGenreSpinnerPosition())
+        }
+        //spinner_genres.onItemSelectedListener
     }
 
     private fun removeFocusFromEditText() {
@@ -89,7 +107,7 @@ class MoviesFilterFragment : Fragment() {
 
     private fun checkIfReleaseYearIsMarked() {
         if (checkbox_release_year.isChecked) {
-           viewModel.saveReleaseYearState(edit_text_release_year.text.toString())
+            viewModel.saveReleaseYearState(edit_text_release_year.text.toString())
             return
         }
         viewModel.clearReleaseYar()

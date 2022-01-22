@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -11,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.data.cache.SharedPrefMovieCategory
 import com.example.data.cache.SharedPrefMovieFilter
 import com.example.data.cache.clearMovieFilterCache
+import com.example.domain.utils.ResponseResult
 import com.example.movies.R
 import com.example.movies.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,23 +45,44 @@ class MovieCategoriesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        button_retry.setOnClickListener {
+            viewModel.refreshData()
+        }
+
         setupToolbar()
         setupRecyclerView()
         setUpMovieCategoriesList()
-        openHomePage()
+        openMoviesPage()
         
     }
 
     private fun setUpMovieCategoriesList() {
-        adapterMovieCategory.setUpList(viewModel.fetchMovieCategoriesList())
+        viewModel.moviesCategoriesList.observe(viewLifecycleOwner){
+            group_error_views.visibility = GONE
+            rv_movie_categories.visibility = GONE
+            when (it) {
+                is ResponseResult.Loading ->{
+                    progress_bar.visibility = VISIBLE
+                }
+                is ResponseResult.Failure ->{
+                    text_error.visibility = VISIBLE
+                    text_error.text = it.message
+                    button_retry.visibility = VISIBLE
+                }
+                is ResponseResult.Success ->{
+                    rv_movie_categories.visibility = VISIBLE
+                    adapterMovieCategory.setUpList(it.data)
+                }
+            }
+        }
     }
 
-    private fun openHomePage() {
-        adapterMovieCategory.category.observe(viewLifecycleOwner){
+    private fun openMoviesPage() {
+        adapterMovieCategory.movieCategory.observe(viewLifecycleOwner){
             sharedPrefMovieCategory.saveMovieCategory(it.categoryName)
             sharedPrefMovieCategory.saveGenreId(it.genreId)
             clearMovieFilterCache(sharedPrefMovieFilter)
-            findNavController().navigate(R.id.action_movie_categories_to_homeFragment)
+            findNavController().navigate(R.id.action_movie_categories_to_moviesFragment)
         }
     }
 

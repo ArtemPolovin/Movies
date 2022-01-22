@@ -5,6 +5,7 @@ plugins {
     id 'kotlin-android-extensions'
     id 'dagger.hilt.android.plugin'
     id 'kotlinx-serialization'
+    id 'androidx.navigation.safeargs'
 }
 
 android {
@@ -106,6 +107,8 @@ dependencies {
 
     //Gif
     implementation 'com.airbnb.android:lottie:4.1.0'
+
+    implementation "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
 
 
 
