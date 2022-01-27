@@ -11,6 +11,7 @@ import com.example.data.mapers.MoviesEntityMapper
 import com.example.data.network.MoviesApi
 import com.example.data.utils.SECOND_PAGE
 import com.example.domain.models.GenreModel
+import com.example.domain.models.MovieModel
 import com.example.domain.models.MovieWithDetailsModel
 import com.example.domain.models.MoviesSortedByGenreContainerModel
 import com.example.domain.repositories.MovieCategoriesRepository
@@ -75,6 +76,42 @@ class MoviesRepositoryImpl(
                 page
             )
         )
+
+    // This function makes request for list of Similar movies for movie details screen
+    override suspend fun getSimilarMovies(movieId: Int): ResponseResult<List<MovieModel>> {
+
+       return try {
+            val response = moviesApi.getSimilarMovies(movieId, settingsDataCache.getLanguage())
+            if (response.isSuccessful) {
+                response.body().let {
+                    return@let ResponseResult.Success(moviesApiMapper.mapMovieApiToMovieModelList(it))
+                }
+            } else {
+                ResponseResult.Failure(message = "An unknown error occured")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ResponseResult.Failure(message = "Couldn't reach the server. Check your internet connection")
+        }
+    }
+
+    // This function makes request for list of Recommendations movies for movie details screen
+    override suspend fun getRecommendationsMovies(movieId: Int): ResponseResult<List<MovieModel>> {
+        return try {
+            val response = moviesApi.getRecommendationsMovies(movieId, settingsDataCache.getLanguage())
+            if (response.isSuccessful) {
+                response.body().let {
+                    return@let ResponseResult.Success(moviesApiMapper.mapMovieApiToMovieModelList(it))
+                }
+            } else {
+                ResponseResult.Failure(message = "An unknown error occured")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ResponseResult.Failure(message = "Couldn't reach the server. Check your internet connection")
+        }
+    }
+
 
     // This function makes 19 requests to the server to get list of movies for each of the nineteen genres.
     // All 19 movie lists are displayed on the home screen
@@ -278,6 +315,7 @@ class MoviesRepositoryImpl(
 
         }
     }
+
 
 
 }

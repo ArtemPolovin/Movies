@@ -1,6 +1,7 @@
 package com.example.domain.repositories
 
 import com.example.domain.models.GenreModel
+import com.example.domain.models.MovieModel
 import com.example.domain.models.MovieWithDetailsModel
 import com.example.domain.models.MoviesSortedByGenreContainerModel
 import com.example.domain.utils.ResponseResult
@@ -40,4 +41,7 @@ interface MoviesRepository {
     suspend fun getMoviesSortedByGenre(): ResponseResult<List<MoviesSortedByGenreContainerModel>>
 
     suspend fun getMovieDetailsForDetailsPage(movieId: Int): ResponseResult<MovieWithDetailsModel>
+
+    suspend fun getSimilarMovies(movieId: Int): ResponseResult<List<MovieModel>>
+    suspend fun getRecommendationsMovies(movieId: Int): ResponseResult<List<MovieModel>>
 }

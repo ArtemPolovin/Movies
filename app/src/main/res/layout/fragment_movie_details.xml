@@ -232,6 +232,46 @@
                 app:layout_constraintStart_toEndOf="@+id/text_homepage_url_header"
                 app:layout_constraintTop_toTopOf="@+id/text_homepage_url_header" />
 
+            <TextView
+                android:id="@+id/text_similar_movies_header"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="@font/alegreya_sans_bold_italic"
+                android:text="@string/similar_movies_header"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_homepage_url" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_similar_movies"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                android:paddingBottom="12dp"
+                app:layout_constraintTop_toBottomOf="@id/text_similar_movies_header" />
+
+            <TextView
+                android:id="@+id/text_recommendations_movies_header"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/alegreya_sans_bold_italic"
+                android:text="@string/recommendations_movies_header"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintTop_toBottomOf="@id/rv_similar_movies"
+                app:layout_constraintStart_toStartOf="@id/text_similar_movies_header"/>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_recommendations_movies"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="16dp"
+                android:paddingBottom="12dp"
+                app:layout_constraintTop_toBottomOf="@id/text_recommendations_movies_header" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
@@ -273,5 +313,7 @@
         android:layout_height="wrap_content"
         app:constraint_referenced_ids="text_error,button_retry,progress_bar"
         tools:ignore="NotSibling" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,18 +10,34 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.movies.R
+import com.example.movies.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_main.*
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    companion object {
+        private var _binding: ActivityMainBinding? = null
+        private val binding: ActivityMainBinding
+            get() = _binding ?: throw RuntimeException("ActivityMainBinding = null")
+
+        fun hideBottomNavBar() {
+            binding.bottomNav.visibility = View.GONE
+        }
+
+        fun showBottomNavBar() {
+            binding.bottomNav.visibility = View.VISIBLE
+        }
+    }
+
 
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        _binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         hideSystemUi()
 
         val navHostFragment =
@@ -29,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 
         navController = navHostFragment.navController
 
-        bottom_nav.setupWithNavController(navController)
+        binding.bottomNav.setupWithNavController(navController)
 
         hideBottomNavBar()
     }
@@ -54,8 +70,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun hideBottomNavBar() {
         navController.addOnDestinationChangedListener { _, distination, _ ->
-            bottom_nav.visibility = when (distination.id) {
-                R.id.nav_login_fragment, R.id.welcome_screen, R.id.moviesFilterFragment -> View.GONE
+            binding.bottomNav.visibility = when (distination.id) {
+                R.id.nav_login_fragment, R.id.welcome_screen,
+                R.id.moviesFilterFragment -> View.GONE
                 else -> View.VISIBLE
             }
         }

@@ -51,4 +51,6 @@
     <string name="check_box_genres_text">Genre</string>
     <string name="check_box_popularity_text">Sort by popularity</string>
     <string name="count_of_poster">%s / %s</string>
+    <string name="similar_movies_header">Similar movies</string>
+    <string name="recommendations_movies_header">You might also like</string>
 </resources>

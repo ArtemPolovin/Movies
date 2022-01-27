@@ -81,7 +81,7 @@ object AppModule {
         settingsDataCache: SettingsDataCache,
         moviesApi: MoviesApi
     ): MovieCategoriesRepository =
-        MovieCategoriesRepositoryImpl(movieGenresMapper,settingsDataCache,moviesApi)
+        MovieCategoriesRepositoryImpl(movieGenresMapper, settingsDataCache, moviesApi)
 
     @Provides
     fun provideMoviePagingSource(
@@ -166,7 +166,16 @@ object AppModule {
         GetMovieDetailsUseCase(moviesRepo)
 
     @Provides
-    fun provideGetUpcomingMoviesUseCase(moviesRepository: MoviesRepository) = GetUpComingMoviesUseCase(moviesRepository)
+    fun provideGetUpcomingMoviesUseCase(moviesRepository: MoviesRepository) =
+        GetUpComingMoviesUseCase(moviesRepository)
+
+    @Provides
+    fun provideGetSimilarMoviesUseCase(moviesRepository: MoviesRepository) =
+        GetSimilarMoviesUseCase(moviesRepository)
+
+    @Provides
+    fun provideGetRecommendationsMoviesUseCase(moviesRepository: MoviesRepository) =
+        GetRecommendationsMoviesUseCase(moviesRepository)
 
     @Provides
     fun provideGetMoviesCategoriesCells(movieCategoriesRepo: MovieCategoriesRepository) =

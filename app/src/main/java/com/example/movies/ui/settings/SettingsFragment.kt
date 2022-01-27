@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -15,7 +16,6 @@ import com.example.data.cache.SharedPreferencesLoginRememberMe
 import com.example.movies.R
 import com.example.movies.utils.LOG_OUT_KEY
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.logout_alert_dialog.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -23,6 +23,9 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 
     @Inject
     lateinit var sharedPreferencesLoginRememberMe: SharedPreferencesLoginRememberMe
+
+    private lateinit var buttonYes: Button
+    private lateinit var buttonNo: Button
 
     private val viewModel: SettingsViewModel by viewModels()
 
@@ -45,6 +48,11 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
         return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        buttonNo = view.findViewById(R.id.btn_no)
+        buttonYes = view.findViewById(R.id.btn_yes)
+    }
+
     override fun onStart() {
         logOut()
         super.onStart()
@@ -65,12 +73,12 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
             setContentView(R.layout.logout_alert_dialog)
             window?.setBackgroundDrawable(ColorDrawable(0))
 
-            btn_yes.setOnClickListener {
+            buttonYes.setOnClickListener {
                 viewModel.logout()
                 dismiss()
             }
 
-            btn_no.setOnClickListener { dismiss() }
+            buttonNo.setOnClickListener { dismiss() }
         }.show()
     }
 

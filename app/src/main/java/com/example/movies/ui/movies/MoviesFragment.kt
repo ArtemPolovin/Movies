@@ -13,18 +13,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.data.cache.SharedPrefMovieCategory
 import com.example.domain.models.MovieWithDetailsModel
 import com.example.movies.R
+import com.example.movies.databinding.FragmentMoviesBinding
 import com.example.movies.ui.MainActivity
 import com.example.movies.ui.movies.adapter.MovieAdapter
 import com.example.movies.ui.movies.adapter.MovieLoadStateAdapter
-import com.example.movies.utils.putKSerializable
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_movies.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.lang.RuntimeException
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MoviesFragment : Fragment() {
+
+    private var _binding: FragmentMoviesBinding? = null
+    private val binding: FragmentMoviesBinding get() =
+        _binding ?: throw RuntimeException("FragmentMoviesBinding = null")
 
     private val viewModel: MoviesViewModel by viewModels()
 
@@ -36,17 +40,18 @@ class MoviesFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_movies, container, false)
+        _binding = FragmentMoviesBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        (requireActivity() as MainActivity).setupActionBar(toolbar)
+        (requireActivity() as MainActivity).setupActionBar(binding.toolbar)
 
-        button_retry.setOnClickListener { moviesAdapter.retry() }
+        binding.buttonRetry.setOnClickListener { moviesAdapter.retry() }
 
         setupToolbar()
         setupAdapter()
@@ -68,7 +73,7 @@ class MoviesFragment : Fragment() {
 
     private fun setupAdapter() {
         moviesAdapter = MovieAdapter()
-        rv_movies.run {
+        binding.rvMovies.run {
             adapter = moviesAdapter.withLoadStateHeaderAndFooter(
                 header = MovieLoadStateAdapter { moviesAdapter.retry() },
                 footer = MovieLoadStateAdapter { moviesAdapter.retry() }
@@ -78,31 +83,26 @@ class MoviesFragment : Fragment() {
         }
 
         moviesAdapter.addLoadStateListener { loadState ->
-            rv_movies?.let { it.isVisible = loadState.source.refresh is LoadState.NotLoading }
-            progress_bar?.let { it.isVisible = loadState.source.refresh is LoadState.Loading }
-            text_error?.let { it.isVisible = loadState.source.refresh is LoadState.Error }
-            button_retry?.let { it.isVisible = loadState.source.refresh is LoadState.Error }
+            binding.rvMovies?.let { it.isVisible = loadState.source.refresh is LoadState.NotLoading }
+            binding.progressBar?.let { it.isVisible = loadState.source.refresh is LoadState.Loading }
+            binding.textError?.let { it.isVisible = loadState.source.refresh is LoadState.Error }
+            binding.buttonRetry?.let { it.isVisible = loadState.source.refresh is LoadState.Error }
         }
     }
 
     private fun openMovieDetailsScreen() {
         moviesAdapter.onClickItem(object : MovieAdapter.OnClickAdapterPopularMovieListener {
             override fun getMovie(movie: MovieWithDetailsModel) {
-                val bundle = Bundle()
-                bundle.putKSerializable("movieObject", movie)
-                bundle.putBoolean("showSavedIcon", true)
                 findNavController().navigate(
-                    R.id.action_moviesFragment_to_movieDetailsFragment,
-                    bundle
-                )
+                    MoviesFragmentDirections.actionMoviesFragmentToMovieDetailsFragment(movie.id,true))
             }
 
         })
     }
 
     private fun setupToolbar() {
-        toolbar.title = sharedPrefMovieCategory.loadMovieCategory()
-        (activity as? AppCompatActivity)?.setSupportActionBar(toolbar)
+        binding.toolbar.title = sharedPrefMovieCategory.loadMovieCategory()
+        (activity as? AppCompatActivity)?.setSupportActionBar(binding.toolbar)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

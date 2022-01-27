@@ -44,7 +44,7 @@ interface MoviesApi {
         @Query("with_genres") genreId: String?,
         @Query("vote_average.gte") rating: Int? = null,
         @Query("primary_release_year") year: String? = null,
-        @Query("sort_by") vote : String? = null,
+        @Query("sort_by") vote: String? = null,
         @Query("page") page: Int? = null,
         @Query("language") language: String? = null
     ): Response<MoviesListApiModel>
@@ -65,6 +65,18 @@ interface MoviesApi {
     suspend fun getGenresList(
         @Query("language") language: String?
     ): Response<GenresApiModel>
+
+    @GET("/3/movie/{movie_id}/similar")
+    suspend fun getSimilarMovies(
+        @Path("movie_id") movieId: Int,
+        @Query("language") language: String?
+    ): Response<MoviesListApiModel>
+
+    @GET("/3/movie/{movie_id}/recommendations")
+    suspend fun getRecommendationsMovies(
+        @Path("movie_id") movieId: Int,
+        @Query("language") language: String?
+    ): Response<MoviesListApiModel>
 
 
     companion object {

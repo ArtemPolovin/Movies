@@ -14,12 +14,17 @@ import com.example.movies.R
 import com.example.movies.utils.SIGNUP_WEB_PAGE_URL
 import com.example.data.cache.SharedPrefLoginAndPassword
 import com.example.data.cache.SharedPreferencesLoginRememberMe
+import com.example.movies.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_login.*
+import java.lang.RuntimeException
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
+
+    private var _binding: FragmentLoginBinding? = null
+    private val binding: FragmentLoginBinding get() =
+        _binding ?: throw RuntimeException("FragmentLoginBinding == null")
 
     private val viewModel: LoginViewModel by viewModels()
 
@@ -32,18 +37,19 @@ class LoginFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         showSystemUI()
-        return inflater.inflate(R.layout.fragment_login, container, false)
+       _binding = FragmentLoginBinding.inflate(inflater,container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        btn_login.setOnClickListener {
+        binding.btnLogin.setOnClickListener {
             viewModel.receiveLoginAndPassword(
-                edit_user_name.text.toString(),
-                edit_password.text.toString()
+                binding.editUserName.text.toString(),
+                binding.editPassword.text.toString()
             )
         }
 
@@ -58,8 +64,8 @@ class LoginFragment : Fragment() {
         viewModel.isLoginSuccess.observe(viewLifecycleOwner) {
             when (it) {
                 is ResponseResult.Failure -> {
-                    text_error.visibility = View.VISIBLE
-                    text_error.text = it.message
+                    binding.textError.visibility = View.VISIBLE
+                    binding.textError.text = it.message
                 }
                 is ResponseResult.Success -> {
                     viewModel.saveSessionId()
@@ -73,8 +79,8 @@ class LoginFragment : Fragment() {
             if (sessionIdSaved) {
                 val isRememberMeChecked = loginSharedPreferencesRememberMe.loadIsRememberMeChecked()
                 if (isRememberMeChecked) {
-                    sharedPrefLoginAndPassword.saveUserName(edit_user_name.text.toString())
-                    sharedPrefLoginAndPassword.savePassword(edit_password.text.toString())
+                    sharedPrefLoginAndPassword.saveUserName(binding.editUserName.text.toString())
+                    sharedPrefLoginAndPassword.savePassword(binding.editPassword.text.toString())
                 }
                 findNavController().navigate(R.id.action_nav_login_fragment_to_homeFragment)
             }
@@ -82,7 +88,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun rememberLoginAndPassword() {
-        checkbox_remember_me.setOnCheckedChangeListener { buttonView, isChecked ->
+        binding.checkboxRememberMe.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 loginSharedPreferencesRememberMe.saveIsRememberMeChecked(isChecked)
             } else {
@@ -98,7 +104,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun openSignupWebPage() {
-        text_signup.setOnClickListener {
+        binding.textSignup.setOnClickListener {
             val intent =
                 Intent(Intent.ACTION_VIEW).setData(Uri.parse(SIGNUP_WEB_PAGE_URL))
             startActivity(intent)

@@ -10,11 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.domain.models.MovieWithDetailsModel
-import com.example.movies.R
-import kotlinx.android.synthetic.main.cell_movie.view.image_movie_poster
-import kotlinx.android.synthetic.main.cell_movie.view.text_movie_name
-import kotlinx.android.synthetic.main.cell_movie.view.text_rating
-import kotlinx.android.synthetic.main.cell_saved_movie.view.*
+import com.example.movies.databinding.CellSavedMovieBinding
 
 class SavedMovieAdapter : RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesViewHolder>() {
 
@@ -25,7 +21,7 @@ class SavedMovieAdapter : RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesView
 
     private val elementsIdList = mutableListOf<Int>()
     private val _selectedElementsId = MutableLiveData<List<Int>>()
-    val selectedElementsId: LiveData<List<Int>>get() = _selectedElementsId
+    val selectedElementsId: LiveData<List<Int>> get() = _selectedElementsId
 
 
     init {
@@ -43,21 +39,17 @@ class SavedMovieAdapter : RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesView
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SavedMoviesViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.cell_saved_movie, parent, false)
-        return SavedMoviesViewHolder(view, parent.context)
+        val binding = CellSavedMovieBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
+        )
+        return SavedMoviesViewHolder(binding, parent.context)
     }
 
     override fun onBindViewHolder(holder: SavedMoviesViewHolder, position: Int) {
 
         val movieModel = savedMoviesList[position]
-        holder.itemView.apply {
-            holder.loadImage(image_movie_poster, movieModel.poster)
-            text_movie_name.text = movieModel.movieName
-            text_rating.text = movieModel.rating.toString()
-            text_vote_count.text = "(${movieModel.voteCount})"
-        }
 
+        holder.bind(movieModel)
         holder.click(movieModel)
         holder.longClick(position)
 
@@ -74,9 +66,16 @@ class SavedMovieAdapter : RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesView
     }
 
     inner class SavedMoviesViewHolder(
-        itemView: View,
+        private val binding: CellSavedMovieBinding,
         private val context: Context,
-    ) : RecyclerView.ViewHolder(itemView) {
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(movieModel: MovieWithDetailsModel) {
+            loadImage(binding.imageMoviePoster, movieModel.poster)
+            binding.textMovieName.text = movieModel.movieName
+            binding.textRating.text = movieModel.rating.toString()
+            binding.textVoteCount.text = "(${movieModel.voteCount})"
+        }
 
         fun loadImage(image: ImageView, imageUrl: String?) {
             Glide.with(context)
@@ -95,12 +94,12 @@ class SavedMovieAdapter : RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesView
 
         fun click(movieModel: MovieWithDetailsModel) {
             itemView.setOnClickListener {
-                if(itemView.isSelected){
+                if (itemView.isSelected) {
                     elementsIdList.remove(itemId.toInt())
                     _selectedElementsId.value = elementsIdList
                     itemView.isSelected = false
-                }else{
-                   _selectedMovie.value = movieModel
+                } else {
+                    _selectedMovie.value = movieModel
                 }
 
             }

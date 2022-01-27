@@ -18,20 +18,22 @@ import com.example.data.cache.SharedPrefMovieFilter
 import com.example.data.cache.clearMovieFilterCache
 import com.example.domain.utils.ResponseResult
 import com.example.movies.R
+import com.example.movies.databinding.FragmentHomeBinding
 import com.example.movies.ui.home.adapters.HomePosterViewPagerAdapter
 import com.example.movies.ui.home.adapters.HomeVerticalAdapter
 import com.example.movies.utils.DepthPageTransformer
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_home.*
+
+import java.lang.RuntimeException
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-  /*  val mLayoutManager :LinearLayoutManager by lazy {
-        LinearLayoutManager(requireContext())
-    }
-*/
+    private var _binding: FragmentHomeBinding? = null
+    private val binding: FragmentHomeBinding get() =
+        _binding ?: throw RuntimeException("FragmentHomeBinding == null")
+
     private lateinit var verticalAdapter: HomeVerticalAdapter
 
     private val viewModel: HomeViewModel by viewModels()
@@ -44,24 +46,26 @@ class HomeFragment : Fragment() {
 
     private val sliderHandle: Handler by lazy { Handler() }
     private val sliderRun: Runnable by lazy {
-        Runnable{
-            view_pager.currentItem = view_pager.currentItem + 1
+        Runnable {
+            binding.viewPager.currentItem += 1
         }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         showSystemUI()
 
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        _binding = FragmentHomeBinding.inflate(inflater,container,false)
+        return binding.root
+
+        //return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        button_retry.setOnClickListener { viewModel.refreshData() }
-        
+        binding.buttonRetry.setOnClickListener { viewModel.refreshData() }
 
 
         //app_bar_layout.addOnOffsetChangedListener(ifAppbarLayoutIsCollapsed)
@@ -76,7 +80,7 @@ class HomeFragment : Fragment() {
     private fun setupRecyclerView() {
 
         verticalAdapter = HomeVerticalAdapter()
-        rv_vertical.apply {
+        binding.rvVertical.apply {
             adapter = verticalAdapter
             layoutManager = LinearLayoutManager(requireContext())
 
@@ -90,25 +94,24 @@ class HomeFragment : Fragment() {
     }
 
 
-
     private fun setupSortedMoviesList() {
         viewModel.sortedMoviesByGenreModel.observe(viewLifecycleOwner) {
-            text_error.visibility = GONE
-            progress_bar.visibility = GONE
-            rv_vertical.visibility = GONE
-            button_retry.visibility = GONE
+            binding.textError.visibility = GONE
+            binding.progressBar.visibility = GONE
+            binding.rvVertical.visibility = GONE
+            binding.buttonRetry.visibility = GONE
 
             when (it) {
                 is ResponseResult.Loading -> {
-                    progress_bar.visibility = VISIBLE
+                    binding.progressBar.visibility = VISIBLE
                 }
                 is ResponseResult.Failure -> {
-                    text_error.visibility = VISIBLE
-                    text_error.text = it.message
-                    button_retry.visibility = VISIBLE
+                    binding.textError.visibility = VISIBLE
+                    binding.textError.text = it.message
+                    binding.buttonRetry.visibility = VISIBLE
                 }
                 is ResponseResult.Success -> {
-                    rv_vertical.visibility = VISIBLE
+                    binding.rvVertical.visibility = VISIBLE
                     verticalAdapter.setData(it.data)
                 }
             }
@@ -136,32 +139,37 @@ class HomeFragment : Fragment() {
     private fun openScreenWithMovieDetails() {
         verticalAdapter.clickedMovieId.observe(viewLifecycleOwner) { movieId ->
             findNavController().navigate(
-                HomeFragmentDirections.actionHomeFragmentToMovieDetailsFragment(movieId))
+                HomeFragmentDirections.actionHomeFragmentToMovieDetailsFragment(movieId, true)
+            )
         }
     }
 
     private fun setupViewPager() {
 
-        view_pager.setPageTransformer(DepthPageTransformer())
+        binding.viewPager.setPageTransformer(DepthPageTransformer())
 
         viewModel.upcomingMovies.observe(viewLifecycleOwner) {
-           val posterAdapter = HomePosterViewPagerAdapter(it.toMutableList(),view_pager)
-            view_pager.adapter = posterAdapter
-            view_pager.clipToPadding = false
-            view_pager.clipChildren = false
-           // view_pager.offscreenPageLimit = 3
-            view_pager.getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+            val posterAdapter = HomePosterViewPagerAdapter(it.toMutableList(), binding.viewPager)
+            binding.viewPager.apply {
+                adapter = posterAdapter
+                clipToPadding = false
+                clipChildren = false
+                // view_pager.offscreenPageLimit = 3
+                getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
 
-            view_pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
-                override fun onPageSelected(position: Int) {
-                    sliderHandle.removeCallbacks(sliderRun)
-                    sliderHandle.postDelayed(sliderRun, 3000)
-                }
-            })
+                registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                    override fun onPageSelected(position: Int) {
+                        sliderHandle.removeCallbacks(sliderRun)
+                        sliderHandle.postDelayed(sliderRun, 3000)
+                    }
+                })
+
+            }
 
             posterAdapter.onPosterClickListener = { movieId ->
                 findNavController().navigate(
-                    HomeFragmentDirections.actionHomeFragmentToMovieDetailsFragment(movieId))
+                    HomeFragmentDirections.actionHomeFragmentToMovieDetailsFragment(movieId, true)
+                )
             }
 
         }
@@ -174,7 +182,7 @@ class HomeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        sliderHandle.postDelayed(sliderRun,3000)
+        sliderHandle.postDelayed(sliderRun, 3000)
     }
 
 }
