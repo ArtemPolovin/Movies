@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -13,12 +12,17 @@ import androidx.navigation.fragment.findNavController
 import com.example.data.cache.SharedPrefMovieCategory
 import com.example.data.cache.SharedPrefMovieFilter
 import com.example.movies.R
+import com.example.movies.databinding.FragmentMoviesFilterBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_movies_filter.*
+import java.lang.RuntimeException
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MoviesFilterFragment : Fragment(){
+
+    private var _binding: FragmentMoviesFilterBinding? = null
+    private val binding: FragmentMoviesFilterBinding get() =
+        _binding ?: throw RuntimeException("FragmentMoviesFilterBinding == null")
 
     @Inject
     lateinit var sharedPrefMovieFilter: SharedPrefMovieFilter
@@ -31,9 +35,9 @@ class MoviesFilterFragment : Fragment(){
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_movies_filter, container, false)
+    ): View {
+        _binding = FragmentMoviesFilterBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,16 +52,16 @@ class MoviesFilterFragment : Fragment(){
     }
 
     private fun loadFilterState() {
-        checkbox_ratings.isChecked = sharedPrefMovieFilter.loadRatingCheckboxState()
-        spinner_ratings.setSelection(sharedPrefMovieFilter.loadRatingPosition())
+        binding.checkboxRatings.isChecked = sharedPrefMovieFilter.loadRatingCheckboxState()
+        binding.spinnerRatings.setSelection(sharedPrefMovieFilter.loadRatingPosition())
 
-        checkbox_release_year.isChecked = sharedPrefMovieFilter.loadReleaseYearCheckBoxState()
-        edit_text_release_year.setText(sharedPrefMovieFilter.loadReleaseYear().toString())
+        binding.checkboxReleaseYear.isChecked = sharedPrefMovieFilter.loadReleaseYearCheckBoxState()
+        binding.editTextReleaseYear.setText(sharedPrefMovieFilter.loadReleaseYear().toString())
 
         /*spinner_genres.setSelection(sharedPrefMovieFilter.loadGenreSpinnerPosition())*/
-        checkbox_genres.isChecked = sharedPrefMovieFilter.loadGenreCheckBoxState()
+        binding.checkboxGenres.isChecked = sharedPrefMovieFilter.loadGenreCheckBoxState()
 
-        checkbox_popularity.isChecked = sharedPrefMovieFilter.loadSortByPopularityCheckBoxState()
+        binding.checkboxPopularity.isChecked = sharedPrefMovieFilter.loadSortByPopularityCheckBoxState()
 
     }
 
@@ -70,23 +74,23 @@ class MoviesFilterFragment : Fragment(){
             ).also { adapter ->
               adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
           }
-            spinner_genres.adapter = arrayAdapter
-            spinner_genres.setSelection(sharedPrefMovieFilter.loadGenreSpinnerPosition())
+            binding.spinnerGenres.adapter = arrayAdapter
+            binding.spinnerGenres.setSelection(sharedPrefMovieFilter.loadGenreSpinnerPosition())
         }
         //spinner_genres.onItemSelectedListener
     }
 
     private fun removeFocusFromEditText() {
-        edit_text_release_year.setOnEditorActionListener { v, actionId, event ->
+        binding.editTextReleaseYear.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                edit_text_release_year.clearFocus()
+                binding.editTextReleaseYear.clearFocus()
             }
             return@setOnEditorActionListener false
         }
     }
 
     private fun openHomePage() {
-        btn_submit.setOnClickListener {
+        binding.btnSubmit.setOnClickListener {
             checkIfRatingIsMarked()
             checkIfReleaseYearIsMarked()
             checkIfGenreCheckBoxIsMarked()
@@ -96,8 +100,8 @@ class MoviesFilterFragment : Fragment(){
     }
 
     private fun checkIfRatingIsMarked() {
-        if (checkbox_ratings.isChecked) {
-            spinner_ratings.apply {
+        if (binding.checkboxRatings.isChecked) {
+            binding.spinnerRatings.apply {
                 viewModel.saveRatingSate(selectedItem.toString().toInt(), selectedItemPosition)
             }
             return
@@ -106,16 +110,16 @@ class MoviesFilterFragment : Fragment(){
     }
 
     private fun checkIfReleaseYearIsMarked() {
-        if (checkbox_release_year.isChecked) {
-            viewModel.saveReleaseYearState(edit_text_release_year.text.toString())
+        if (binding.checkboxReleaseYear.isChecked) {
+            viewModel.saveReleaseYearState(binding.editTextReleaseYear.text.toString())
             return
         }
         viewModel.clearReleaseYar()
     }
 
     private fun checkIfGenreCheckBoxIsMarked() {
-        if (checkbox_genres.isChecked) {
-            spinner_genres.apply {
+        if (binding.checkboxGenres.isChecked) {
+            binding.spinnerGenres.apply {
                 viewModel.saveGenreState(selectedItem.toString(), selectedItemPosition)
             }
             return
@@ -124,7 +128,7 @@ class MoviesFilterFragment : Fragment(){
     }
 
     private fun checkIfSortByPopularityIsMarked() {
-        if (checkbox_popularity.isChecked) {
+        if (binding.checkboxPopularity.isChecked) {
             viewModel.saveSortByPopularityState()
             return
         }

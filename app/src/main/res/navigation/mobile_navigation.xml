@@ -29,6 +29,14 @@
         <argument
             android:name="movieId"
             app:argType="integer"/>
+        <argument
+            android:name="showSavedIcon"
+            app:argType="boolean"/>
+        <action
+            android:id="@+id/action_movieDetailsFragment_self"
+            app:destination="@id/movieDetailsFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_right" />
     </fragment>
     <fragment
         android:id="@+id/saved_movies"
