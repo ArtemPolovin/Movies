@@ -3,6 +3,7 @@ package com.example.movies.ui.move_details
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableString
@@ -11,6 +12,7 @@ import android.view.*
 import android.view.View.*
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -61,7 +63,6 @@ class MovieDetailsFragment : Fragment() {
         (requireActivity() as MainActivity).setupActionBar(binding.toolbar, false)
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
-
         checkMovieWithDetailsResponseState()
         openWebHomePage()
         fullScreenListener()
@@ -71,6 +72,7 @@ class MovieDetailsFragment : Fragment() {
         setupRecommendedMoviesData()
         openScreenWithMovieDetailsByClickingSimilarMovie()
         openScreenWithMovieDetailsByClickingRecommendedMovie()
+        changeSaveMovieIconState()
     }
 
 
@@ -275,6 +277,17 @@ class MovieDetailsFragment : Fragment() {
                     movieId, true
                 )
             )
+        }
+    }
+
+    private fun changeSaveMovieIconState() {
+        binding.imageViewSaveMovie.setOnClickListener {
+            binding.imageViewSaveMovie.setColorFilter(Color.parseColor("#FFFFFF"))
+            binding.textSaveMovieIconText.apply {
+                setTextColor(Color.parseColor("#FFFFFF"))
+                text = getString(R.string.saved_in_watch_list)
+            }
+
         }
     }
 

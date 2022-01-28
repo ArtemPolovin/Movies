@@ -26,16 +26,16 @@
             android:id="@+id/youtube_player"
             android:layout_width="match_parent"
             android:layout_height="240dp"
+            app:autoPlay="false"
             app:showFullScreenButton="true"
             app:showYouTubeButton="false"
-            app:autoPlay="false"
             app:useWebUi="false" />
 
         <ImageView
             android:id="@+id/image_movie_details"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:scaleType="fitXY"/>
+            android:scaleType="fitXY" />
 
         <View
             android:id="@+id/view_image_shadow"
@@ -44,7 +44,6 @@
             android:background="@drawable/movie_poster_shadow_details_screen" />
 
     </RelativeLayout>
-
 
     <ScrollView
         android:id="@+id/scroll_view"
@@ -65,6 +64,27 @@
                 android:paddingTop="10dp"
                 android:paddingEnd="8dp"
                 app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/imageView_save_movie"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:clickable="true"
+                    android:src="@drawable/save_movie_icon1"
+                    app:layout_constraintStart_toStartOf="@id/text_save_movie_icon_text"
+                    app:layout_constraintEnd_toEndOf="@+id/text_save_movie_icon_text"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/text_save_movie_icon_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/save_to_watch_list"
+                    android:layout_marginStart="12dp"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_save_icon_color"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/imageView_save_movie"/>
 
                 <RatingBar
                     android:id="@+id/rating_bar_movie"
@@ -93,25 +113,24 @@
                     android:id="@+id/text_vote_count_details"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
                     android:text="(245)"
                     android:textColor="@color/vote_count_text_color"
-                    android:layout_marginEnd="8dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/text_rating_details"
                     app:layout_constraintEnd_toStartOf="@+id/text_rating_details"
-                    app:layout_constraintTop_toTopOf="@+id/text_rating_details"
-                    app:layout_constraintBottom_toBottomOf="@+id/text_rating_details"/>
+                    app:layout_constraintTop_toTopOf="@+id/text_rating_details" />
 
                 <TextView
                     android:id="@+id/text_movie_name_details"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
                     android:fontFamily="@font/aclonica"
                     android:text="LFkjsdalkfjsd fsdlfjds"
+                    android:layout_marginTop="25dp"
                     android:textColor="@color/white"
                     android:textSize="23sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/rating_bar_movie" />
-
+                    app:layout_constraintTop_toBottomOf="@+id/text_save_movie_icon_text" />
 
                 <TextView
                     android:id="@+id/text_genre_header"
@@ -261,8 +280,8 @@
                 android:text="@string/recommendations_movies_header"
                 android:textColor="@color/white"
                 android:textSize="20sp"
-                app:layout_constraintTop_toBottomOf="@id/rv_similar_movies"
-                app:layout_constraintStart_toStartOf="@id/text_similar_movies_header"/>
+                app:layout_constraintStart_toStartOf="@id/text_similar_movies_header"
+                app:layout_constraintTop_toBottomOf="@id/rv_similar_movies" />
 
 
             <androidx.recyclerview.widget.RecyclerView
@@ -313,7 +332,6 @@
         android:layout_height="wrap_content"
         app:constraint_referenced_ids="text_error,button_retry,progress_bar"
         tools:ignore="NotSibling" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

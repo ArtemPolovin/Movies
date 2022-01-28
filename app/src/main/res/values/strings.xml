@@ -53,4 +53,6 @@
     <string name="count_of_poster">%s / %s</string>
     <string name="similar_movies_header">Similar movies</string>
     <string name="recommendations_movies_header">You might also like</string>
+    <string name="save_to_watch_list">Save to watch list</string>
+    <string name="saved_in_watch_list">Saved in watch list</string>
 </resources>
