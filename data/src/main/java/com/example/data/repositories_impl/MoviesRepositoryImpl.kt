@@ -10,18 +10,17 @@ import com.example.data.mapers.MoviesApiMapper
 import com.example.data.mapers.MoviesEntityMapper
 import com.example.data.network.MoviesApi
 import com.example.data.utils.SECOND_PAGE
-import com.example.domain.models.GenreModel
-import com.example.domain.models.MovieModel
-import com.example.domain.models.MovieWithDetailsModel
-import com.example.domain.models.MoviesSortedByGenreContainerModel
+import com.example.domain.models.*
 import com.example.domain.repositories.MovieCategoriesRepository
 import com.example.domain.repositories.MoviesRepository
 import com.example.domain.utils.ResponseResult
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.withContext
 import retrofit2.Response
 import java.io.IOException
-import java.util.*
 
 class MoviesRepositoryImpl(
     private val moviesApi: MoviesApi,
@@ -80,7 +79,7 @@ class MoviesRepositoryImpl(
     // This function makes request for list of Similar movies for movie details screen
     override suspend fun getSimilarMovies(movieId: Int): ResponseResult<List<MovieModel>> {
 
-       return try {
+        return try {
             val response = moviesApi.getSimilarMovies(movieId, settingsDataCache.getLanguage())
             if (response.isSuccessful) {
                 response.body().let {
@@ -98,7 +97,8 @@ class MoviesRepositoryImpl(
     // This function makes request for list of Recommendations movies for movie details screen
     override suspend fun getRecommendationsMovies(movieId: Int): ResponseResult<List<MovieModel>> {
         return try {
-            val response = moviesApi.getRecommendationsMovies(movieId, settingsDataCache.getLanguage())
+            val response =
+                moviesApi.getRecommendationsMovies(movieId, settingsDataCache.getLanguage())
             if (response.isSuccessful) {
                 response.body().let {
                     return@let ResponseResult.Success(moviesApiMapper.mapMovieApiToMovieModelList(it))
@@ -112,9 +112,66 @@ class MoviesRepositoryImpl(
         }
     }
 
+    // This functions save movie or TV or any media to Watch list on Remote server
+    override suspend fun saveToWatchList(
+        saveToWatchListModel: SaveToWatchListModel,
+        sessionId: String
+    ) {
+        try {
+            val response = moviesApi.saveToWatchList(saveToWatchListModel, sessionId)
+            if (response.isSuccessful) {
+                response.body()?.let {
+                    println("mLog: success = ${it.success}\n${it.status_message}")
+                }
+            } else println("mLog: success = ${response.body()?.success}\n${response.body()?.status_message}")
+        } catch (e: RuntimeException) {
+            e.printStackTrace()
+        }
+    }
+
+    //This function fetches Watch list from remote server
+    override suspend fun getWatchList(sessionId: String): Flow<ResponseResult<List<MovieModel>>> {
+        return flow {
+            emit(ResponseResult.Loading)
+
+            val response =
+                moviesApi.getWatchList(sessionId, language = settingsDataCache.getLanguage())
+
+            if (response.isSuccessful) {
+                emit(ResponseResult.Success(moviesApiMapper.mapMovieApiToMovieModelList(response.body())))
+            } else {
+                val responseError = response.errorBody()?.string()
+                response.errorBody()?.close()
+                emit(ResponseResult.Failure(message = responseError ?: "An unknown error occured"))
+            }
+        }.catch {
+            emit(ResponseResult.Failure(message = it.message ?:"An unknown error occured" ))
+        }.flowOn(Dispatchers.Default)
+    }
+
+    override suspend fun getMovieAccountState(
+        sessionId: String,
+        movieId: Int
+    ): ResponseResult<MovieAccountStateModel> {
+        return try {
+            val response = moviesApi.getMovieAccountState(movieId, sessionId)
+            if (response.isSuccessful) {
+                response.body()?.let {
+                    return@let ResponseResult.Success(
+                        moviesApiMapper.mapMovieAccountStateApiToModel(
+                            it
+                        )
+                    )
+                } ?: ResponseResult.Failure(message = "Get movie account state response is null")
+            } else ResponseResult.Failure(message = "Get movie account state response is not successful")
+        } catch (e: RuntimeException) {
+            e.printStackTrace()
+            ResponseResult.Failure(message = "The unknown error in response of movie account state")
+        }
+    }
 
     // This function makes 19 requests to the server to get list of movies for each of the nineteen genres.
-    // All 19 movie lists are displayed on the home screen
+// All 19 movie lists are displayed on the home screen
     override suspend fun getMoviesSortedByGenre(): ResponseResult<List<MoviesSortedByGenreContainerModel>> {
 
         val list = mutableListOf<MoviesSortedByGenreContainerModel>()
@@ -147,7 +204,7 @@ class MoviesRepositoryImpl(
     }
 
     // This function takes list of movie api models without details and maps
-    // it to list of movies with details and returns it
+// it to list of movies with details and returns it
     private suspend fun getMovieWithDetailsList(response: Response<MoviesListApiModel>): List<MovieWithDetailsModel> {
 
         return if (response.isSuccessful) {
@@ -155,10 +212,10 @@ class MoviesRepositoryImpl(
                 response.body()?.let { body ->
                     val genresList = movieCategoriesRepository.getGenres()
                     val moviesWithDetailsList = body.results.map { apiMovie ->
-                       async {
-                             getMovieDetailsModelForList(apiMovie.id,genresList,apiMovie)
-                         }
-                     }
+                        async {
+                            getMovieDetailsModelForList(apiMovie.id, genresList, apiMovie)
+                        }
+                    }
                     moviesWithDetailsList.awaitAll()
                 } ?: throw  IllegalArgumentException("An unknown error occured")
             }
@@ -209,36 +266,6 @@ class MoviesRepositoryImpl(
         }
     }
 
-    // This function takes list of regular movies api without details ids and based on the received
-    // list of ids the function gets list of movie details api models
-   /* private suspend fun getMovieDetailsApiList(movieIdList: List<Int>): List<MovieDetailsModelApi?> {
-
-        val movieDetailsApiList: List<MovieDetailsModelApi?>
-        withContext(Dispatchers.IO) {
-            val runningTask = movieIdList.map { movieId ->
-                async {
-                    getMovieDetailsForList(movieId)
-                }
-            }
-            movieDetailsApiList = runningTask.awaitAll()
-        }
-        return movieDetailsApiList
-    }*/
-
-    // This function takes list of regular movies api without details ids and based on the
-    // received list of ids the function gets list of video models for each movie id
-  /*  private suspend fun getVideosList(movieIdList: List<Int>): List<VideoApiModel?> {
-
-        val videoApiModelList: List<VideoApiModel?>
-        withContext(Dispatchers.IO) {
-            val runningTask = movieIdList.map { movieId ->
-                async { getVideo(movieId) }
-            }
-            videoApiModelList = runningTask.awaitAll()
-        }
-        return videoApiModelList
-    }*/
-
     // This function fetches video model by movie id
     private suspend fun getVideo(movieId: Int): VideoApiModel? {
 
@@ -269,15 +296,19 @@ class MoviesRepositoryImpl(
     }
 
     // This function takes  data such as
-    // "genres list",  "video api model" , "movie with details model" and maps it all into a MovieWithDetailsModel
-    // adn returns it for movies with details list
-    private suspend fun getMovieDetailsModelForList(movieId: Int, genreList: List<GenreModel>, movieApiModel: Result): MovieWithDetailsModel {
+// "genres list",  "video api model" , "movie with details model" and maps it all into a MovieWithDetailsModel
+// adn returns it for movies with details list
+    private suspend fun getMovieDetailsModelForList(
+        movieId: Int,
+        genreList: List<GenreModel>,
+        movieApiModel: Result
+    ): MovieWithDetailsModel {
         return withContext(Dispatchers.IO) {
             val movieDetails = async { getMovieDetailsForList(movieId) }
             val video = async { getVideo(movieId) }
 
-              try {
-                  return@withContext moviesApiMapper.mapMovieDetailsApiToModel(
+            try {
+                return@withContext moviesApiMapper.mapMovieDetailsApiToModel(
                     movieDetails.await(),
                     video.await(),
                     genreList,
@@ -292,9 +323,9 @@ class MoviesRepositoryImpl(
     }
 
     // This function takes  data such as
-    // "video api model" , "movie with details model" and maps it all into a MovieWithDetailsModel
-    // adn returns it for "Movie details page"
-   override suspend fun getMovieDetailsForDetailsPage(movieId: Int): ResponseResult<MovieWithDetailsModel> {
+// "video api model" , "movie with details model" and maps it all into a MovieWithDetailsModel
+// adn returns it for "Movie details page"
+    override suspend fun getMovieDetailsForDetailsPage(movieId: Int): ResponseResult<MovieWithDetailsModel> {
         return withContext(Dispatchers.IO) {
             val movieDetails = async { getMovieDetailsForList(movieId) }
             val video = async { getVideo(movieId) }
@@ -315,7 +346,6 @@ class MoviesRepositoryImpl(
 
         }
     }
-
 
 
 }

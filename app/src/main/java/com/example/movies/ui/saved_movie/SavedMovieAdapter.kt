@@ -9,15 +9,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.domain.models.MovieModel
 import com.example.domain.models.MovieWithDetailsModel
 import com.example.movies.databinding.CellSavedMovieBinding
 
 class SavedMovieAdapter : RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesViewHolder>() {
 
-    private val savedMoviesList = mutableListOf<MovieWithDetailsModel>()
+    private val savedMoviesList = mutableListOf<MovieModel>()
 
-    private val _selectedMovie = MutableLiveData<MovieWithDetailsModel>()
-    val selectedMovie: LiveData<MovieWithDetailsModel> get() = _selectedMovie
+    private val _selectedMovie = MutableLiveData<MovieModel>()
+    val selectedMovie: LiveData<MovieModel> get() = _selectedMovie
 
     private val elementsIdList = mutableListOf<Int>()
     private val _selectedElementsId = MutableLiveData<List<Int>>()
@@ -32,7 +33,7 @@ class SavedMovieAdapter : RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesView
         elementsIdList.clear()
     }
 
-    fun setupList(newSavedMovieList: List<MovieWithDetailsModel>) {
+    fun setupList(newSavedMovieList: List<MovieModel>) {
         savedMoviesList.clear()
         savedMoviesList.addAll(newSavedMovieList)
         notifyDataSetChanged()
@@ -62,7 +63,7 @@ class SavedMovieAdapter : RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesView
     }
 
     override fun getItemId(position: Int): Long {
-        return savedMoviesList[position].id.toLong()
+        return savedMoviesList[position].movieId.toLong()
     }
 
     inner class SavedMoviesViewHolder(
@@ -70,9 +71,9 @@ class SavedMovieAdapter : RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesView
         private val context: Context,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(movieModel: MovieWithDetailsModel) {
+        fun bind(movieModel: MovieModel) {
             loadImage(binding.imageMoviePoster, movieModel.poster)
-            binding.textMovieName.text = movieModel.movieName
+            binding.textMovieName.text = movieModel.title
             binding.textRating.text = movieModel.rating.toString()
             binding.textVoteCount.text = "(${movieModel.voteCount})"
         }
@@ -92,7 +93,7 @@ class SavedMovieAdapter : RecyclerView.Adapter<SavedMovieAdapter.SavedMoviesView
             }
         }
 
-        fun click(movieModel: MovieWithDetailsModel) {
+        fun click(movieModel: MovieModel) {
             itemView.setOnClickListener {
                 if (itemView.isSelected) {
                     elementsIdList.remove(itemId.toInt())

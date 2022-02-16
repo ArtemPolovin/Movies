@@ -53,7 +53,7 @@ class SavedMovieFragment : Fragment() {
 
     private fun setupSavedMoviesList() {
 
-        viewModel.savedMovie.observe(viewLifecycleOwner, {
+        viewModel.watchList.observe(viewLifecycleOwner) {
 
             binding.textError.visibility = View.GONE
             binding.progressBar.visibility = View.GONE
@@ -76,7 +76,7 @@ class SavedMovieFragment : Fragment() {
                     savedMoviesAdapter.setupList(it.data)
                 }
             }
-        })
+        }
 
 
     }
@@ -94,7 +94,7 @@ class SavedMovieFragment : Fragment() {
         savedMoviesAdapter.selectedMovie.observe(viewLifecycleOwner) { selectedMovie ->
             findNavController().navigate(
                 SavedMovieFragmentDirections.actionSavedMoviesToMovieDetailsFragment(
-                    selectedMovie.id,
+                    selectedMovie.movieId,
                     false
                 )
             )

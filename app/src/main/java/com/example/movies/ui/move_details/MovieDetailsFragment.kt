@@ -12,7 +12,6 @@ import android.view.*
 import android.view.View.*
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -20,32 +19,40 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.domain.models.MovieWithDetailsModel
+import com.example.domain.models.SaveToWatchListModel
 import com.example.domain.utils.ResponseResult
 import com.example.movies.R
 import com.example.movies.databinding.FragmentMovieDetailsBinding
 import com.example.movies.ui.MainActivity
 import com.example.movies.ui.move_details.adapter.MoviesAdapter
+import com.example.movies.utils.MEDIA_TYPE_MOVIE
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerFullScreenListener
 import dagger.hilt.android.AndroidEntryPoint
-import java.lang.RuntimeException
 
 @AndroidEntryPoint
 class MovieDetailsFragment : Fragment() {
 
     private var _binding: FragmentMovieDetailsBinding? = null
-    private val binding: FragmentMovieDetailsBinding get() =
-        _binding ?: throw RuntimeException("FragmentMovieDetailsBinding == null")
+    private val binding: FragmentMovieDetailsBinding
+        get() =
+            _binding ?: throw RuntimeException("FragmentMovieDetailsBinding == null")
 
     private val viewModel: MovieDetailsViewModel by viewModels()
 
     private val args: MovieDetailsFragmentArgs by navArgs()
 
+    private val movieId: Int by lazy {
+        args.movieId
+    }
+
     private lateinit var similarMoviesAdapter: MoviesAdapter
     private lateinit var recommendedMoviesAdapter: MoviesAdapter
 
     private var movieWithDetails: MovieWithDetailsModel? = null
+
+    private var isSavedToWatchList = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,7 +60,7 @@ class MovieDetailsFragment : Fragment() {
     ): View {
         setHasOptionsMenu(true)
 
-       _binding = FragmentMovieDetailsBinding.inflate(inflater,container, false)
+        _binding = FragmentMovieDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -63,6 +70,7 @@ class MovieDetailsFragment : Fragment() {
         (requireActivity() as MainActivity).setupActionBar(binding.toolbar, false)
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
+        checkMovieAccountState()
         checkMovieWithDetailsResponseState()
         openWebHomePage()
         fullScreenListener()
@@ -72,13 +80,13 @@ class MovieDetailsFragment : Fragment() {
         setupRecommendedMoviesData()
         openScreenWithMovieDetailsByClickingSimilarMovie()
         openScreenWithMovieDetailsByClickingRecommendedMovie()
-        changeSaveMovieIconState()
+        changeWatchListIconState()
     }
 
 
     private fun checkMovieWithDetailsResponseState() {
 
-        viewModel.fetchMovieDetails(args.movieId)
+        viewModel.fetchMovieDetails(movieId)
         viewModel.movieDetailsModel.observe(viewLifecycleOwner) {
             binding.groupErrorViews.visibility = GONE
             when (it) {
@@ -95,7 +103,6 @@ class MovieDetailsFragment : Fragment() {
                 }
             }
         }
-
     }
 
     private fun setupMovieDetails(movieModel: MovieWithDetailsModel) {
@@ -245,7 +252,7 @@ class MovieDetailsFragment : Fragment() {
         similarMoviesAdapter.onItemClickListener = { movieId ->
             findNavController().navigate(
                 MovieDetailsFragmentDirections.actionMovieDetailsFragmentSelf(
-                    movieId,true
+                    movieId, true
                 )
             )
         }
@@ -280,14 +287,51 @@ class MovieDetailsFragment : Fragment() {
         }
     }
 
-    private fun changeSaveMovieIconState() {
-        binding.imageViewSaveMovie.setOnClickListener {
-            binding.imageViewSaveMovie.setColorFilter(Color.parseColor("#FFFFFF"))
-            binding.textSaveMovieIconText.apply {
-                setTextColor(Color.parseColor("#FFFFFF"))
-                text = getString(R.string.saved_in_watch_list)
+    private fun checkMovieAccountState() {
+        viewModel.getMovieAccountState(movieId)
+        viewModel.movieAccountState.observe(viewLifecycleOwner) { movieAccountState ->
+            movieAccountState.watchlist?.let { it ->
+                if (it) createSavedMovieIconStyle()
+                else createDeletedMovieIconStyle()
+                isSavedToWatchList = it
             }
+        }
+    }
 
+    private fun changeWatchListIconState() {
+        binding.imageViewSaveMovie.setOnClickListener {
+            isSavedToWatchList = if (!isSavedToWatchList) {
+                createSavedMovieIconStyle()
+                true
+            } else {
+                createDeletedMovieIconStyle()
+                false
+            }
+            viewModel.saveToWatchList(
+                SaveToWatchListModel(
+                    MEDIA_TYPE_MOVIE,
+                    movieId,
+                    isSavedToWatchList
+                )
+            )
+        }
+    }
+
+    private fun createSavedMovieIconStyle() {
+        val iconColor = Color.parseColor("#FFFFFF")
+        binding.imageViewSaveMovie.setColorFilter(iconColor)
+        binding.textSaveMovieIconText.apply {
+            setTextColor(iconColor)
+            text = getString(R.string.saved_in_watch_list)
+        }
+    }
+
+    private fun createDeletedMovieIconStyle() {
+        val iconColor = Color.parseColor("#918D8D")
+        binding.imageViewSaveMovie.setColorFilter(iconColor)
+        binding.textSaveMovieIconText.apply {
+            setTextColor(iconColor)
+            text = getString(R.string.save_to_watch_list)
         }
     }
 

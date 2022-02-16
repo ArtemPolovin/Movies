@@ -2,18 +2,20 @@ package com.example.data.network
 
 import com.example.data.apimodels.genres.GenresApiModel
 import com.example.data.apimodels.movie_details.MovieDetailsModelApi
+import com.example.data.apimodels.movie_state.MovieAccountStateApiModel
 import com.example.data.apimodels.movies.MoviesListApiModel
 import com.example.data.apimodels.video.VideoApiModel
 import com.example.data.utils.API_KEY
 import com.example.data.utils.MOVIES_API_BASE_URL
+import com.example.domain.models.SaveToWatchListModel
+import com.example.domain.models.SaveToWatchListResponseModel
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 
 interface MoviesApi {
@@ -78,6 +80,25 @@ interface MoviesApi {
         @Query("language") language: String?
     ): Response<MoviesListApiModel>
 
+    @Headers("Content-Type: application/json;charset=utf-8")
+    @POST("/3/account/{account_id}/watchlist")
+    suspend fun saveToWatchList(
+        @Body saveToWatchListModel: SaveToWatchListModel,
+        @Query("session_id") sessionId: String
+    ): Response<SaveToWatchListResponseModel>
+
+    @GET("/3/account/{account_id}/watchlist/movies")
+   suspend fun getWatchList(
+        @Query("session_id") sessionId: String,
+        @Query("language") language: String?
+    ): Response<MoviesListApiModel>
+
+    @GET("/3/movie/{movie_id}/account_states")
+    suspend fun getMovieAccountState(
+        @Path("movie_id") movieId: Int,
+        @Query("session_id") sessionId: String
+    ): Response<MovieAccountStateApiModel>
+
 
     companion object {
         operator fun invoke(): MoviesApi {
@@ -102,6 +123,7 @@ interface MoviesApi {
                 .client(okHttpClient)
                 .baseUrl(MOVIES_API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(CoroutineCallAdapterFactory())
                 .build()
                 .create(MoviesApi::class.java)
         }

@@ -178,6 +178,15 @@ object AppModule {
         GetRecommendationsMoviesUseCase(moviesRepository)
 
     @Provides
+    fun provideSaveToWatchListUseCase(movieRepository: MoviesRepository) = SaveToWatchListUseCase(movieRepository)
+
+    @Provides
+    fun provideGetWatchListUseCase(movieRepository: MoviesRepository) = GetWatchListUseCase(movieRepository)
+
+    @Provides
+    fun provideGetMovieAccountStateUseCase(movieRepository: MoviesRepository) = GetMovieAccountStateUseCase(movieRepository)
+
+    @Provides
     fun provideGetMoviesCategoriesCells(movieCategoriesRepo: MovieCategoriesRepository) =
         GetMoviesCategoriesUseCase(movieCategoriesRepo)
 
