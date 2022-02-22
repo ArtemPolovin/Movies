@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    id 'kotlin-android-extensions'
+   // id 'kotlin-android-extensions'
     id 'dagger.hilt.android.plugin'
     id 'kotlinx-serialization'
     id 'androidx.navigation.safeargs'
@@ -10,7 +10,6 @@ plugins {
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "30.0.2"
 
     defaultConfig {
         applicationId "com.example.movies"
@@ -34,6 +33,10 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+
+    buildFeatures {
+        viewBinding = true
     }
 }
 

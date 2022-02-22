@@ -1,7 +1,6 @@
 package com.example.movies.ui.movies.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
@@ -11,6 +10,7 @@ import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movies.R
+import com.example.movies.databinding.MovieLoadStateFooterViewItemBinding
 
 class MovieLoadStateAdapter(private val retry: () -> Unit) :
     LoadStateAdapter<MovieLoadStateAdapter.MovieLoadStateVieHolder>() {
@@ -20,9 +20,10 @@ class MovieLoadStateAdapter(private val retry: () -> Unit) :
         parent: ViewGroup,
         loadState: LoadState
     ): MovieLoadStateVieHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.movie_load_state_footer_view_item, parent, false)
-        return MovieLoadStateVieHolder(view, retry)
+        val binding = MovieLoadStateFooterViewItemBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
+        )
+        return MovieLoadStateVieHolder(binding, retry)
     }
 
 
@@ -30,24 +31,22 @@ class MovieLoadStateAdapter(private val retry: () -> Unit) :
         holder.bind(loadState)
     }
 
-    class MovieLoadStateVieHolder(itemView: View, retry: () -> Unit) :
-        RecyclerView.ViewHolder(itemView) {
-
-        private val buttonRetry = itemView.findViewById<Button>(R.id.retry_button)
-        private val textError = itemView.findViewById<TextView>(R.id.error_msg)
-        private val progressBar = itemView.findViewById<ProgressBar>(R.id.progress_bar)
+    class MovieLoadStateVieHolder(
+        private val binding: MovieLoadStateFooterViewItemBinding,
+        retry: () -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
-            buttonRetry.setOnClickListener { retry.invoke() }
+            binding.retryButton.setOnClickListener { retry.invoke() }
         }
 
         fun bind(loadState: LoadState) {
             if (loadState is LoadState.Error) {
-                textError.text = loadState.error.localizedMessage
+                binding.errorMsg.text = loadState.error.localizedMessage
             }
-            progressBar.isVisible = loadState is LoadState.Loading
-            buttonRetry.isVisible = loadState is LoadState.Error
-            textError.isVisible = loadState is LoadState.Error
+            binding.progressBar.isVisible = loadState is LoadState.Loading
+            binding.retryButton.isVisible = loadState is LoadState.Error
+            binding.errorMsg.isVisible = loadState is LoadState.Error
         }
     }
 }

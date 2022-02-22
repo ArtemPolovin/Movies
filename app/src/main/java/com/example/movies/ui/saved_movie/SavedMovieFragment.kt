@@ -5,43 +5,42 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.domain.utils.ResponseResult
 import com.example.movies.R
+import com.example.movies.databinding.FragmentSavedMovieBinding
 import com.example.movies.ui.MainActivity
-import com.example.movies.utils.putKSerializable
+import com.example.movies.ui.saved_movie.adapter.SavedMovieAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.fragment_saved_movie.*
-import kotlinx.android.synthetic.main.fragment_saved_movie.button_retry
-import kotlinx.android.synthetic.main.fragment_saved_movie.progress_bar
-import kotlinx.android.synthetic.main.fragment_saved_movie.text_error
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SavedMovieFragment : Fragment() {
+
+    private var _binding: FragmentSavedMovieBinding? = null
+    private val binding: FragmentSavedMovieBinding
+        get() =
+            _binding ?: throw RuntimeException("FragmentSavedMovieBinding =- null")
 
     private val viewModel: SavedMovieViewModel by viewModels()
     private lateinit var savedMoviesAdapter: SavedMovieAdapter
 
     private var showDeleteMenuIcon = MutableLiveData<Boolean>()
 
-    private var popularMovieId  = mutableListOf<Int>()
+    private var selectedMovieIdList = mutableListOf<Int>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_saved_movie, container, false)
+        _binding = FragmentSavedMovieBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        (requireActivity() as MainActivity).setupActionBar(toolbar)
+        (requireActivity() as MainActivity).setupActionBar(binding.toolbar)
 
         showDeleteMenuIcon.value = false
 
@@ -53,37 +52,35 @@ class SavedMovieFragment : Fragment() {
 
     private fun setupSavedMoviesList() {
 
-        viewModel.savedMovie.observe(viewLifecycleOwner, {
-
-            text_error.visibility = View.GONE
-            progress_bar.visibility = View.GONE
-            rv_saved_movies.visibility = View.GONE
-            button_retry.visibility = View.GONE
+        viewModel.watchList.observe(viewLifecycleOwner) {
+            binding.groupHiddenItems.visibility = View.GONE
+            binding.rvSavedMovies.visibility = View.GONE
 
             when (it) {
                 ResponseResult.Loading -> {
-                    progress_bar.visibility = View.VISIBLE
+                    binding.rvSavedMovies.visibility = View.VISIBLE
+                    binding.progressBar.visibility = View.VISIBLE
                 }
                 is ResponseResult.Failure -> {
-                    button_retry.visibility = View.GONE
-                    progress_bar.visibility = View.GONE
-                    text_error.visibility = View.VISIBLE
-                    text_error.text = it.message
+                    binding.buttonRetry.visibility = View.GONE
+                    binding.progressBar.visibility = View.GONE
+                    binding.textError.visibility = View.VISIBLE
+                    binding.textError.text = it.message
                 }
                 is ResponseResult.Success -> {
-                    progress_bar.visibility = View.GONE
-                    rv_saved_movies.visibility = View.VISIBLE
-                    savedMoviesAdapter.setupList(it.data)
+                    binding.progressBar.visibility = View.GONE
+                    binding.rvSavedMovies.visibility = View.VISIBLE
+                    savedMoviesAdapter.submitList(it.data)
                 }
             }
-        })
+        }
 
 
     }
 
     private fun setupAdapter() {
         savedMoviesAdapter = SavedMovieAdapter()
-        rv_saved_movies.run {
+        binding.rvSavedMovies.run {
             adapter = savedMoviesAdapter
             layoutManager = GridLayoutManager(requireContext(), 2)
         }
@@ -91,40 +88,37 @@ class SavedMovieFragment : Fragment() {
 
 
     private fun openMovieDetailsScreen() {
-        savedMoviesAdapter.selectedMovie.observe(viewLifecycleOwner){ selectedMovie ->
-            val bundle = Bundle()
-            bundle.putKSerializable("movieObject", selectedMovie)
-            bundle.putBoolean("showSavedIcon", false)
+        savedMoviesAdapter.selectedMovie.observe(viewLifecycleOwner) { selectedMovie ->
             findNavController().navigate(
-                R.id.action_saved_movies_to_movieDetailsFragment,
-                bundle
+                SavedMovieFragmentDirections.actionSavedMoviesToMovieDetailsFragment(
+                    selectedMovie.movieId,
+                    false
+                )
             )
         }
     }
 
     private fun receiveSelectedItemsFromAdapter() {
-        savedMoviesAdapter.selectedElementsId.observe(viewLifecycleOwner){
-            if(it.isEmpty()){
+        savedMoviesAdapter.selectedElementsId.observe(viewLifecycleOwner) {
+            if (it.isEmpty()) {
                 showDeleteMenuIcon.value = false
             } else {
                 showDeleteMenuIcon.value = true
-                popularMovieId.clear()
-                popularMovieId.addAll(it)
+                selectedMovieIdList.clear()
+                selectedMovieIdList.addAll(it)
             }
         }
     }
 
-    private fun deleteMovieFromList() {
-        lifecycleScope.launch {
-            viewModel.deleteMovieByIdFromDb(popularMovieId)
-            savedMoviesAdapter.clearSelectedElementsList()
-        }
+    private fun sendMovieIdList() {
+        viewModel.deleteMoviesFromWatchList(selectedMovieIdList)
+        savedMoviesAdapter.clearSelectedElementsList()
     }
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.saved_movies_toolbar_menu, menu)
-        showDeleteMenuIcon.observe(viewLifecycleOwner,{
+        showDeleteMenuIcon.observe(viewLifecycleOwner, {
             val item: MenuItem = menu.findItem(R.id.delete_movie)
             item.isVisible = it
         })
@@ -135,7 +129,7 @@ class SavedMovieFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.delete_movie -> {
-                deleteMovieFromList()
+                sendMovieIdList()
                 showDeleteMenuIcon.value = false
                 true
             }

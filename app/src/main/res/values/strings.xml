@@ -12,7 +12,7 @@
     <string name="retry">Retry</string>
     <string name="menu_title_save_movie">Save movie</string>
     <string name="title_home">Home</string>
-    <string name="title_saved_movies">Saved movies</string>
+    <string name="title_watch_list">Watch list</string>
     <string name="rating_header_text">Rating:</string>
     <string name="menu_title_delete_movie">Delete moive</string>
     <string name="text_header_login">Login</string>
@@ -51,4 +51,8 @@
     <string name="check_box_genres_text">Genre</string>
     <string name="check_box_popularity_text">Sort by popularity</string>
     <string name="count_of_poster">%s / %s</string>
+    <string name="similar_movies_header">Similar movies</string>
+    <string name="recommendations_movies_header">You might also like</string>
+    <string name="save_to_watch_list">Save to watch list</string>
+    <string name="saved_in_watch_list">Saved in watch list</string>
 </resources>

@@ -1,15 +1,12 @@
 package com.example.movies.ui.movie_categories
 
-import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.domain.models.MovieCategoryModel
-import com.example.movies.R
-import kotlinx.android.synthetic.main.movie_category_cell.view.*
+import com.example.movies.databinding.MovieCategoryCellBinding
 
 class MoviesCategoriesAdapter :
     RecyclerView.Adapter<MoviesCategoriesAdapter.MovieCategoriesViewHolder>() {
@@ -17,7 +14,7 @@ class MoviesCategoriesAdapter :
     private val movieCategoriesList = mutableListOf<MovieCategoryModel>()
 
     private val _category = MutableLiveData<MovieCategoryModel>()
-    val movieCategory: LiveData<MovieCategoryModel>get() = _category
+    val movieCategory: LiveData<MovieCategoryModel> get() = _category
 
     fun setUpList(newList: List<MovieCategoryModel>) {
         movieCategoriesList.clear()
@@ -26,9 +23,10 @@ class MoviesCategoriesAdapter :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieCategoriesViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.movie_category_cell, parent, false)
-        return MovieCategoriesViewHolder(view, parent.context)
+        val binding = MovieCategoryCellBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
+        )
+        return MovieCategoriesViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: MovieCategoriesViewHolder, position: Int) {
@@ -42,19 +40,19 @@ class MoviesCategoriesAdapter :
         return movieCategoriesList.size
     }
 
-    inner class MovieCategoriesViewHolder(itemView: View, private val context: Context) :
-        RecyclerView.ViewHolder(itemView) {
+    inner class MovieCategoriesViewHolder(private val binding: MovieCategoryCellBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(movieMovieCategoryModel: MovieCategoryModel) {
             itemView.apply {
-                image_movie_category.setImageResource(movieMovieCategoryModel.image)
-                text_title.text = movieMovieCategoryModel.categoryName
+                binding.imageMovieCategory.setImageResource(movieMovieCategoryModel.image)
+                binding.textTitle.text = movieMovieCategoryModel.categoryName
             }
 
         }
 
         fun onClick(movieMovieCategoryModel: MovieCategoryModel) {
-            itemView.card_view.setOnClickListener {
+            binding.cardView.setOnClickListener {
                 _category.value = movieMovieCategoryModel
             }
         }

@@ -11,7 +11,7 @@
     <item
         android:id="@+id/saved_movies"
         android:icon="@drawable/ic_saved_movies"
-        android:title="@string/title_saved_movies"
+        android:title="@string/title_watch_list"
        />
 
     <item

@@ -3,6 +3,7 @@ package com.example.movies.ui.move_details
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableString
@@ -10,130 +11,141 @@ import android.text.style.UnderlineSpan
 import android.view.*
 import android.view.View.*
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.domain.models.MovieWithDetailsModel
+import com.example.domain.models.SaveToWatchListModel
 import com.example.domain.utils.ResponseResult
 import com.example.movies.R
+import com.example.movies.databinding.FragmentMovieDetailsBinding
 import com.example.movies.ui.MainActivity
-import com.example.movies.utils.getKSerializable
+import com.example.movies.ui.move_details.adapter.MoviesAdapter
+import com.example.movies.utils.MEDIA_TYPE_MOVIE
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerFullScreenListener
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_movie_details.*
 
 @AndroidEntryPoint
 class MovieDetailsFragment : Fragment() {
+
+    private var _binding: FragmentMovieDetailsBinding? = null
+    private val binding: FragmentMovieDetailsBinding
+        get() =
+            _binding ?: throw RuntimeException("FragmentMovieDetailsBinding == null")
 
     private val viewModel: MovieDetailsViewModel by viewModels()
 
     private val args: MovieDetailsFragmentArgs by navArgs()
 
+    private val movieId: Int by lazy {
+        args.movieId
+    }
+
+    private lateinit var similarMoviesAdapter: MoviesAdapter
+    private lateinit var recommendedMoviesAdapter: MoviesAdapter
+
     private var movieWithDetails: MovieWithDetailsModel? = null
 
-    private var showMenuSaveIcon: Boolean = true
+    private var isSavedToWatchList = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         setHasOptionsMenu(true)
 
-        return inflater.inflate(R.layout.fragment_movie_details, container, false)
+        _binding = FragmentMovieDetailsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        (requireActivity() as MainActivity).setupActionBar(toolbar, false)
+      //  (requireActivity() as MainActivity).setupActionBar(binding.toolbar, false)
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
-        showMenuSaveIcon = arguments?.getBoolean("showSavedIcon") ?: false
-
-        receiveMovieDetailsData()
+        checkMovieAccountState()
+        checkMovieWithDetailsResponseState()
         openWebHomePage()
         fullScreenListener()
+        setupRecyclerViewForSimilarMovies()
+        setupRecyclerviewForRecommendedMovies()
+        setupSimilarMoviesData()
+        setupRecommendedMoviesData()
+        openScreenWithMovieDetailsByClickingSimilarMovie()
+        openScreenWithMovieDetailsByClickingRecommendedMovie()
+        changeWatchListIconState()
     }
 
-    private fun receiveMovieDetailsData() {
-        movieWithDetails = arguments?.getKSerializable<MovieWithDetailsModel>("movieObject")
-        if (movieWithDetails == null) {
-//            val clickedMovieId = arguments?.getInt("movieId")
-//            clickedMovieId?.let { checkMovieWithDetailsResponseState(it)  }
-            checkMovieWithDetailsResponseState(args.movieId)
-        }else{
-            movieWithDetails?.let { setupMovieDetails(it) }
-        }
-    }
 
-    private fun checkMovieWithDetailsResponseState(movieId: Int) {
+    private fun checkMovieWithDetailsResponseState() {
+
         viewModel.fetchMovieDetails(movieId)
-        viewModel.movieDetailsModel.observe(viewLifecycleOwner){
-            group_error_views.visibility = GONE
+        viewModel.movieDetailsModel.observe(viewLifecycleOwner) {
+            binding.groupErrorViews.visibility = GONE
             when (it) {
-                is ResponseResult.Loading ->{
-                    progress_bar.visibility = VISIBLE
+                is ResponseResult.Loading -> {
+                    binding.progressBar.visibility = VISIBLE
                 }
-                is ResponseResult.Failure ->{
-                    text_error.visibility = VISIBLE
-                    text_error.text = it.message
-                    button_retry.visibility = VISIBLE
+                is ResponseResult.Failure -> {
+                    binding.textError.visibility = VISIBLE
+                    binding.textError.text = it.message
+                    binding.buttonRetry.visibility = VISIBLE
                 }
-                is ResponseResult.Success ->{
+                is ResponseResult.Success -> {
                     setupMovieDetails(it.data)
                 }
             }
         }
-
     }
 
     private fun setupMovieDetails(movieModel: MovieWithDetailsModel) {
-        group_error_views.visibility = GONE
-        youtube_player.visibility = GONE
-        image_movie_details.visibility = GONE
+        binding.groupErrorViews.visibility = GONE
+        binding.youtubePlayer.visibility = GONE
+        binding.imageMovieDetails.visibility = GONE
 
         movieModel.apply {
-            text_movie_name_details.text = movieName
-            text_popularity.text = popularityScore
-            text_release_date.text = releaseData
-            text_overview.text = overview
-            text_vote_count_details.text = "(${voteCount})"
-            rating?.let { rating_bar_movie.rating = it.toFloat() }
-            text_rating_details.text = rating.toString()
-            text_genre.text = genres
-            homePageUrl?.let { underlineText(text_homepage_url, it) }
+            binding.textMovieNameDetails.text = movieName
+            binding.textPopularity.text = popularityScore
+            binding.textReleaseDate.text = releaseData
+            binding.textOverview.text = overview
+            binding.textVoteCountDetails.text = "(${voteCount})"
+            rating?.let { binding.ratingBarMovie.rating = it.toFloat() }
+            binding.textRatingDetails.text = rating.toString()
+            binding.textGenre.text = genres
+            homePageUrl?.let { underlineText(binding.textHomepageUrl, it) }
             showVideoOrPoster(movieModel)
         }
     }
 
     private fun showVideoOrPoster(movieModel: MovieWithDetailsModel) {
-       movieModel.video?.let { video ->
-           if (video.isNotBlank()) {
-               image_movie_details.visibility = GONE
-               view_image_shadow.visibility = GONE
-               youtube_player.visibility = VISIBLE
-               showVideo(video)
-           } else {
-               image_movie_details.visibility = VISIBLE
-               view_image_shadow.visibility = VISIBLE
+        movieModel.video?.let { video ->
+            if (video.isNotBlank()) {
+                binding.imageMovieDetails.visibility = GONE
+                binding.viewImageShadow.visibility = GONE
+                binding.youtubePlayer.visibility = VISIBLE
+                showVideo(video)
+            } else {
+                binding.imageMovieDetails.visibility = VISIBLE
+                binding.viewImageShadow.visibility = VISIBLE
 
-               Glide.with(requireActivity())
-                   .load(movieModel.backdropPoster)
-                   .into(image_movie_details)
-           }
-       }
+                Glide.with(requireActivity())
+                    .load(movieModel.backdropPoster)
+                    .into(binding.imageMovieDetails)
+            }
+        }
 
     }
 
     private fun showVideo(videoId: String) {
-        viewLifecycleOwner.lifecycle.addObserver(youtube_player)
+        viewLifecycleOwner.lifecycle.addObserver(binding.youtubePlayer)
 
-        youtube_player.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+        binding.youtubePlayer.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(youTubePlayer: YouTubePlayer) {
                 youTubePlayer.cueVideo(videoId, 0f)
             }
@@ -147,18 +159,18 @@ class MovieDetailsFragment : Fragment() {
     }
 
     private fun openWebHomePage() {
-        text_homepage_url.setOnClickListener {
+        binding.textHomepageUrl.setOnClickListener {
             val browserIntent =
-                Intent(Intent.ACTION_VIEW, Uri.parse(text_homepage_url.text.toString()))
+                Intent(Intent.ACTION_VIEW, Uri.parse(binding.textHomepageUrl.text.toString()))
             startActivity(browserIntent)
         }
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+  /*  override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.details_screen_tool_bar_menu, menu)
         val item: MenuItem = menu.findItem(R.id.save_movie)
-        item.isVisible = showMenuSaveIcon
+        item.isVisible = args.showSavedIcon
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -171,14 +183,14 @@ class MovieDetailsFragment : Fragment() {
             }
             else -> return super.onOptionsItemSelected(item)
         }
-    }
+    }*/
 
     private fun fullScreenListener() {
 
         val decorView = activity?.window?.decorView?.let {
             val screenListener = object : YouTubePlayerFullScreenListener {
                 override fun onYouTubePlayerEnterFullScreen() {
-                    youtube_player.enterFullScreen()
+                    binding.youtubePlayer.enterFullScreen()
                     hideSystemUi(it)
                 }
 
@@ -187,7 +199,7 @@ class MovieDetailsFragment : Fragment() {
                 }
 
             }
-            youtube_player.addFullScreenListener(screenListener)
+            binding.youtubePlayer.addFullScreenListener(screenListener)
         }
 
     }
@@ -195,24 +207,131 @@ class MovieDetailsFragment : Fragment() {
     private fun hideSystemUi(view: View) {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
-        (requireActivity() as MainActivity).bottom_nav.visibility = GONE
-        toolbar.visibility = GONE
+        MainActivity.hideBottomNavBar()
+        //binding.toolbar.visibility = GONE
 
         view.systemUiVisibility =
-                SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-                SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
-                SYSTEM_UI_FLAG_FULLSCREEN or
-                SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+            SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                    SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
+                    SYSTEM_UI_FLAG_FULLSCREEN or
+                    SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
     private fun showSystemUi(view: View) {
 
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        MainActivity.showBottomNavBar()
 
-        view.systemUiVisibility = SYSTEM_UI_FLAG_LAYOUT_STABLE or SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-        (requireActivity() as MainActivity).bottom_nav.visibility = VISIBLE
-        toolbar.visibility = VISIBLE
+        view.systemUiVisibility =
+            SYSTEM_UI_FLAG_LAYOUT_STABLE or SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+      //  binding.toolbar.visibility = VISIBLE
+    }
+
+    private fun setupRecyclerViewForSimilarMovies() {
+        similarMoviesAdapter = MoviesAdapter()
+        binding.rvSimilarMovies.apply {
+            adapter = similarMoviesAdapter
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        }
+    }
+
+    private fun setupSimilarMoviesData() {
+        viewModel.similarMovies.observe(viewLifecycleOwner) {
+            when (it) {
+                is ResponseResult.Success -> {
+                    similarMoviesAdapter.submitList(it.data)
+                }
+            }
+        }
+    }
+
+    private fun openScreenWithMovieDetailsByClickingSimilarMovie() {
+        similarMoviesAdapter.onItemClickListener = { movieId ->
+            findNavController().navigate(
+                MovieDetailsFragmentDirections.actionMovieDetailsFragmentSelf(
+                    movieId, true
+                )
+            )
+        }
+    }
+
+    private fun setupRecyclerviewForRecommendedMovies() {
+        recommendedMoviesAdapter = MoviesAdapter()
+        binding.rvRecommendationsMovies.apply {
+            adapter = recommendedMoviesAdapter
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        }
+    }
+
+    private fun setupRecommendedMoviesData() {
+        viewModel.recommendationsMovies.observe(viewLifecycleOwner) {
+            when (it) {
+                is ResponseResult.Success -> {
+                    recommendedMoviesAdapter.submitList(it.data)
+                }
+            }
+        }
+    }
+
+    private fun openScreenWithMovieDetailsByClickingRecommendedMovie() {
+        recommendedMoviesAdapter.onItemClickListener = { movieId ->
+            findNavController().navigate(
+                MovieDetailsFragmentDirections.actionMovieDetailsFragmentSelf(
+                    movieId, true
+                )
+            )
+        }
+    }
+
+    private fun checkMovieAccountState() {
+        viewModel.getMovieAccountState(movieId)
+        viewModel.movieAccountState.observe(viewLifecycleOwner) { movieAccountState ->
+            movieAccountState.watchlist?.let { it ->
+                if (it) createSavedMovieIconStyle()
+                else createDeletedMovieIconStyle()
+                isSavedToWatchList = it
+            }
+        }
+    }
+
+    private fun changeWatchListIconState() {
+        binding.imageViewSaveMovie.setOnClickListener {
+            isSavedToWatchList = if (!isSavedToWatchList) {
+                createSavedMovieIconStyle()
+                true
+            } else {
+                createDeletedMovieIconStyle()
+                false
+            }
+            viewModel.saveOrDeleteMovieFromWatchList(
+                SaveToWatchListModel(
+                    MEDIA_TYPE_MOVIE,
+                    movieId,
+                    isSavedToWatchList
+                )
+            )
+        }
+    }
+
+    private fun createSavedMovieIconStyle() {
+        val iconColor = Color.parseColor("#FFFFFF")
+        binding.imageViewSaveMovie.setColorFilter(iconColor)
+        binding.textSaveMovieIconText.apply {
+            setTextColor(iconColor)
+            text = getString(R.string.saved_in_watch_list)
+        }
+    }
+
+    private fun createDeletedMovieIconStyle() {
+        val iconColor = Color.parseColor("#918D8D")
+        binding.imageViewSaveMovie.setColorFilter(iconColor)
+        binding.textSaveMovieIconText.apply {
+            setTextColor(iconColor)
+            text = getString(R.string.save_to_watch_list)
+        }
     }
 
     override fun onStop() {

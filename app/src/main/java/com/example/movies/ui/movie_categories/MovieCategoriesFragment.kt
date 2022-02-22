@@ -15,14 +15,18 @@ import com.example.data.cache.SharedPrefMovieFilter
 import com.example.data.cache.clearMovieFilterCache
 import com.example.domain.utils.ResponseResult
 import com.example.movies.R
+import com.example.movies.databinding.FragmentMovieCategoriesBinding
 import com.example.movies.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_movie_categories.*
-import kotlinx.android.synthetic.main.fragment_movie_categories.toolbar
+import java.lang.RuntimeException
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MovieCategoriesFragment : Fragment() {
+
+    private var _binding: FragmentMovieCategoriesBinding? = null
+    private val binding : FragmentMovieCategoriesBinding get() =
+        _binding ?: throw RuntimeException("FragmentMovieCategoriesBinding == null")
 
     private val viewModel: MovieCategoriesViewModel by viewModels()
     private lateinit var adapterMovieCategory: MoviesCategoriesAdapter
@@ -35,17 +39,18 @@ class MovieCategoriesFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         setHasOptionsMenu(true)
         adapterMovieCategory = MoviesCategoriesAdapter()
 
-        return inflater.inflate(R.layout.fragment_movie_categories, container, false)
+        _binding = FragmentMovieCategoriesBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        button_retry.setOnClickListener {
+        binding.buttonRetry.setOnClickListener {
             viewModel.refreshData()
         }
 
@@ -58,19 +63,19 @@ class MovieCategoriesFragment : Fragment() {
 
     private fun setUpMovieCategoriesList() {
         viewModel.moviesCategoriesList.observe(viewLifecycleOwner){
-            group_error_views.visibility = GONE
-            rv_movie_categories.visibility = GONE
+            binding.groupErrorViews.visibility = GONE
+            binding.rvMovieCategories.visibility = GONE
             when (it) {
                 is ResponseResult.Loading ->{
-                    progress_bar.visibility = VISIBLE
+                    binding.progressBar.visibility = VISIBLE
                 }
                 is ResponseResult.Failure ->{
-                    text_error.visibility = VISIBLE
-                    text_error.text = it.message
-                    button_retry.visibility = VISIBLE
+                    binding.textError.visibility = VISIBLE
+                    binding.textError.text = it.message
+                    binding.buttonRetry.visibility = VISIBLE
                 }
                 is ResponseResult.Success ->{
-                    rv_movie_categories.visibility = VISIBLE
+                    binding.rvMovieCategories.visibility = VISIBLE
                     adapterMovieCategory.setUpList(it.data)
                 }
             }
@@ -87,13 +92,13 @@ class MovieCategoriesFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        rv_movie_categories.run {
+        binding.rvMovieCategories.run {
             adapter = adapterMovieCategory
             layoutManager = GridLayoutManager(requireContext(),2)
         }
     }
 
     private fun setupToolbar() {
-        (requireActivity() as MainActivity).setupActionBar(toolbar)
+        (requireActivity() as MainActivity).setupActionBar(binding.toolbar)
     }
 }

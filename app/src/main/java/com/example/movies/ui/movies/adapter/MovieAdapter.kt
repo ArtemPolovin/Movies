@@ -2,7 +2,6 @@ package com.example.movies.ui.movies.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.paging.PagingDataAdapter
@@ -10,12 +9,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.domain.models.MovieWithDetailsModel
-import com.example.movies.R
+import com.example.movies.databinding.CellMovieBinding
 import com.example.movies.utils.DATA_VIEWTYPE
 import com.example.movies.utils.LOADSTATE_VIEW_TYPE
-import kotlinx.android.synthetic.main.cell_movie.view.*
 
-class MovieAdapter : PagingDataAdapter<MovieWithDetailsModel, MovieAdapter.MoviesViewHolder>(MovieDiffUtilCallback()) {
+class MovieAdapter :
+    PagingDataAdapter<MovieWithDetailsModel, MovieAdapter.MoviesViewHolder>(MovieDiffUtilCallback()) {
 
     private lateinit var onClickAdapterPopularMovieListener: OnClickAdapterPopularMovieListener
 
@@ -24,8 +23,8 @@ class MovieAdapter : PagingDataAdapter<MovieWithDetailsModel, MovieAdapter.Movie
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.cell_movie, parent, false)
-        return MoviesViewHolder(view, parent.context, onClickAdapterPopularMovieListener)
+        val binding = CellMovieBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return MoviesViewHolder(binding, parent.context, onClickAdapterPopularMovieListener)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -37,31 +36,31 @@ class MovieAdapter : PagingDataAdapter<MovieWithDetailsModel, MovieAdapter.Movie
     }
 
     override fun onBindViewHolder(holder: MoviesViewHolder, position: Int) {
-        getItem(position)?.let {popularMovie ->
-
-            holder.itemView.apply {
-                holder.loadImage(image_movie_poster, popularMovie.poster)
-                text_movie_name.text = popularMovie.movieName
-                text_popularity.text = popularMovie.popularityScore
-                text_release_date.text = popularMovie.releaseData
-                text_rating.text = popularMovie.rating.toString()
-                popularMovie.rating?.let {
-                    rating_bar_movie.rating = it.toFloat()
-                }
-                text_genre.text = popularMovie.genres
-                text_vote_count.text = "(${popularMovie.voteCount})"
-            }
-
+        getItem(position)?.let { popularMovie ->
+            holder.bind(popularMovie)
             holder.onClick(popularMovie)
         }
 
     }
 
     class MoviesViewHolder(
-        itemView: View,
+        private val binding: CellMovieBinding,
         private val context: Context,
         private val onClickAdapterPopularMovieListener: OnClickAdapterPopularMovieListener
-    ) : RecyclerView.ViewHolder(itemView) {
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(popularMovie: MovieWithDetailsModel) {
+          loadImage(binding.imageMoviePoster, popularMovie.poster)
+            binding.textMovieName.text = popularMovie.movieName
+            binding.textPopularity.text = popularMovie.popularityScore
+            binding.textReleaseDate.text = popularMovie.releaseData
+            binding.textRating.text = popularMovie.rating.toString()
+            popularMovie.rating?.let {
+                binding.ratingBarMovie.rating = it.toFloat()
+            }
+            binding.textGenre.text = popularMovie.genres
+            binding.textVoteCount.text = "(${popularMovie.voteCount})"
+        }
 
         fun onClick(movieWithDetailsModel: MovieWithDetailsModel) {
             itemView.setOnClickListener {
@@ -94,7 +93,7 @@ class MovieAdapter : PagingDataAdapter<MovieWithDetailsModel, MovieAdapter.Movie
 
     }
 
-    interface OnClickAdapterPopularMovieListener{
+    interface OnClickAdapterPopularMovieListener {
         fun getMovie(movie: MovieWithDetailsModel)
     }
 
