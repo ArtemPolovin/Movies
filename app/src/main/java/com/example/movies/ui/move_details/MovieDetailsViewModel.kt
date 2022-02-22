@@ -9,7 +9,6 @@ import com.example.domain.models.SaveToWatchListModel
 import com.example.domain.usecases.movie_usecase.*
 import com.example.domain.utils.ResponseResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,7 +19,7 @@ class MovieDetailsViewModel @Inject constructor(
     private val getSimilarMoviesUseCase: GetSimilarMoviesUseCase,
     private val getRecommendationsMoviesUseCase: GetRecommendationsMoviesUseCase,
     private val sessionIdDataCache: SessionIdDataCache,
-    private val saveToWatchListUseCase: SaveToWatchListUseCase,
+    private val saveOrDeleteMovieFromWatchListUseCase: SaveOrDeleteMovieFromWatchListUseCase,
     private val getMovieAccountStateUseCase: GetMovieAccountStateUseCase
 ) : ViewModel() {
 
@@ -38,13 +37,13 @@ class MovieDetailsViewModel @Inject constructor(
     val movieAccountState: LiveData<MovieAccountStateModel> get() = _movieAccountState
 
 
-    fun insertMovieToDb(movie: MovieWithDetailsModel) {
+   /* fun insertMovieToDb(movie: MovieWithDetailsModel) {
         viewModelScope.launch { insertMovieToDbUseCase(movie) }
-    }
+    }*/
 
-    fun saveToWatchList(saveToWatchListModel: SaveToWatchListModel) {
+    fun saveOrDeleteMovieFromWatchList(saveToWatchListModel: SaveToWatchListModel) {
         viewModelScope.launch {
-            saveToWatchListUseCase.execute(saveToWatchListModel, sessionIdDataCache.loadSessionId())
+            saveOrDeleteMovieFromWatchListUseCase.execute(saveToWatchListModel, sessionIdDataCache.loadSessionId())
         }
     }
 

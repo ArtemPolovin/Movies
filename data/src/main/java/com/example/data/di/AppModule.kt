@@ -178,7 +178,7 @@ object AppModule {
         GetRecommendationsMoviesUseCase(moviesRepository)
 
     @Provides
-    fun provideSaveToWatchListUseCase(movieRepository: MoviesRepository) = SaveToWatchListUseCase(movieRepository)
+    fun provideSaveToWatchListUseCase(movieRepository: MoviesRepository) = SaveOrDeleteMovieFromWatchListUseCase(movieRepository)
 
     @Provides
     fun provideGetWatchListUseCase(movieRepository: MoviesRepository) = GetWatchListUseCase(movieRepository)

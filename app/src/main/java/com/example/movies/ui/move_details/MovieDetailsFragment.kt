@@ -11,7 +11,6 @@ import android.text.style.UnderlineSpan
 import android.view.*
 import android.view.View.*
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -67,7 +66,7 @@ class MovieDetailsFragment : Fragment() {
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        (requireActivity() as MainActivity).setupActionBar(binding.toolbar, false)
+      //  (requireActivity() as MainActivity).setupActionBar(binding.toolbar, false)
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         checkMovieAccountState()
@@ -168,7 +167,7 @@ class MovieDetailsFragment : Fragment() {
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+  /*  override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.details_screen_tool_bar_menu, menu)
         val item: MenuItem = menu.findItem(R.id.save_movie)
         item.isVisible = args.showSavedIcon
@@ -184,7 +183,7 @@ class MovieDetailsFragment : Fragment() {
             }
             else -> return super.onOptionsItemSelected(item)
         }
-    }
+    }*/
 
     private fun fullScreenListener() {
 
@@ -209,7 +208,7 @@ class MovieDetailsFragment : Fragment() {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
         MainActivity.hideBottomNavBar()
-        binding.toolbar.visibility = GONE
+        //binding.toolbar.visibility = GONE
 
         view.systemUiVisibility =
             SYSTEM_UI_FLAG_HIDE_NAVIGATION or
@@ -226,7 +225,7 @@ class MovieDetailsFragment : Fragment() {
 
         view.systemUiVisibility =
             SYSTEM_UI_FLAG_LAYOUT_STABLE or SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-        binding.toolbar.visibility = VISIBLE
+      //  binding.toolbar.visibility = VISIBLE
     }
 
     private fun setupRecyclerViewForSimilarMovies() {
@@ -307,7 +306,7 @@ class MovieDetailsFragment : Fragment() {
                 createDeletedMovieIconStyle()
                 false
             }
-            viewModel.saveToWatchList(
+            viewModel.saveOrDeleteMovieFromWatchList(
                 SaveToWatchListModel(
                     MEDIA_TYPE_MOVIE,
                     movieId,

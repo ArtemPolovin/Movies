@@ -129,14 +129,27 @@ class MoviesRepositoryImpl(
         }
     }
 
-    //This function fetches Watch list from remote server
-    override suspend fun getWatchList(sessionId: String): Flow<ResponseResult<List<MovieModel>>> {
-        return flow {
-            emit(ResponseResult.Loading)
-
+    override suspend fun getWatchList(sessionId: String): ResponseResult<List<MovieModel>> {
+        return try {
             val response =
                 moviesApi.getWatchList(sessionId, language = settingsDataCache.getLanguage())
+            if (response.isSuccessful) {
+                response.body()?.let {
+                    return@let ResponseResult.Success(moviesApiMapper.mapMovieApiToMovieModelList(it))
+                } ?: ResponseResult.Failure(message = "Response body of getting watch list is null")
+            } else ResponseResult.Failure(message = "Response of getting watch list is not success")
+        } catch (e: RuntimeException) {
+            e.printStackTrace()
+            ResponseResult.Failure(message = "There is some error in response of getting watch list")
+        }
+    }
 
+    //This function fetches Watch list from remote server
+  /*  override suspend fun getWatchList(sessionId: String): Flow<ResponseResult<List<MovieModel>>> {
+        return flow {
+            emit(ResponseResult.Loading)
+            val response =
+                moviesApi.getWatchList(sessionId, language = settingsDataCache.getLanguage())
             if (response.isSuccessful) {
                 emit(ResponseResult.Success(moviesApiMapper.mapMovieApiToMovieModelList(response.body())))
             } else {
@@ -146,8 +159,8 @@ class MoviesRepositoryImpl(
             }
         }.catch {
             emit(ResponseResult.Failure(message = it.message ?:"An unknown error occured" ))
-        }.flowOn(Dispatchers.Default)
-    }
+        }.flowOn(Dispatchers.IO)
+    }*/
 
     override suspend fun getMovieAccountState(
         sessionId: String,

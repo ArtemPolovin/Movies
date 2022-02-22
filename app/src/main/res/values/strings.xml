@@ -12,7 +12,7 @@
     <string name="retry">Retry</string>
     <string name="menu_title_save_movie">Save movie</string>
     <string name="title_home">Home</string>
-    <string name="title_saved_movies">Saved movies</string>
+    <string name="title_watch_list">Watch list</string>
     <string name="rating_header_text">Rating:</string>
     <string name="menu_title_delete_movie">Delete moive</string>
     <string name="text_header_login">Login</string>

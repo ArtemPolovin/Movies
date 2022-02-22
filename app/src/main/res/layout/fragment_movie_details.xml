@@ -7,14 +7,14 @@
     android:background="@color/movie_details_screen_background_color"
     tools:context=".ui.move_details.MovieDetailsFragment">
 
-    <androidx.appcompat.widget.Toolbar
+  <!--  <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@android:color/transparent"
         android:elevation="4dp"
         android:theme="@style/ToolbarTheme"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />-->
 
     <RelativeLayout
         android:id="@+id/container"
