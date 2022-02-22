@@ -1,9 +1,6 @@
 package com.example.domain.repositories
 
-import com.example.domain.models.GenreModel
-import com.example.domain.models.MovieModel
-import com.example.domain.models.MovieWithDetailsModel
-import com.example.domain.models.MoviesSortedByGenreContainerModel
+import com.example.domain.models.*
 import com.example.domain.utils.ResponseResult
 import kotlinx.coroutines.flow.Flow
 
@@ -44,4 +41,11 @@ interface MoviesRepository {
 
     suspend fun getSimilarMovies(movieId: Int): ResponseResult<List<MovieModel>>
     suspend fun getRecommendationsMovies(movieId: Int): ResponseResult<List<MovieModel>>
+
+    suspend fun saveToWatchList(saveToWatchListModel: SaveToWatchListModel,sessionId: String)
+    //suspend fun getWatchList(sessionId: String): Flow<ResponseResult<List<MovieModel>>>
+    suspend fun getWatchList(sessionId: String): ResponseResult<List<MovieModel>>
+    suspend fun getMovieAccountState(sessionId: String,movieId: Int): ResponseResult<MovieAccountStateModel>
+
+
 }

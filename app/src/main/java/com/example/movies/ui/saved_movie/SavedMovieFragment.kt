@@ -5,30 +5,29 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.domain.utils.ResponseResult
 import com.example.movies.R
 import com.example.movies.databinding.FragmentSavedMovieBinding
 import com.example.movies.ui.MainActivity
+import com.example.movies.ui.saved_movie.adapter.SavedMovieAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import java.lang.RuntimeException
 
 @AndroidEntryPoint
 class SavedMovieFragment : Fragment() {
 
     private var _binding: FragmentSavedMovieBinding? = null
-    private val binding: FragmentSavedMovieBinding get() =
-        _binding ?: throw RuntimeException("FragmentSavedMovieBinding =- null")
+    private val binding: FragmentSavedMovieBinding
+        get() =
+            _binding ?: throw RuntimeException("FragmentSavedMovieBinding =- null")
 
     private val viewModel: SavedMovieViewModel by viewModels()
     private lateinit var savedMoviesAdapter: SavedMovieAdapter
 
     private var showDeleteMenuIcon = MutableLiveData<Boolean>()
 
-    private var popularMovieId = mutableListOf<Int>()
+    private var selectedMovieIdList = mutableListOf<Int>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,15 +52,13 @@ class SavedMovieFragment : Fragment() {
 
     private fun setupSavedMoviesList() {
 
-        viewModel.savedMovie.observe(viewLifecycleOwner, {
-
-            binding.textError.visibility = View.GONE
-            binding.progressBar.visibility = View.GONE
+        viewModel.watchList.observe(viewLifecycleOwner) {
+            binding.groupHiddenItems.visibility = View.GONE
             binding.rvSavedMovies.visibility = View.GONE
-            binding.buttonRetry.visibility = View.GONE
 
             when (it) {
                 ResponseResult.Loading -> {
+                    binding.rvSavedMovies.visibility = View.VISIBLE
                     binding.progressBar.visibility = View.VISIBLE
                 }
                 is ResponseResult.Failure -> {
@@ -73,10 +70,10 @@ class SavedMovieFragment : Fragment() {
                 is ResponseResult.Success -> {
                     binding.progressBar.visibility = View.GONE
                     binding.rvSavedMovies.visibility = View.VISIBLE
-                    savedMoviesAdapter.setupList(it.data)
+                    savedMoviesAdapter.submitList(it.data)
                 }
             }
-        })
+        }
 
 
     }
@@ -94,7 +91,7 @@ class SavedMovieFragment : Fragment() {
         savedMoviesAdapter.selectedMovie.observe(viewLifecycleOwner) { selectedMovie ->
             findNavController().navigate(
                 SavedMovieFragmentDirections.actionSavedMoviesToMovieDetailsFragment(
-                    selectedMovie.id,
+                    selectedMovie.movieId,
                     false
                 )
             )
@@ -107,17 +104,15 @@ class SavedMovieFragment : Fragment() {
                 showDeleteMenuIcon.value = false
             } else {
                 showDeleteMenuIcon.value = true
-                popularMovieId.clear()
-                popularMovieId.addAll(it)
+                selectedMovieIdList.clear()
+                selectedMovieIdList.addAll(it)
             }
         }
     }
 
-    private fun deleteMovieFromList() {
-        lifecycleScope.launch {
-            viewModel.deleteMovieByIdFromDb(popularMovieId)
-            savedMoviesAdapter.clearSelectedElementsList()
-        }
+    private fun sendMovieIdList() {
+        viewModel.deleteMoviesFromWatchList(selectedMovieIdList)
+        savedMoviesAdapter.clearSelectedElementsList()
     }
 
 
@@ -134,7 +129,7 @@ class SavedMovieFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.delete_movie -> {
-                deleteMovieFromList()
+                sendMovieIdList()
                 showDeleteMenuIcon.value = false
                 true
             }

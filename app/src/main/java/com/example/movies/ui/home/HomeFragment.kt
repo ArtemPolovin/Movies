@@ -96,10 +96,8 @@ class HomeFragment : Fragment() {
 
     private fun setupSortedMoviesList() {
         viewModel.sortedMoviesByGenreModel.observe(viewLifecycleOwner) {
-            binding.textError.visibility = GONE
-            binding.progressBar.visibility = GONE
             binding.rvVertical.visibility = GONE
-            binding.buttonRetry.visibility = GONE
+            binding.groupHiddenItems.visibility = GONE
 
             when (it) {
                 is ResponseResult.Loading -> {

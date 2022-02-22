@@ -41,7 +41,7 @@
     <fragment
         android:id="@+id/saved_movies"
         android:name="com.example.movies.ui.saved_movie.SavedMovieFragment"
-        android:label="Saved movies"
+        android:label="Watch list"
         tools:layout="@layout/fragment_saved_movie">
         <action
             android:id="@+id/action_saved_movies_to_movieDetailsFragment"
