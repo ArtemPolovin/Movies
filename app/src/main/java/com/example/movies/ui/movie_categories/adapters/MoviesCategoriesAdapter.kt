@@ -1,4 +1,4 @@
-package com.example.movies.ui.movie_categories
+package com.example.movies.ui.movie_categories.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

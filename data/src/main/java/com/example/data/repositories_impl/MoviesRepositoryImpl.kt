@@ -144,24 +144,6 @@ class MoviesRepositoryImpl(
         }
     }
 
-    //This function fetches Watch list from remote server
-  /*  override suspend fun getWatchList(sessionId: String): Flow<ResponseResult<List<MovieModel>>> {
-        return flow {
-            emit(ResponseResult.Loading)
-            val response =
-                moviesApi.getWatchList(sessionId, language = settingsDataCache.getLanguage())
-            if (response.isSuccessful) {
-                emit(ResponseResult.Success(moviesApiMapper.mapMovieApiToMovieModelList(response.body())))
-            } else {
-                val responseError = response.errorBody()?.string()
-                response.errorBody()?.close()
-                emit(ResponseResult.Failure(message = responseError ?: "An unknown error occured"))
-            }
-        }.catch {
-            emit(ResponseResult.Failure(message = it.message ?:"An unknown error occured" ))
-        }.flowOn(Dispatchers.IO)
-    }*/
-
     override suspend fun getMovieAccountState(
         sessionId: String,
         movieId: Int
@@ -181,6 +163,17 @@ class MoviesRepositoryImpl(
             e.printStackTrace()
             ResponseResult.Failure(message = "The unknown error in response of movie account state")
         }
+    }
+
+    // This function gets list of movies by user-entered words
+    override suspend fun getMoviesByName(movieName: String, page: Int): List<MovieModel> {
+        val response =  moviesApi.getMoviesByName(movieName = movieName,  language = settingsDataCache.getLanguage(), page = page)
+
+        return if (response.isSuccessful) {
+            response.body()?.let {
+                return@let moviesApiMapper.mapMovieApiToMovieModelList(it)
+            }?: throw IllegalArgumentException("The response is empty")
+        }else throw IllegalArgumentException("The response is not successful")
     }
 
     // This function makes 19 requests to the server to get list of movies for each of the nineteen genres.
@@ -359,6 +352,8 @@ class MoviesRepositoryImpl(
 
         }
     }
+
+
 
 
 }

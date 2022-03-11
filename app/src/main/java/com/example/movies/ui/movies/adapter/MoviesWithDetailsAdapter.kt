@@ -13,8 +13,8 @@ import com.example.movies.databinding.CellMovieBinding
 import com.example.movies.utils.DATA_VIEWTYPE
 import com.example.movies.utils.LOADSTATE_VIEW_TYPE
 
-class MovieAdapter :
-    PagingDataAdapter<MovieWithDetailsModel, MovieAdapter.MoviesViewHolder>(MovieDiffUtilCallback()) {
+class MoviesWithDetailsAdapter :
+    PagingDataAdapter<MovieWithDetailsModel, MoviesWithDetailsAdapter.MoviesViewHolder>(MoviesWithDetailsDiffUtilCallback()) {
 
     private lateinit var onClickAdapterPopularMovieListener: OnClickAdapterPopularMovieListener
 
@@ -27,13 +27,13 @@ class MovieAdapter :
         return MoviesViewHolder(binding, parent.context, onClickAdapterPopularMovieListener)
     }
 
-    override fun getItemViewType(position: Int): Int {
+    /*override fun getItemViewType(position: Int): Int {
         return if (position == itemCount) {
             DATA_VIEWTYPE
         } else {
             LOADSTATE_VIEW_TYPE
         }
-    }
+    }*/
 
     override fun onBindViewHolder(holder: MoviesViewHolder, position: Int) {
         getItem(position)?.let { popularMovie ->
@@ -76,7 +76,7 @@ class MovieAdapter :
 
     }
 
-    class MovieDiffUtilCallback : DiffUtil.ItemCallback<MovieWithDetailsModel>() {
+    class MoviesWithDetailsDiffUtilCallback : DiffUtil.ItemCallback<MovieWithDetailsModel>() {
         override fun areItemsTheSame(
             oldItem: MovieWithDetailsModel,
             newItem: MovieWithDetailsModel
@@ -88,7 +88,7 @@ class MovieAdapter :
             oldItem: MovieWithDetailsModel,
             newItem: MovieWithDetailsModel
         ): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem == newItem
         }
 
     }

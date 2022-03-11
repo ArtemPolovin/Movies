@@ -1,15 +1,11 @@
-package com.example.movies.ui.movies.adapter
+package com.example.movies.utils
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.movies.R
 import com.example.movies.databinding.MovieLoadStateFooterViewItemBinding
 
 class MovieLoadStateAdapter(private val retry: () -> Unit) :

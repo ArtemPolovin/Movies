@@ -7,7 +7,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.1.2'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10"
         classpath "com.google.dagger:hilt-android-gradle-plugin:2.38.1"
         classpath "org.jetbrains.kotlin:kotlin-serialization:1.5.10"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.4.1"
@@ -35,7 +35,7 @@ ext.versions = [
         junit            : "4.12",
         junitTest        : "1.1.2",
         espressoCore     : "3.3.0",
-        navFragment      : "2.2.2",
+        navFragment      : "2.4.1",
         recyclerView     : "1.2.1",
         retrofit         : "2.9.0",
         daggerHilt       : "2.38.1",

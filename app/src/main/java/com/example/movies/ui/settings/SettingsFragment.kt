@@ -20,7 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener {
+class SettingsFragment : PreferenceFragmentCompat(),Preference.OnPreferenceClickListener {
 
     @Inject
     lateinit var sharedPreferencesLoginRememberMe: SharedPreferencesLoginRememberMe
@@ -38,7 +38,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val view = super.onCreateView(inflater, container, savedInstanceState)
         view?.setBackgroundColor(
             ContextCompat.getColor(
@@ -59,12 +59,19 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
         super.onStart()
     }
 
-    override fun onPreferenceTreeClick(preference: Preference?): Boolean {
+ /*   override fun onPreferenceTreeClick(preference: Preference?): Boolean {
 
         when (preference?.key) {
             LOG_OUT_KEY -> showDialog()
         }
 
+        return super.onPreferenceTreeClick(preference)
+    }*/
+
+    override fun onPreferenceTreeClick(preference: Preference): Boolean {
+        when (preference?.key) {
+            LOG_OUT_KEY -> showDialog()
+        }
         return super.onPreferenceTreeClick(preference)
     }
 
@@ -92,8 +99,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
         }
     }
 
-
-    override fun onPreferenceClick(preference: Preference?): Boolean {
+    override fun onPreferenceClick(preference: Preference): Boolean {
         return true
     }
 

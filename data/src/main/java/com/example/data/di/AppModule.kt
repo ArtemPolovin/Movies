@@ -5,7 +5,8 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import androidx.room.Room
 import com.example.data.cache.*
-import com.example.data.datasource.MoviePagingSource
+import com.example.data.datasource.MoviesPagingSource
+import com.example.data.datasource.MoviesWithDetailsPagingSource
 import com.example.data.db.AppDatabase
 import com.example.data.db.dao.MoviesDao
 import com.example.data.mapers.ErrorLoginMapper
@@ -84,11 +85,14 @@ object AppModule {
         MovieCategoriesRepositoryImpl(movieGenresMapper, settingsDataCache, moviesApi)
 
     @Provides
-    fun provideMoviePagingSource(
+    fun provideMovieWithDetailsPagingSource(
         movieRepository: MoviesRepository,
         sharedPrefMovieCategory: SharedPrefMovieCategory,
         shardPrefMovieFilter: SharedPrefMovieFilter
-    ) = MoviePagingSource(movieRepository, sharedPrefMovieCategory, shardPrefMovieFilter)
+    ) = MoviesWithDetailsPagingSource(movieRepository, sharedPrefMovieCategory, shardPrefMovieFilter)
+
+    @Provides
+    fun provideMoviesPagingSource(movieRepository: MoviesRepository) = MoviesPagingSource(movieRepository)
 
     @Provides
     @Singleton

@@ -1,4 +1,5 @@
 package com.example.data.mapers
+
 import com.example.data.apimodels.movie_details.MovieDetailsModelApi
 import com.example.data.apimodels.movie_state.MovieAccountStateApiModel
 import com.example.data.apimodels.movies.MoviesListApiModel
@@ -37,9 +38,9 @@ class MoviesApiMapper {
         movieApiModel: Result,
     ): MovieWithDetailsModel {
 
-      return  if (movieDetailsModelApi != null) {
+        return if (movieDetailsModelApi != null) {
             return createMovieWithDetailsModel(movieDetailsModelApi, videoApiModel)
-        }else{
+        } else {
             MovieWithDetailsModel(
                 releaseData = movieApiModel.release_date,
                 popularityScore = movieApiModel.popularity.toString(),

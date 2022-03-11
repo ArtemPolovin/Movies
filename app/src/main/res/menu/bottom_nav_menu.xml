@@ -15,9 +15,9 @@
        />
 
     <item
-        android:id="@+id/movie_categories"
-        android:icon="@drawable/ic_movie_categories"
-        android:title="@string/title_movie_categories"
+        android:id="@+id/explore_fragment"
+        android:icon="@drawable/ic_explore"
+        android:title="@string/title_movie_explore"
        />
 
     <item

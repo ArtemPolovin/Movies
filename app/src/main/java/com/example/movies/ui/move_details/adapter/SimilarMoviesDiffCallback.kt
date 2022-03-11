@@ -10,6 +10,6 @@ class SimilarMoviesDiffCallback: DiffUtil.ItemCallback<MovieModel>() {
     }
 
     override fun areContentsTheSame(oldItem: MovieModel, newItem: MovieModel): Boolean {
-        return oldItem.equals(newItem)
+        return oldItem == newItem
     }
 }

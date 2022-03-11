@@ -13,7 +13,7 @@ import java.io.IOException
 import java.lang.IllegalArgumentException
 
 
-class MoviePagingSource(
+class MoviesWithDetailsPagingSource(
     private val movieRepository: MoviesRepository,
     private val sharedPrefMovieCategory: SharedPrefMovieCategory,
     private val shardPrefMovieFilter: SharedPrefMovieFilter
