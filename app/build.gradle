@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 31
 
     defaultConfig {
         applicationId "com.example.movies"
@@ -58,7 +58,8 @@ dependencies {
     //constraintLayout
     implementation constraintlayout.constraintlayout
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.preference:preference:1.1.1'
+
+    implementation 'androidx.preference:preference-ktx:1.2.0'
 
     //junit
     testImplementation junit.junit
@@ -112,6 +113,7 @@ dependencies {
     implementation 'com.airbnb.android:lottie:4.1.0'
 
     implementation "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
+
 
 
 
