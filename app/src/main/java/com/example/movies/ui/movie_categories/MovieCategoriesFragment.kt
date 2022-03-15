@@ -6,29 +6,17 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.data.cache.SharedPrefMovieCategory
 import com.example.data.cache.SharedPrefMovieFilter
-import com.example.data.cache.clearMovieFilterCache
 import com.example.domain.utils.ResponseResult
-import com.example.movies.R
 import com.example.movies.databinding.FragmentMovieCategoriesBinding
-import com.example.movies.ui.MainActivity
 import com.example.movies.ui.movie_categories.adapters.MoviesCategoriesAdapter
 import com.example.movies.utils.KEY_OPEN_MOVIES_PAGE
-import com.example.movies.utils.MINIMUM_SYMBOLS
 import com.example.movies.utils.setNavigationResult
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
