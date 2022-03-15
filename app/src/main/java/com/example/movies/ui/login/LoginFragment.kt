@@ -89,11 +89,7 @@ class LoginFragment : Fragment() {
 
     private fun rememberLoginAndPassword() {
         binding.checkboxRememberMe.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
                 loginSharedPreferencesRememberMe.saveIsRememberMeChecked(isChecked)
-            } else {
-                loginSharedPreferencesRememberMe.saveIsRememberMeChecked(false)
-            }
         }
     }
 
