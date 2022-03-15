@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.data.cache.SharedPrefMovieCategory
 import com.example.data.cache.SharedPrefMovieFilter
-import com.example.data.cache.clearMovieFilterCache
 import com.example.domain.utils.ResponseResult
 import com.example.movies.R
 import com.example.movies.databinding.FragmentHomeBinding
@@ -23,16 +22,15 @@ import com.example.movies.ui.home.adapters.HomePosterViewPagerAdapter
 import com.example.movies.ui.home.adapters.HomeVerticalAdapter
 import com.example.movies.utils.DepthPageTransformer
 import dagger.hilt.android.AndroidEntryPoint
-
-import java.lang.RuntimeException
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
-    private val binding: FragmentHomeBinding get() =
-        _binding ?: throw RuntimeException("FragmentHomeBinding == null")
+    private val binding: FragmentHomeBinding
+        get() =
+            _binding ?: throw RuntimeException("FragmentHomeBinding == null")
 
     private lateinit var verticalAdapter: HomeVerticalAdapter
 
@@ -57,7 +55,7 @@ class HomeFragment : Fragment() {
     ): View {
         showSystemUI()
 
-        _binding = FragmentHomeBinding.inflate(inflater,container,false)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
 
         //return inflater.inflate(R.layout.fragment_home, container, false)
@@ -128,7 +126,7 @@ class HomeFragment : Fragment() {
             if (genre != null) {
                 sharedPrefMovieCategory.saveMovieCategory(genre.genreName)
                 sharedPrefMovieCategory.saveGenreId(genre.genreId)
-                clearMovieFilterCache(sharedPrefMovieFilter)
+                sharedPrefMovieFilter.clearFilterCache()
                 findNavController().navigate(R.id.action_homeFragment_to_moviesFragment)
             }
         }

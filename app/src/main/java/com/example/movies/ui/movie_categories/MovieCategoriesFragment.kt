@@ -101,7 +101,7 @@ class MovieCategoriesFragment : Fragment() {
         adapterMovieCategory.movieCategory.observe(viewLifecycleOwner) {
             sharedPrefMovieCategory.saveMovieCategory(it.categoryName)
             sharedPrefMovieCategory.saveGenreId(it.genreId)
-            clearMovieFilterCache(sharedPrefMovieFilter)
+            sharedPrefMovieFilter.clearFilterCache()
             //findNavController().navigate(R.id.action_movieCategoriesFragment_to_moviesFragment)
             setNavigationResult(KEY_OPEN_MOVIES_PAGE, true)
         }
