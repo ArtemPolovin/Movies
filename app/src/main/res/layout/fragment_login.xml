@@ -12,6 +12,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/imageView"
+            app:layout_constraintBottom_toTopOf="@+id/edit_user_name" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -85,7 +95,7 @@
         android:textColorHint="@color/login_text_hint_color"
         app:layout_constraintEnd_toEndOf="@+id/edit_user_name"
         app:layout_constraintStart_toStartOf="@+id/edit_user_name"
-        app:layout_constraintTop_toBottomOf="@+id/edit_user_name" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_user_name"/>
 
     <Button
         android:id="@+id/btn_login"
@@ -95,6 +105,7 @@
         android:background="@drawable/button_background"
         android:text="@string/text_btn_login"
         app:backgroundTint="@null"
+        android:enabled="false"
         app:layout_constraintEnd_toEndOf="@+id/edit_password"
         app:layout_constraintStart_toStartOf="@+id/edit_password"
         app:layout_constraintTop_toBottomOf="@+id/edit_password" />

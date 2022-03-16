@@ -3,6 +3,8 @@ package com.example.movies.ui.login
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,6 +47,9 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        binding.editPassword.addTextChangedListener(loginTextWatcher)
+        binding.editUserName.addTextChangedListener(loginTextWatcher)
+
         //checkIfLoginIsSuccess()
         //  skipLoginScreen()
         sendLoginData()
@@ -70,6 +75,8 @@ class LoginFragment : Fragment() {
 
     private fun sendLoginData() {
         binding.btnLogin.setOnClickListener {
+            binding.btnLogin.isEnabled = false
+            binding.progressBar.visibility = View.VISIBLE
             viewModel.receiveLoginAndPassword(
                 binding.editUserName.text.toString(),
                 binding.editPassword.text.toString()
@@ -102,10 +109,27 @@ class LoginFragment : Fragment() {
     private fun displayLoginErrorMessage() {
         viewModel.loginErrorText.observe(viewLifecycleOwner) { errorText ->
             if (errorText.isNotBlank()) {
+                binding.progressBar.visibility = View.GONE
                 binding.textError.visibility = View.VISIBLE
                 binding.textError.text = errorText
             }
         }
+    }
+
+    private val loginTextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        }
+
+        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            val userNameInput = binding.editUserName.text.toString().trim()
+            val passwordInput = binding.editPassword.text.toString().trim()
+
+            binding.btnLogin.isEnabled = userNameInput.isNotBlank() && passwordInput.isNotBlank()
+        }
+
+        override fun afterTextChanged(p0: Editable?) {
+        }
+
     }
 
     private fun openSignupWebPage() {
