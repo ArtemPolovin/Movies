@@ -9,22 +9,21 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.example.domain.utils.ResponseResult
-import com.example.movies.R
-import com.example.movies.utils.SIGNUP_WEB_PAGE_URL
 import com.example.data.cache.SharedPrefLoginAndPassword
 import com.example.data.cache.SharedPreferencesLoginRememberMe
+import com.example.movies.R
 import com.example.movies.databinding.FragmentLoginBinding
+import com.example.movies.utils.SIGNUP_WEB_PAGE_URL
 import dagger.hilt.android.AndroidEntryPoint
-import java.lang.RuntimeException
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
-    private val binding: FragmentLoginBinding get() =
-        _binding ?: throw RuntimeException("FragmentLoginBinding == null")
+    private val binding: FragmentLoginBinding
+        get() =
+            _binding ?: throw RuntimeException("FragmentLoginBinding == null")
 
     private val viewModel: LoginViewModel by viewModels()
 
@@ -40,37 +39,42 @@ class LoginFragment : Fragment() {
     ): View {
 
         showSystemUI()
-       _binding = FragmentLoginBinding.inflate(inflater,container, false)
+        _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        //checkIfLoginIsSuccess()
+        //  skipLoginScreen()
+        sendLoginData()
+        rememberLoginAndPassword()
+        openHomePage()
+        openSignupWebPage()
+        displayLoginErrorMessage()
+    }
+
+    /* private fun checkIfLoginIsSuccess() {
+         viewModel.isLoginSuccess.observe(viewLifecycleOwner) {
+             when (it) {
+                 is ResponseResult.Failure -> {
+                     binding.textError.visibility = View.VISIBLE
+                     binding.textError.text = it.message
+                 }
+                 is ResponseResult.Success -> {
+                     viewModel.saveSessionId()
+                 }
+             }
+         }
+     }*/
+
+    private fun sendLoginData() {
         binding.btnLogin.setOnClickListener {
             viewModel.receiveLoginAndPassword(
                 binding.editUserName.text.toString(),
                 binding.editPassword.text.toString()
             )
-        }
 
-        skipLoginScreen()
-        rememberLoginAndPassword()
-        checkIfLoginIsSuccess()
-        openHomePage()
-        openSignupWebPage()
-    }
-
-    private fun checkIfLoginIsSuccess() {
-        viewModel.isLoginSuccess.observe(viewLifecycleOwner) {
-            when (it) {
-                is ResponseResult.Failure -> {
-                    binding.textError.visibility = View.VISIBLE
-                    binding.textError.text = it.message
-                }
-                is ResponseResult.Success -> {
-                    viewModel.saveSessionId()
-                }
-            }
         }
     }
 
@@ -79,8 +83,10 @@ class LoginFragment : Fragment() {
             if (sessionIdSaved) {
                 val isRememberMeChecked = loginSharedPreferencesRememberMe.loadIsRememberMeChecked()
                 if (isRememberMeChecked) {
-                    sharedPrefLoginAndPassword.saveUserName(binding.editUserName.text.toString())
-                    sharedPrefLoginAndPassword.savePassword(binding.editPassword.text.toString())
+                    viewModel.saveUserNameAndPassword(
+                        binding.editUserName.text.toString(),
+                        binding.editPassword.text.toString()
+                    )
                 }
                 findNavController().navigate(R.id.action_nav_login_fragment_to_homeFragment)
             }
@@ -89,13 +95,16 @@ class LoginFragment : Fragment() {
 
     private fun rememberLoginAndPassword() {
         binding.checkboxRememberMe.setOnCheckedChangeListener { buttonView, isChecked ->
-                loginSharedPreferencesRememberMe.saveIsRememberMeChecked(isChecked)
+            loginSharedPreferencesRememberMe.saveIsRememberMeChecked(isChecked)
         }
     }
 
-    private fun skipLoginScreen() {
-        viewModel.isRememberMeChecked.observe(viewLifecycleOwner) {
-            if (it) findNavController().navigate(R.id.action_nav_login_fragment_to_homeFragment)
+    private fun displayLoginErrorMessage() {
+        viewModel.loginErrorText.observe(viewLifecycleOwner) { errorText ->
+            if (errorText.isNotBlank()) {
+                binding.textError.visibility = View.VISIBLE
+                binding.textError.text = errorText
+            }
         }
     }
 
@@ -109,7 +118,8 @@ class LoginFragment : Fragment() {
 
     private fun showSystemUI() {
         activity?.window?.decorView?.let {
-            it.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+            it.systemUiVisibility =
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
         }
     }
 

@@ -7,9 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.example.data.cache.SharedPrefMovieCategory
-import com.example.data.cache.SharedPrefMovieFilter
-import com.example.data.cache.SharedPreferencesLoginRememberMe
+import com.example.data.cache.*
 import com.example.movies.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -28,6 +26,12 @@ class WelcomeScreenFragment : Fragment() {
     @Inject
     lateinit var sharedPrefMovieCategory: SharedPrefMovieCategory
 
+    @Inject
+   lateinit var sharedPrefLoginAndPassword: SharedPrefLoginAndPassword
+
+//    @Inject
+//    lateinit var loginSharedPreferencesRememberMe: SharedPreferencesLoginRememberMe
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,6 +40,11 @@ class WelcomeScreenFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        // TODO: fix login screen back press button 
+
+      // loginSharedPreferencesRememberMe.saveIsRememberMeChecked(false)
+
         sharedPrefMovieCategory.clearMovieCategory()
         sharedPrefMovieFilter.clearFilterCache()
         delayWelcomeScreen()
@@ -43,9 +52,10 @@ class WelcomeScreenFragment : Fragment() {
 
     private fun delayWelcomeScreen() {
         viewLifecycleOwner.lifecycleScope.launch {
+            val userName = sharedPrefLoginAndPassword.loadUserName()
+            val password = sharedPrefLoginAndPassword.loadPassword()
             delay(3000)
-            if (isLoginRememberMe.loadIsRememberMeChecked()) {
-                //findNavController().navigate(R.id.action_welcomeScreenFragment_to_homeFragment)
+            if (isLoginRememberMe.loadIsRememberMeChecked() && userName.isNotBlank() && password.isNotBlank()) {
                 findNavController().navigate(R.id.action_welcome_screen_to_homeFragment)
             } else {
                 findNavController().navigate(R.id.action_welcomeScreenFragment_to_nav_login_fragment)
