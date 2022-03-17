@@ -41,7 +41,7 @@ class WelcomeScreenFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        // TODO: fix login screen back press button 
+        // TODO: fix login screen back press button
 
       // loginSharedPreferencesRememberMe.saveIsRememberMeChecked(false)
 

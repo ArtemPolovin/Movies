@@ -30,7 +30,13 @@ class SavedMovieViewModel @Inject constructor(
 
    private fun fetchWatchList() {
          _watchList.value = ResponseResult.Loading
-        viewModelScope.launch {
+
+       val handler = CoroutineExceptionHandler { coroutineContext, throwable ->
+           _watchList.value = ResponseResult.Failure(
+               message = "Unknown error has occurred. Please check internet connection"
+           )
+       }
+        viewModelScope.launch(handler) {
             _watchList.value = getWatchListUseCase.execute(sessionIdDataCache.loadSessionId())
         }
     }
