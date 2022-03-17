@@ -67,7 +67,7 @@
         <action
             android:id="@+id/action_settings_to_nav_login_fragment"
             app:destination="@id/nav_login_fragment"
-            app:popUpTo="@id/moviesFragment"
+            app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true"/>
     </fragment>
     <fragment
