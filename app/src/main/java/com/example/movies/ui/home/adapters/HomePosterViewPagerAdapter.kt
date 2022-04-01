@@ -1,13 +1,12 @@
 package com.example.movies.ui.home.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import com.bumptech.glide.Glide
 import com.example.domain.models.MoviePosterViewPagerModel
+import com.example.movies.R
 import com.example.movies.databinding.CellMoviePosterViewPagerBinding
 
 class HomePosterViewPagerAdapter(
@@ -19,16 +18,19 @@ class HomePosterViewPagerAdapter(
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PosterViewHolder {
-        val binding = CellMoviePosterViewPagerBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
+        val binding: CellMoviePosterViewPagerBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(parent.context),
+            R.layout.cell_movie_poster_view_pager,
+            parent,
+            false
         )
-        return PosterViewHolder(binding, parent.context)
+        return PosterViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: PosterViewHolder, position: Int) {
         val moviePosterViewPagerModel = postersList[position]
 
-        holder.bind(moviePosterViewPagerModel, position + 1)
+        holder.bind(moviePosterViewPagerModel)
         holder.onPosterClick(moviePosterViewPagerModel.movieId)
 
         if (position == postersList.size - 2) {
@@ -42,28 +44,13 @@ class HomePosterViewPagerAdapter(
     }
 
     inner class PosterViewHolder(
-        private val binding: CellMoviePosterViewPagerBinding,
-        private val context: Context
+        binding: CellMoviePosterViewPagerBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(moviePosterModel: MoviePosterViewPagerModel, position: Int) {
+        private val posterBinding = binding
 
-            itemView.apply {
-                binding.textMovieName.text = moviePosterModel.movieName
-                binding.textMovieGenres.text = moviePosterModel.genreName
-//                text_count_of_posters.text = String.format(
-//                    context.applicationContext.getString(R.string.count_of_poster),
-//                    countOfPosters++,
-//                    postersListSize
-//                )
-                loadImage(binding.imagePoster, moviePosterModel.poster)
-            }
-        }
-
-       private fun loadImage(image: ImageView, imageUrl: String?) {
-            Glide.with(context)
-                .load(imageUrl)
-                .into(image)
+        fun bind(moviePosterModel: MoviePosterViewPagerModel) {
+            posterBinding.posterModel = moviePosterModel
         }
 
         fun onPosterClick(movieId: Int) {

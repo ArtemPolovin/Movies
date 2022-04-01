@@ -8,11 +8,15 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.data.cache.SharedPrefMovieCategory
 import com.example.data.cache.SharedPrefMovieFilter
 import com.example.domain.utils.ResponseResult
+import com.example.movies.R
 import com.example.movies.databinding.FragmentMovieCategoriesBinding
+import com.example.movies.ui.explore.ExploreFragmentDirections
 import com.example.movies.ui.movie_categories.adapters.MoviesCategoriesAdapter
 import com.example.movies.utils.KEY_OPEN_MOVIES_PAGE
 import com.example.movies.utils.setNavigationResult
@@ -58,8 +62,7 @@ class MovieCategoriesFragment : Fragment() {
         setupRecyclerView()
         setUpMovieCategoriesList()
         openMoviesPage()
-       // inputResultOfMovieSearching()
-
+        // inputResultOfMovieSearching()
 
 
     }
@@ -79,7 +82,7 @@ class MovieCategoriesFragment : Fragment() {
                 }
                 is ResponseResult.Success -> {
                     binding.rvMovieCategories.visibility = VISIBLE
-                    adapterMovieCategory.setUpList(it.data)
+                    adapterMovieCategory.submitList(it.data)
                 }
             }
         }
@@ -90,8 +93,9 @@ class MovieCategoriesFragment : Fragment() {
             sharedPrefMovieCategory.saveMovieCategory(it.categoryName)
             sharedPrefMovieCategory.saveGenreId(it.genreId)
             sharedPrefMovieFilter.clearFilterCache()
-            //findNavController().navigate(R.id.action_movieCategoriesFragment_to_moviesFragment)
-            setNavigationResult(KEY_OPEN_MOVIES_PAGE, true)
+            val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+            navController.navigate(ExploreFragmentDirections.actionExploreFragmentToMoviesFragment())
+            //setNavigationResult(KEY_OPEN_MOVIES_PAGE, true)
         }
     }
 
@@ -102,8 +106,8 @@ class MovieCategoriesFragment : Fragment() {
         }
     }
 
-   /* private fun setupToolbar() {
-        (requireActivity() as MainActivity).setupActionBar(binding.toolbar)
-    }*/
+    /* private fun setupToolbar() {
+         (requireActivity() as MainActivity).setupActionBar(binding.toolbar)
+     }*/
 
 }

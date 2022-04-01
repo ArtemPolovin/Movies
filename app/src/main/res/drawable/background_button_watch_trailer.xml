@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/ripple_effect_color">
 
-    <solid android:color="@color/button_watch_trailer_color" />
-    <corners android:radius="20dp" />
+    <item>
+        <shape>
+            <solid android:color="@color/button_watch_trailer_color" />
+            <corners android:radius="20dp" />
+        </shape>
+    </item>
 
-</shape>
+</ripple>

@@ -21,7 +21,7 @@
         android:id="@+id/view_blue_picture"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="60dp"
         android:background="@drawable/header_background"
         app:layout_constraintBottom_toTopOf="@+id/text_error"
         app:layout_constraintTop_toTopOf="parent" />
@@ -32,7 +32,7 @@
         android:fontFamily="@font/architects_daughter"
         android:text="@string/text_header_login"
         android:textColor="@color/white"
-        android:textSize="42sp"
+        android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@id/image_user_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,8 +41,8 @@
 
     <ImageView
         android:id="@+id/image_user_icon"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:src="@drawable/image_user"
         app:layout_constraintBottom_toBottomOf="@id/view_blue_picture"
         app:layout_constraintEnd_toEndOf="parent"
@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginBottom="10dp"
-        android:text="sdfsdfsdftrh trwtr t rtrth rt hrt rh rt wtrh trh rth rth rt h h rth rth  rth rth rth r htrsd"
+        tools:text="sdfsdfsdftrh trwtr t rtrth rt hrt rh rt wtrh trh rth rth rt h h rth rth  rth rth rth r htrsd"
         android:textColor="@color/text_error_color"
         android:textSize="18sp"
         android:visibility="invisible"
@@ -69,10 +69,10 @@
     <EditText
         android:id="@+id/edit_user_name"
         android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="30dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="120dp"
+        android:layout_marginEnd="120dp"
+        android:layout_marginBottom="13dp"
         android:background="@drawable/login_field_background"
         android:drawableStart="@drawable/ic_user_name"
         android:hint="@string/text_hint_user_name"
@@ -87,8 +87,8 @@
     <EditText
         android:id="@+id/edit_password"
         android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginBottom="40dp"
+        android:layout_height="38dp"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/login_field_background"
         android:drawableStart="@drawable/ic_password"
         android:hint="@string/text_hint_password"
@@ -104,7 +104,7 @@
     <Button
         android:id="@+id/btn_login"
         android:layout_width="0dp"
-        android:layout_height="48dp"
+        android:layout_height="38dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/button_background"
         android:enabled="false"
@@ -119,12 +119,12 @@
     <CheckBox
         android:id="@+id/checkbox_remember_me"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_height="25dp"
+        android:layout_marginBottom="8dp"
         android:text="@string/text_remember_me"
         android:textColor="@color/login_screen_text_color"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/text_new_user"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/btn_login"
         app:layout_constraintTop_toBottomOf="@id/btn_login" />
 
@@ -133,13 +133,13 @@
         android:id="@+id/text_new_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="26dp"
+        android:layout_marginStart="80dp"
         android:text="@string/text_new_user"
         android:textColor="@color/login_screen_text_color"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/checkbox_remember_me"
-        app:layout_constraintTop_toBottomOf="@id/checkbox_remember_me" />
+        app:layout_constraintBottom_toBottomOf="@id/checkbox_remember_me"
+        app:layout_constraintStart_toEndOf="@id/checkbox_remember_me"
+        app:layout_constraintTop_toTopOf="@id/checkbox_remember_me" />
 
 
     <TextView

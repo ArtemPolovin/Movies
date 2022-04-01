@@ -9,22 +9,25 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.navArgs
-import com.example.movies.databinding.ActivityTrailerBinding
+import com.example.movies.databinding.ActivityWatchTrailerBinding
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerFullScreenListener
 
-class Trailer : AppCompatActivity() {
-    private var _binding: ActivityTrailerBinding? = null
-    private val binding: ActivityTrailerBinding
+class WatchTrailerActivity : AppCompatActivity() {
+    private var _binding: ActivityWatchTrailerBinding? = null
+    private val binding: ActivityWatchTrailerBinding
         get() =
-            _binding ?: throw RuntimeException("ActivityTrailerBinding == null")
+            _binding ?: throw RuntimeException("ActivityWatchTrailerBinding == null")
 
-    private val args: TrailerArgs by navArgs()
+    private val args: WatchTrailerActivityArgs by navArgs()
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         super.onCreate(savedInstanceState)
-        _binding = ActivityTrailerBinding.inflate(layoutInflater)
+
+        _binding = ActivityWatchTrailerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         fullScreenListener()
@@ -32,19 +35,11 @@ class Trailer : AppCompatActivity() {
 
     }
 
-
     private fun showVideo(videoId: String) {
         lifecycle.addObserver(binding.youtubePlayer)
 
-        // binding.youtubePlayer.enterFullScreen()
-
-//       val a =  binding.youtubePlayer.inflateCustomPlayerUi(R.layout.custop_player_ui)
-//
-//        val btn = a.findViewById<Button>(R.id.custom_button_ui)
-//
-//        btn.setOnClickListener { println("mLog: clicked") }
-
-        val listener = binding.youtubePlayer.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+        val listener = binding.youtubePlayer.addYouTubePlayerListener(object :
+            AbstractYouTubePlayerListener() {
             override fun onReady(youTubePlayer: YouTubePlayer) {
                 youTubePlayer.loadVideo(videoId, 0f)
             }

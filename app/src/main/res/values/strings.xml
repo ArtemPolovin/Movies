@@ -56,4 +56,6 @@
     <string name="save_to_watch_list">Save to watch list</string>
     <string name="saved_in_watch_list">Saved in watch list</string>
     <string name="search_view_hint">Find movies</string>
+    <string name="button_watch_trailer_text">Watch Trailer</string>
+    <string name="explore_fragment_title">Explore</string>
 </resources>

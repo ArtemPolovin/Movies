@@ -91,8 +91,7 @@ class SavedMovieFragment : Fragment() {
         savedMoviesAdapter.selectedMovie.observe(viewLifecycleOwner) { selectedMovie ->
             findNavController().navigate(
                 SavedMovieFragmentDirections.actionSavedMoviesToMovieDetailsFragment(
-                    selectedMovie.movieId,
-                    false
+                    selectedMovie.movieId
                 )
             )
         }

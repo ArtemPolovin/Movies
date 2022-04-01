@@ -1,9 +1,13 @@
 package com.example.movies.ui.welcome_screen
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -40,11 +44,8 @@ class WelcomeScreenFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-        // TODO: fix login screen back press button
-
       // loginSharedPreferencesRememberMe.saveIsRememberMeChecked(false)
-
+        hideSystemUi(view)
         sharedPrefMovieCategory.clearMovieCategory()
         sharedPrefMovieFilter.clearFilterCache()
         delayWelcomeScreen()
@@ -62,6 +63,18 @@ class WelcomeScreenFragment : Fragment() {
             }
 
         }
+    }
+
+    private fun hideSystemUi(view: View) {
+       // activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+
+        WindowCompat.setDecorFitsSystemWindows(requireActivity().window, false)
+        WindowInsetsControllerCompat(requireActivity().window, view).let { controller ->
+            controller.hide(WindowInsetsCompat.Type.systemBars())
+            controller.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
+
     }
 
 }

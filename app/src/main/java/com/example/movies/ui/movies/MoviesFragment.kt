@@ -94,7 +94,7 @@ class MoviesFragment : Fragment() {
         moviesAdapter.onClickItem(object : MoviesWithDetailsAdapter.OnClickAdapterPopularMovieListener {
             override fun getMovie(movie: MovieWithDetailsModel) {
                 findNavController().navigate(
-                    MoviesFragmentDirections.actionMoviesFragmentToMovieDetailsFragment(movie.id,true))
+                    MoviesFragmentDirections.actionMoviesFragmentToMovieDetailsFragment(movie.id))
             }
 
         })

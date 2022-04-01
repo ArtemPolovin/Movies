@@ -4,17 +4,19 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.databinding.DataBindingUtil
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.domain.models.MovieWithDetailsModel
+import com.example.movies.R
 import com.example.movies.databinding.CellMovieBinding
-import com.example.movies.utils.DATA_VIEWTYPE
-import com.example.movies.utils.LOADSTATE_VIEW_TYPE
 
 class MoviesWithDetailsAdapter :
-    PagingDataAdapter<MovieWithDetailsModel, MoviesWithDetailsAdapter.MoviesViewHolder>(MoviesWithDetailsDiffUtilCallback()) {
+    PagingDataAdapter<MovieWithDetailsModel, MoviesWithDetailsAdapter.MoviesViewHolder>(
+        MoviesWithDetailsDiffUtilCallback()
+    ) {
 
     private lateinit var onClickAdapterPopularMovieListener: OnClickAdapterPopularMovieListener
 
@@ -23,7 +25,12 @@ class MoviesWithDetailsAdapter :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesViewHolder {
-        val binding = CellMovieBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding: CellMovieBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(parent.context),
+            R.layout.cell_movie,
+            parent,
+            false
+        )
         return MoviesViewHolder(binding, parent.context, onClickAdapterPopularMovieListener)
     }
 
@@ -49,17 +56,8 @@ class MoviesWithDetailsAdapter :
         private val onClickAdapterPopularMovieListener: OnClickAdapterPopularMovieListener
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(popularMovie: MovieWithDetailsModel) {
-          loadImage(binding.imageMoviePoster, popularMovie.poster)
-            binding.textMovieName.text = popularMovie.movieName
-            binding.textPopularity.text = popularMovie.popularityScore
-            binding.textReleaseDate.text = popularMovie.releaseData
-            binding.textRating.text = popularMovie.rating.toString()
-            popularMovie.rating?.let {
-                binding.ratingBarMovie.rating = it.toFloat()
-            }
-            binding.textGenre.text = popularMovie.genres
-            binding.textVoteCount.text = "(${popularMovie.voteCount})"
+        fun bind(movieWithDetailsModel: MovieWithDetailsModel) {
+            binding.movieWithDetailsBindingModel = movieWithDetailsModel
         }
 
         fun onClick(movieWithDetailsModel: MovieWithDetailsModel) {
@@ -67,13 +65,6 @@ class MoviesWithDetailsAdapter :
                 onClickAdapterPopularMovieListener.getMovie(movieWithDetailsModel)
             }
         }
-
-        fun loadImage(image: ImageView, imageUrl: String?) {
-            Glide.with(context)
-                .load(imageUrl)
-                .into(image)
-        }
-
     }
 
     class MoviesWithDetailsDiffUtilCallback : DiffUtil.ItemCallback<MovieWithDetailsModel>() {

@@ -1,5 +1,6 @@
 package com.example.movies.ui.saved_movie
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.data.cache.SessionIdDataCache
 import com.example.domain.models.MovieModel

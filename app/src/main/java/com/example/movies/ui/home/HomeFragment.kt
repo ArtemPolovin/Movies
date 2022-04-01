@@ -1,5 +1,7 @@
 package com.example.movies.ui.home
 
+import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -7,6 +9,9 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -57,16 +62,11 @@ class HomeFragment : Fragment() {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
-
-        //return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         binding.buttonRetry.setOnClickListener { viewModel.refreshData() }
-
-
-        //app_bar_layout.addOnOffsetChangedListener(ifAppbarLayoutIsCollapsed)
 
         setupRecyclerView()
         setupViewPager()
@@ -81,14 +81,8 @@ class HomeFragment : Fragment() {
         binding.rvVertical.apply {
             adapter = verticalAdapter
             layoutManager = LinearLayoutManager(requireContext())
-
-            //layoutManager = mLayoutManager
         }
 
-        //val firstVisibleItemPosition = mLayoutManager.findFirstVisibleItemPosition()
-
-        //println("mLog: first pos = ${(rv_vertical.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()}")
-        //println("mLog: first pos = $firstVisibleItemPosition")
     }
 
 
@@ -108,7 +102,7 @@ class HomeFragment : Fragment() {
                 }
                 is ResponseResult.Success -> {
                     binding.rvVertical.visibility = VISIBLE
-                    verticalAdapter.setData(it.data)
+                    verticalAdapter.submitList(it.data)
                 }
             }
         }
@@ -116,8 +110,11 @@ class HomeFragment : Fragment() {
 
     private fun showSystemUI() {
         activity?.window?.decorView?.let {
-            it.systemUiVisibility =
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+            WindowCompat.setDecorFitsSystemWindows(requireActivity().window, true)
+            WindowInsetsControllerCompat(
+                this.requireActivity().window,
+                it
+            ).show(WindowInsetsCompat.Type.systemBars())
         }
     }
 
@@ -135,7 +132,7 @@ class HomeFragment : Fragment() {
     private fun openScreenWithMovieDetails() {
         verticalAdapter.clickedMovieId.observe(viewLifecycleOwner) { movieId ->
             findNavController().navigate(
-                HomeFragmentDirections.actionHomeFragmentToMovieDetailsFragment(movieId, true)
+                HomeFragmentDirections.actionHomeFragmentToMovieDetailsFragment(movieId)
             )
         }
     }
@@ -164,7 +161,7 @@ class HomeFragment : Fragment() {
 
             posterAdapter.onPosterClickListener = { movieId ->
                 findNavController().navigate(
-                    HomeFragmentDirections.actionHomeFragmentToMovieDetailsFragment(movieId, true)
+                    HomeFragmentDirections.actionHomeFragmentToMovieDetailsFragment(movieId)
                 )
             }
 
@@ -176,9 +173,16 @@ class HomeFragment : Fragment() {
         super.onPause()
     }
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onResume() {
         super.onResume()
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         sliderHandle.postDelayed(sliderRun, 3000)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER
     }
 
 }

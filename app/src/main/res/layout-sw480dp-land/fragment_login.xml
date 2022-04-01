@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginBottom="10dp"
-        android:text="sdfsdfsdftrh trwtr t rtrth rt hrt rh rt wtrh trh rth rth rt h h rth rth  rth rth rth r htrsd"
+        tools:text="sdfsdfsdftrh trwtr t rtrth rt hrt rh rt wtrh trh rth rth rt h h rth rth  rth rth rth r htrsd"
         android:textColor="@color/text_error_color"
         android:textSize="18sp"
         android:visibility="invisible"

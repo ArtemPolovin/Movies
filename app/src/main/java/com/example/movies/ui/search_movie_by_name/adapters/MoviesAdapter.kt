@@ -15,6 +15,8 @@ class MoviesAdapter : PagingDataAdapter<MovieModel, MoviesAdapter.MoviesViewHold
     MoviesDiffUtilCallback()
 ) {
 
+    var onItemClickLister: ((movieId: Int)-> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesViewHolder {
         val binding = CellMovieByNameBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
@@ -25,6 +27,9 @@ class MoviesAdapter : PagingDataAdapter<MovieModel, MoviesAdapter.MoviesViewHold
     override fun onBindViewHolder(holder: MoviesViewHolder, position: Int) {
         getItem(position)?.let { movieModel ->
             holder.bind(movieModel)
+            holder.itemView.setOnClickListener {
+                onItemClickLister?.invoke(movieModel.movieId)
+            }
         }
 
 
