@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<layout>
+    <data>
+        <variable
+            name="movieBindingModel"
+            type="com.example.domain.models.MovieModel" />
+    </data>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginEnd="8dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -10,6 +18,7 @@
         android:layout_width="130dp"
         android:layout_height="200dp"
         android:background="@color/black"
+        app:loadImage="@{movieBindingModel.poster}"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
@@ -17,7 +26,8 @@
         android:id="@+id/text_movie_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Name Of Movie"
+        tools:text="Name Of Movie"
+        android:text="@{movieBindingModel.title}"
         android:textColor="@color/text_movie_info_color"
         android:textSize="12sp"
         app:layout_constraintTop_toBottomOf="@+id/image_horizontal_item"
@@ -25,3 +35,5 @@
         app:layout_constraintEnd_toEndOf="@+id/image_horizontal_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

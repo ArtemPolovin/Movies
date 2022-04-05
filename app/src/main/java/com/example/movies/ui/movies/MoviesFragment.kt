@@ -15,8 +15,8 @@ import com.example.domain.models.MovieWithDetailsModel
 import com.example.movies.R
 import com.example.movies.databinding.FragmentMoviesBinding
 import com.example.movies.ui.MainActivity
-import com.example.movies.ui.movies.adapter.MovieAdapter
-import com.example.movies.ui.movies.adapter.MovieLoadStateAdapter
+import com.example.movies.ui.movies.adapter.MoviesWithDetailsAdapter
+import com.example.movies.utils.MovieLoadStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -32,7 +32,7 @@ class MoviesFragment : Fragment() {
 
     private val viewModel: MoviesViewModel by viewModels()
 
-    private lateinit var moviesAdapter: MovieAdapter
+    private lateinit var moviesAdapter: MoviesWithDetailsAdapter
 
     @Inject
     lateinit var sharedPrefMovieCategory: SharedPrefMovieCategory
@@ -72,7 +72,7 @@ class MoviesFragment : Fragment() {
 
 
     private fun setupAdapter() {
-        moviesAdapter = MovieAdapter()
+        moviesAdapter = MoviesWithDetailsAdapter()
         binding.rvMovies.run {
             adapter = moviesAdapter.withLoadStateHeaderAndFooter(
                 header = MovieLoadStateAdapter { moviesAdapter.retry() },
@@ -91,10 +91,10 @@ class MoviesFragment : Fragment() {
     }
 
     private fun openMovieDetailsScreen() {
-        moviesAdapter.onClickItem(object : MovieAdapter.OnClickAdapterPopularMovieListener {
+        moviesAdapter.onClickItem(object : MoviesWithDetailsAdapter.OnClickAdapterPopularMovieListener {
             override fun getMovie(movie: MovieWithDetailsModel) {
                 findNavController().navigate(
-                    MoviesFragmentDirections.actionMoviesFragmentToMovieDetailsFragment(movie.id,true))
+                    MoviesFragmentDirections.actionMoviesFragmentToMovieDetailsFragment(movie.id))
             }
 
         })

@@ -1,4 +1,5 @@
 package com.example.data.mapers
+
 import com.example.data.apimodels.movie_details.MovieDetailsModelApi
 import com.example.data.apimodels.movie_state.MovieAccountStateApiModel
 import com.example.data.apimodels.movies.MoviesListApiModel
@@ -37,14 +38,14 @@ class MoviesApiMapper {
         movieApiModel: Result,
     ): MovieWithDetailsModel {
 
-      return  if (movieDetailsModelApi != null) {
+        return if (movieDetailsModelApi != null) {
             return createMovieWithDetailsModel(movieDetailsModelApi, videoApiModel)
-        }else{
+        } else {
             MovieWithDetailsModel(
                 releaseData = movieApiModel.release_date,
                 popularityScore = movieApiModel.popularity.toString(),
                 movieName = movieApiModel.title,
-                rating = movieApiModel.vote_average,
+                rating = movieApiModel.vote_average.toFloat(),
                 poster = "${POSTER_BASE_URL}${movieApiModel.poster_path}",
                 backdropPoster = "${POSTER_BASE_URL}${movieApiModel.backdrop_path}",
                 overview = movieApiModel.overview,
@@ -65,7 +66,7 @@ class MoviesApiMapper {
             releaseData = movieDetailsModelApi.release_date,
             popularityScore = movieDetailsModelApi.popularity.toString(),
             movieName = movieDetailsModelApi.title,
-            rating = movieDetailsModelApi.vote_average,
+            rating = movieDetailsModelApi.vote_average?.toFloat(),
             poster = "${POSTER_BASE_URL}${movieDetailsModelApi.poster_path}",
             backdropPoster = "${POSTER_BASE_URL}${movieDetailsModelApi.backdrop_path}",
             overview = movieDetailsModelApi.overview,

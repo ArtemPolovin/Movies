@@ -1,7 +1,5 @@
 package com.example.data.mapers
 
-import com.example.data.apimodels.auth.LoginErrorApiModel
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.json.JSONObject
 
 class ErrorLoginMapper {

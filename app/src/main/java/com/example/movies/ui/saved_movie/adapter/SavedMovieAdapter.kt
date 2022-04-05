@@ -1,18 +1,18 @@
 package com.example.movies.ui.saved_movie.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.domain.models.MovieModel
+import com.example.movies.R
 import com.example.movies.databinding.CellSavedMovieBinding
 
-class SavedMovieAdapter : ListAdapter<MovieModel, SavedMovieAdapter.SavedMoviesViewHolder>(SavedMoviesDiffCallback()) {
+class SavedMovieAdapter :
+    ListAdapter<MovieModel, SavedMovieAdapter.SavedMoviesViewHolder>(SavedMoviesDiffCallback()) {
 
     private val _selectedMovie = MutableLiveData<MovieModel>()
     val selectedMovie: LiveData<MovieModel> get() = _selectedMovie
@@ -30,14 +30,14 @@ class SavedMovieAdapter : ListAdapter<MovieModel, SavedMovieAdapter.SavedMoviesV
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SavedMoviesViewHolder {
-        val binding = CellSavedMovieBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
+        val binding: CellSavedMovieBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(parent.context), R.layout.cell_saved_movie, parent, false
         )
-        return SavedMoviesViewHolder(binding, parent.context)
+        return SavedMoviesViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: SavedMoviesViewHolder, position: Int) {
-       val movieModel = getItem(position)
+        val movieModel = getItem(position)
 
         holder.bind(movieModel)
         holder.click(movieModel)
@@ -49,22 +49,11 @@ class SavedMovieAdapter : ListAdapter<MovieModel, SavedMovieAdapter.SavedMoviesV
         return getItem(position).movieId.toLong()
     }
 
-    inner class SavedMoviesViewHolder(
-        private val binding: CellSavedMovieBinding,
-        private val context: Context,
-    ) : RecyclerView.ViewHolder(binding.root) {
+    inner class SavedMoviesViewHolder(private val binding: CellSavedMovieBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(movieModel: MovieModel) {
-            loadImage(binding.imageMoviePoster, movieModel.poster)
-            binding.textMovieName.text = movieModel.title
-            binding.textRating.text = movieModel.rating.toString()
-            binding.textVoteCount.text = movieModel.voteCount.toString()
-        }
-
-       private fun loadImage(image: ImageView, imageUrl: String?) {
-            Glide.with(context)
-                .load(imageUrl)
-                .into(image)
+            binding.movieWithDetailsBindingModel = movieModel
         }
 
         fun longClick(itemPosition: Int) {
@@ -90,7 +79,6 @@ class SavedMovieAdapter : ListAdapter<MovieModel, SavedMovieAdapter.SavedMoviesV
             }
         }
     }
-
 
 
 }

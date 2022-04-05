@@ -99,6 +99,13 @@ interface MoviesApi {
         @Query("session_id") sessionId: String
     ): Response<MovieAccountStateApiModel>
 
+    @GET("/3/search/movie")
+    suspend fun getMoviesByName(
+        @Query("page") page: Int,
+        @Query("query") movieName: String,
+        @Query("language") language: String?
+    ): Response<MoviesListApiModel>
+
 
     companion object {
         operator fun invoke(): MoviesApi {

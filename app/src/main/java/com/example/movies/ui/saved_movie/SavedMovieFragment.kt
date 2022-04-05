@@ -39,7 +39,7 @@ class SavedMovieFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+        viewModel.refreshIfWatchListWasChanged()
         (requireActivity() as MainActivity).setupActionBar(binding.toolbar)
 
         showDeleteMenuIcon.value = false
@@ -91,8 +91,7 @@ class SavedMovieFragment : Fragment() {
         savedMoviesAdapter.selectedMovie.observe(viewLifecycleOwner) { selectedMovie ->
             findNavController().navigate(
                 SavedMovieFragmentDirections.actionSavedMoviesToMovieDetailsFragment(
-                    selectedMovie.movieId,
-                    false
+                    selectedMovie.movieId
                 )
             )
         }

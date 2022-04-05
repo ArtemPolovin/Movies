@@ -23,7 +23,7 @@
     <string name="text_signup">Sign Up on Web page</string>
     <string name="text_log_out">Log out</string>
     <string name="text_remember_me">Remember me</string>
-    <string name="title_movie_categories">Categories</string>
+    <string name="title_movie_explore">Explore</string>
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
@@ -55,4 +55,7 @@
     <string name="recommendations_movies_header">You might also like</string>
     <string name="save_to_watch_list">Save to watch list</string>
     <string name="saved_in_watch_list">Saved in watch list</string>
+    <string name="search_view_hint">Find movies</string>
+    <string name="button_watch_trailer_text">Watch Trailer</string>
+    <string name="explore_fragment_title">Explore</string>
 </resources>

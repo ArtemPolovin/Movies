@@ -10,6 +10,7 @@ import com.example.domain.usecases.movie_usecase.GetMoviesSortedByGenreUseCase
 import com.example.domain.usecases.movie_usecase.GetUpComingMoviesUseCase
 import com.example.domain.utils.ResponseResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -35,15 +36,18 @@ class HomeViewModel @Inject constructor(
     private fun fetchSortedMoviesByGenre() {
         _sortedMoviesByGenre.value = ResponseResult.Loading
 
-        viewModelScope.launch {
+        val handler = CoroutineExceptionHandler { coroutineContext, throwable ->
+            _sortedMoviesByGenre.value = ResponseResult.Failure(
+                message = "Unknown error has occurred. Please check internet connection"
+            )
+        }
 
+        viewModelScope.launch(handler) {
             val sortedMovies = async { getMoviesSortedByGenreUseCase.execute() }
             val upComingMovies = async { getUpcomingMoviesUseCase.execute(1) }
 
             _sortedMoviesByGenre.value = sortedMovies.await()
             _upcomingMovies.value = upComingMovies.await()
-
-
         }
     }
 

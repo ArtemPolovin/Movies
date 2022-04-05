@@ -25,7 +25,7 @@ class AuthMovieRepositoryImpl(
             if (response.isSuccessful) {
                 response.body()?.let { body ->
                     requestTokenDataCache.saveRequestToken(body.request_token)
-                    requestToken =  body.request_token
+                    requestToken = body.request_token
                 }
             } else {
                 Throwable(response.errorBody().toString())

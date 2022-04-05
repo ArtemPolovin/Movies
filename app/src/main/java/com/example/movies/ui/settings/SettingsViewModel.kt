@@ -29,9 +29,9 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             val logoutRequestBodyModel = LogoutRequestBodyModel(sessionIdDataCache.loadSessionId())
 
-            val isLoggedOutFormApi = logoutUseCase.execute(logoutRequestBodyModel)
-            if (isLoggedOutFormApi) clearLoginRememberMeData()
-            _isLoggedOut.value = isLoggedOutFormApi
+            val isLoggedOutFromApi = logoutUseCase.execute(logoutRequestBodyModel)
+            if (isLoggedOutFromApi) clearLoginRememberMeData()
+            _isLoggedOut.value = isLoggedOutFromApi
         }
     }
 

@@ -19,7 +19,7 @@ class MoviesAdapter :
         val binding = CellMovieHorizontalListBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
-        return HomeHorizontalAdapter.HorizontalRVViewHolder(binding, parent.context)
+        return HomeHorizontalAdapter.HorizontalRVViewHolder(binding)
     }
 
     override fun onBindViewHolder(

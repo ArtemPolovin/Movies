@@ -43,9 +43,9 @@ interface MoviesRepository {
     suspend fun getRecommendationsMovies(movieId: Int): ResponseResult<List<MovieModel>>
 
     suspend fun saveToWatchList(saveToWatchListModel: SaveToWatchListModel,sessionId: String)
-    //suspend fun getWatchList(sessionId: String): Flow<ResponseResult<List<MovieModel>>>
     suspend fun getWatchList(sessionId: String): ResponseResult<List<MovieModel>>
     suspend fun getMovieAccountState(sessionId: String,movieId: Int): ResponseResult<MovieAccountStateModel>
 
+    suspend fun getMoviesByName(movieName: String, page: Int): List<MovieModel>
 
 }
