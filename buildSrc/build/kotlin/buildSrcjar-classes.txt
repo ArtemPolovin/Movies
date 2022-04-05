@@ -1,0 +1,1 @@
+C:\Users\Artem\AndroidStudioProjects\Movies\buildSrc\build\classes\kotlin\main\Deps.class;C:\Users\Artem\AndroidStudioProjects\Movies\buildSrc\build\classes\kotlin\main\Versions.class

@@ -43,77 +43,78 @@ android {
 
 dependencies {
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation project(path: ':domain')
     implementation project(path: ':data')
 
+    implementation Deps.kotlin_stdlib
+
     // core-ktx
-    implementation core.coreKtx
+    implementation Deps.coreKtx
 
     //appcompat
-    implementation appcompat.appcompat
+    implementation Deps.appcompat
 
     // Google material design
-    implementation material.googleMaterial
+    implementation Deps.googleMaterial
 
     //constraintLayout
-    implementation constraintlayout.constraintlayout
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation Deps.constraintlayout
+    implementation Deps.legacy
 
-    implementation 'androidx.preference:preference-ktx:1.2.0'
+    implementation Deps.pref_ktx
 
     //junit
-    testImplementation junit.junit
+    testImplementation Deps.junit
 
     //test.ext JUnit
-    androidTestImplementation testExt.junit
+    androidTestImplementation Deps.junit
 
     //espresso
-    androidTestImplementation espresso.espressoCore
+    androidTestImplementation Deps.espressoCore
 
     //NavigationFragment
-    implementation navigationFragment.navFragment
-    implementation navigationFragment.navigationUi
-    implementation navigationFragment.navigationUiKtx
+    implementation Deps.navFragment
+    implementation Deps.navigationUi
+    implementation Deps.navigationUiKtx
 
     //RecyclerView
-    implementation recyclerView.recyclerView
+    implementation Deps.recyclerView
 
     // Dagger Hilt
-    implementation daggerHilt.daggerHilt
-    kapt daggerHilt.daggerHiltCompiler
+    implementation Deps.daggerHilt
+    kapt Deps.daggerHiltCompiler
 
     // Glide
-    implementation glide.glide
+    implementation Deps.glide
 
     // Kotlinx-serialization-json
-    implementation serializationJson.serialization
+    implementation Deps.serialization
 
     //Coroutines
-    implementation coroutines.coroutinesCore
-    implementation coroutines.coroutinesAndroid
+    implementation Deps.coroutinesCore
+    implementation Deps.coroutinesAndroid
 
-    def paging_version = "3.0.0-alpha10"
-    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
+    //Paging
+    implementation Deps.paging
 
     //Room
-    implementation room.roomRuntime
-    implementation room.roomKtx
-    kapt room.roomCompiler
+    implementation Deps.roomRuntime
+    implementation Deps.roomKtx
+    kapt Deps.roomCompiler
 
     // Gson
-    implementation gson.gson
+    implementation Deps.gson
 
     // YoutubePlayer
-    implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.5'
+    implementation Deps.youtubePlayer
 
     //AndroidAnimation
-    implementation "com.daimajia.androidanimations:library:2.4@aar"
+    implementation Deps.animation
 
     //Gif
-    implementation 'com.airbnb.android:lottie:4.1.0'
+    implementation Deps.gif
 
-    implementation "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
+    implementation Deps.coordinatorLayout
 
 
 
