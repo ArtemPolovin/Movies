@@ -4,24 +4,25 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.databinding.DataBindingUtil
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.domain.models.MovieModel
+import com.example.movies.R
 import com.example.movies.databinding.CellMovieByNameBinding
-import com.example.movies.databinding.CellMovieHorizontalListBinding
 
 class MoviesAdapter : PagingDataAdapter<MovieModel, MoviesAdapter.MoviesViewHolder>(
     MoviesDiffUtilCallback()
 ) {
 
-    var onItemClickLister: ((movieId: Int)-> Unit)? = null
+    var onItemClickLister: ((movieId: Int) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesViewHolder {
-        val binding = CellMovieByNameBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
+        val binding: CellMovieByNameBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(parent.context), R.layout.cell_movie_by_name, parent, false
         )
-        return MoviesViewHolder(binding, parent.context)
+        return MoviesViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: MoviesViewHolder, position: Int) {
@@ -36,23 +37,12 @@ class MoviesAdapter : PagingDataAdapter<MovieModel, MoviesAdapter.MoviesViewHold
     }
 
     class MoviesViewHolder(
-        private val binding: CellMovieByNameBinding,
-        private val context: Context
+        private val binding: CellMovieByNameBinding
     ) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(movieModel: MovieModel) {
-            itemView.apply {
-                loadImage(binding.movieByNameCell.imageHorizontalItem, movieModel.poster ?: "")
-                binding.movieByNameCell.textMovieName.setPadding(0,0,16,0)
-                binding.movieByNameCell.textMovieName.text = movieModel.title
-            }
-        }
-
-        private fun loadImage(image: ImageView, imageUrl: String) {
-            Glide.with(context)
-                .load(imageUrl)
-                .into(image)
+           binding.movieBindingModel = movieModel
         }
 
     }
