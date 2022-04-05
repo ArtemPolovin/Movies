@@ -2,6 +2,7 @@ package com.example.movies.ui.move_details
 
 import androidx.lifecycle.*
 import com.example.data.cache.SessionIdDataCache
+import com.example.data.cache.WatchListChanges
 import com.example.domain.models.MovieAccountStateModel
 import com.example.domain.models.MovieModel
 import com.example.domain.models.MovieWithDetailsModel
@@ -20,7 +21,8 @@ class MovieDetailsViewModel @Inject constructor(
     private val getRecommendationsMoviesUseCase: GetRecommendationsMoviesUseCase,
     private val sessionIdDataCache: SessionIdDataCache,
     private val saveOrDeleteMovieFromWatchListUseCase: SaveOrDeleteMovieFromWatchListUseCase,
-    private val getMovieAccountStateUseCase: GetMovieAccountStateUseCase
+    private val getMovieAccountStateUseCase: GetMovieAccountStateUseCase,
+    private val watchListChanges: WatchListChanges
 ) : ViewModel() {
 
     private val _movieDetailsModel = MutableLiveData<ResponseResult<MovieWithDetailsModel>>()
@@ -68,6 +70,10 @@ class MovieDetailsViewModel @Inject constructor(
             }
 
         }
+    }
+
+    fun saveWatchListChangesState() {
+        watchListChanges.saveIsWatchListChanged(true)
     }
 
 }

@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/auth_nav_graph"
+    android:id="@+id/explore_nav_graph"
     app:startDestination="@id/movieCategoriesFragment">
 
     <fragment
@@ -18,5 +18,14 @@
         android:id="@+id/searchMovieByNameFragment"
         android:name="com.example.movies.ui.search_movie_by_name.SearchMovieByNameFragment"
         android:label="fragment_search_movie_by_name"
-        tools:layout="@layout/fragment_search_movie_by_name" />
+        tools:layout="@layout/fragment_search_movie_by_name" >
+        <argument
+            android:name="movieName"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_searchMovieByNameFragment_self"
+            app:destination="@id/searchMovieByNameFragment"
+            app:popUpTo="@+id/searchMovieByNameFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
 </navigation>

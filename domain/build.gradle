@@ -11,16 +11,16 @@ java {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation Deps.kotlin_stdlib
 
     // Kotlinx-serialization-json
-    implementation serializationJson.serialization
+    implementation Deps.serialization
 
     //Coroutines
-    implementation coroutines.coroutinesCore
-    implementation coroutines.coroutinesAndroid
+    implementation Deps.coroutinesCore
+    implementation Deps.coroutinesAndroid
 
     //Retrofit2
-    implementation retrofit2.retrofit
+    implementation Deps.retrofit
 
 }

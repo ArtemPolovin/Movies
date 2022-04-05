@@ -14,7 +14,6 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.example.data.cache.SharedPreferencesLoginRememberMe
 import com.example.movies.R
-import com.example.movies.databinding.FragmentSavedMovieBinding
 import com.example.movies.utils.LOG_OUT_KEY
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -40,18 +39,14 @@ class SettingsFragment : PreferenceFragmentCompat(),Preference.OnPreferenceClick
         savedInstanceState: Bundle?
     ): View {
         val view = super.onCreateView(inflater, container, savedInstanceState)
-        view?.setBackgroundColor(
+        view.setBackgroundColor(
             ContextCompat.getColor(
                 requireContext(),
                 R.color.settings_background_color
             )
         )
         return view
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        buttonNo = view.findViewById(R.id.btn_no)
-        buttonYes = view.findViewById(R.id.btn_yes)
     }
 
     override fun onStart() {
@@ -59,17 +54,8 @@ class SettingsFragment : PreferenceFragmentCompat(),Preference.OnPreferenceClick
         super.onStart()
     }
 
- /*   override fun onPreferenceTreeClick(preference: Preference?): Boolean {
-
-        when (preference?.key) {
-            LOG_OUT_KEY -> showDialog()
-        }
-
-        return super.onPreferenceTreeClick(preference)
-    }*/
-
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
-        when (preference?.key) {
+        when (preference.key) {
             LOG_OUT_KEY -> showDialog()
         }
         return super.onPreferenceTreeClick(preference)
@@ -80,6 +66,9 @@ class SettingsFragment : PreferenceFragmentCompat(),Preference.OnPreferenceClick
             setCancelable(false)
             setContentView(R.layout.logout_alert_dialog)
             window?.setBackgroundDrawable(ColorDrawable(0))
+
+            buttonNo = findViewById(R.id.btn_no)
+            buttonYes = findViewById(R.id.btn_yes)
 
             buttonYes.setOnClickListener {
                 viewModel.logout()

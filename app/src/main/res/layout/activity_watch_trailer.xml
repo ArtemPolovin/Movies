@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/home_page_background_color"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.watch_trailer.WatchTrailerActivity">
+
+    <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+        android:id="@+id/youtube_player"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:autoPlay="false"
+        app:showFullScreenButton="true"
+        app:showYouTubeButton="false"
+        app:useWebUi="false" />
+
+</FrameLayout>

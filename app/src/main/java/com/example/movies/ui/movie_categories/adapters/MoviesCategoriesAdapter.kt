@@ -4,23 +4,21 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.domain.models.MovieCategoryModel
 import com.example.movies.databinding.MovieCategoryCellBinding
 
-class MoviesCategoriesAdapter :
-    RecyclerView.Adapter<MoviesCategoriesAdapter.MovieCategoriesViewHolder>() {
+/*class MoviesCategoriesAdapter :
+    RecyclerView.Adapter<MoviesCategoriesAdapter.MovieCategoriesViewHolder>() {*/
 
-    private val movieCategoriesList = mutableListOf<MovieCategoryModel>()
+class MoviesCategoriesAdapter :
+    ListAdapter<MovieCategoryModel, MoviesCategoriesAdapter.MovieCategoriesViewHolder>(
+        MovieCategoriesDiffCallback()
+    ) {
 
     private val _category = MutableLiveData<MovieCategoryModel>()
     val movieCategory: LiveData<MovieCategoryModel> get() = _category
-
-    fun setUpList(newList: List<MovieCategoryModel>) {
-        movieCategoriesList.clear()
-        movieCategoriesList.addAll(newList)
-        notifyDataSetChanged()
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieCategoriesViewHolder {
         val binding = MovieCategoryCellBinding.inflate(
@@ -30,14 +28,10 @@ class MoviesCategoriesAdapter :
     }
 
     override fun onBindViewHolder(holder: MovieCategoriesViewHolder, position: Int) {
-        val movieCellModel = movieCategoriesList[position]
+        val movieCellModel = getItem(position)
 
         holder.bind(movieCellModel)
         holder.onClick(movieCellModel)
-    }
-
-    override fun getItemCount(): Int {
-        return movieCategoriesList.size
     }
 
     inner class MovieCategoriesViewHolder(private val binding: MovieCategoryCellBinding) :

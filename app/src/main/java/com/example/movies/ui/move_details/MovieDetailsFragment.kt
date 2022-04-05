@@ -8,26 +8,27 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
-import android.view.*
-import android.view.View.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import android.view.ViewGroup
 import android.widget.TextView
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.example.domain.models.MovieWithDetailsModel
 import com.example.domain.models.SaveToWatchListModel
 import com.example.domain.utils.ResponseResult
+import com.example.movies.MovieDetailsArgs
 import com.example.movies.R
 import com.example.movies.databinding.FragmentMovieDetailsBinding
-import com.example.movies.ui.MainActivity
 import com.example.movies.ui.move_details.adapter.MoviesAdapter
 import com.example.movies.utils.MEDIA_TYPE_MOVIE
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerFullScreenListener
+import com.example.movies.utils.bindingImage
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -40,7 +41,7 @@ class MovieDetailsFragment : Fragment() {
 
     private val viewModel: MovieDetailsViewModel by viewModels()
 
-    private val args: MovieDetailsFragmentArgs by navArgs()
+    private val args: MovieDetailsArgs by navArgs()
 
     private val movieId: Int by lazy {
         args.movieId
@@ -48,8 +49,6 @@ class MovieDetailsFragment : Fragment() {
 
     private lateinit var similarMoviesAdapter: MoviesAdapter
     private lateinit var recommendedMoviesAdapter: MoviesAdapter
-
-    private var movieWithDetails: MovieWithDetailsModel? = null
 
     private var isSavedToWatchList = false
 
@@ -59,20 +58,17 @@ class MovieDetailsFragment : Fragment() {
     ): View {
         setHasOptionsMenu(true)
 
-        _binding = FragmentMovieDetailsBinding.inflate(inflater, container, false)
+        _binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_movie_details, container, false)
+
         return binding.root
     }
 
-    @SuppressLint("SourceLockedOrientationActivity")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-      //  (requireActivity() as MainActivity).setupActionBar(binding.toolbar, false)
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         checkMovieAccountState()
         checkMovieWithDetailsResponseState()
         openWebHomePage()
-        fullScreenListener()
         setupRecyclerViewForSimilarMovies()
         setupRecyclerviewForRecommendedMovies()
         setupSimilarMoviesData()
@@ -80,6 +76,12 @@ class MovieDetailsFragment : Fragment() {
         openScreenWithMovieDetailsByClickingSimilarMovie()
         openScreenWithMovieDetailsByClickingRecommendedMovie()
         changeWatchListIconState()
+    }
+
+    @SuppressLint("SourceLockedOrientationActivity")
+    override fun onResume() {
+        super.onResume()
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
 
@@ -98,58 +100,28 @@ class MovieDetailsFragment : Fragment() {
                     binding.buttonRetry.visibility = VISIBLE
                 }
                 is ResponseResult.Success -> {
-                    setupMovieDetails(it.data)
+                    setupMovieDetailsScreen(it.data)
                 }
             }
         }
     }
 
-    private fun setupMovieDetails(movieModel: MovieWithDetailsModel) {
+    private fun setupMovieDetailsScreen(movieModel: MovieWithDetailsModel) {
         binding.groupErrorViews.visibility = GONE
-        binding.youtubePlayer.visibility = GONE
-        binding.imageMovieDetails.visibility = GONE
 
-        movieModel.apply {
-            binding.textMovieNameDetails.text = movieName
-            binding.textPopularity.text = popularityScore
-            binding.textReleaseDate.text = releaseData
-            binding.textOverview.text = overview
-            binding.textVoteCountDetails.text = "(${voteCount})"
-            rating?.let { binding.ratingBarMovie.rating = it.toFloat() }
-            binding.textRatingDetails.text = rating.toString()
-            binding.textGenre.text = genres
-            homePageUrl?.let { underlineText(binding.textHomepageUrl, it) }
-            showVideoOrPoster(movieModel)
-        }
+        binding.movieWithDetailsModel = movieModel
+
+        movieModel.homePageUrl?.let { underlineText(binding.textHomepageUrl, it) }
+        movieModel.video?.let { watchTrailer(it) }
+
+        showWatchTrailerButton(movieModel)
     }
 
-    private fun showVideoOrPoster(movieModel: MovieWithDetailsModel) {
+    private fun showWatchTrailerButton(movieModel: MovieWithDetailsModel) {
         movieModel.video?.let { video ->
-            if (video.isNotBlank()) {
-                binding.imageMovieDetails.visibility = GONE
-                binding.viewImageShadow.visibility = GONE
-                binding.youtubePlayer.visibility = VISIBLE
-                showVideo(video)
-            } else {
-                binding.imageMovieDetails.visibility = VISIBLE
-                binding.viewImageShadow.visibility = VISIBLE
-
-                Glide.with(requireActivity())
-                    .load(movieModel.backdropPoster)
-                    .into(binding.imageMovieDetails)
-            }
+            if (video.isNotBlank()) binding.btnWatchTrailer.visibility = VISIBLE
+            else binding.btnWatchTrailer.visibility = GONE
         }
-
-    }
-
-    private fun showVideo(videoId: String) {
-        viewLifecycleOwner.lifecycle.addObserver(binding.youtubePlayer)
-
-        binding.youtubePlayer.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
-            override fun onReady(youTubePlayer: YouTubePlayer) {
-                youTubePlayer.cueVideo(videoId, 0f)
-            }
-        })
     }
 
     private fun underlineText(textView: TextView, text: String) {
@@ -165,67 +137,6 @@ class MovieDetailsFragment : Fragment() {
             startActivity(browserIntent)
         }
 
-    }
-
-  /*  override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.details_screen_tool_bar_menu, menu)
-        val item: MenuItem = menu.findItem(R.id.save_movie)
-        item.isVisible = args.showSavedIcon
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.save_movie -> {
-                movieWithDetails?.let { viewModel.insertMovieToDb(it) }
-                Toast.makeText(requireContext(), "The movie was saved", Toast.LENGTH_LONG).show()
-                true
-            }
-            else -> return super.onOptionsItemSelected(item)
-        }
-    }*/
-
-    private fun fullScreenListener() {
-
-        val decorView = activity?.window?.decorView?.let {
-            val screenListener = object : YouTubePlayerFullScreenListener {
-                override fun onYouTubePlayerEnterFullScreen() {
-                    binding.youtubePlayer.enterFullScreen()
-                    hideSystemUi(it)
-                }
-
-                override fun onYouTubePlayerExitFullScreen() {
-                    showSystemUi(it)
-                }
-
-            }
-            binding.youtubePlayer.addFullScreenListener(screenListener)
-        }
-
-    }
-
-    private fun hideSystemUi(view: View) {
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-
-        MainActivity.hideBottomNavBar()
-        //binding.toolbar.visibility = GONE
-
-        view.systemUiVisibility =
-            SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-                    SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
-                    SYSTEM_UI_FLAG_FULLSCREEN or
-                    SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-    }
-
-    @SuppressLint("SourceLockedOrientationActivity")
-    private fun showSystemUi(view: View) {
-
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        MainActivity.showBottomNavBar()
-
-        view.systemUiVisibility =
-            SYSTEM_UI_FLAG_LAYOUT_STABLE or SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-      //  binding.toolbar.visibility = VISIBLE
     }
 
     private fun setupRecyclerViewForSimilarMovies() {
@@ -250,9 +161,7 @@ class MovieDetailsFragment : Fragment() {
     private fun openScreenWithMovieDetailsByClickingSimilarMovie() {
         similarMoviesAdapter.onItemClickListener = { movieId ->
             findNavController().navigate(
-                MovieDetailsFragmentDirections.actionMovieDetailsFragmentSelf(
-                    movieId, true
-                )
+                MovieDetailsFragmentDirections.actionMovieDetailsFragmentSelf(movieId)
             )
         }
     }
@@ -279,9 +188,7 @@ class MovieDetailsFragment : Fragment() {
     private fun openScreenWithMovieDetailsByClickingRecommendedMovie() {
         recommendedMoviesAdapter.onItemClickListener = { movieId ->
             findNavController().navigate(
-                MovieDetailsFragmentDirections.actionMovieDetailsFragmentSelf(
-                    movieId, true
-                )
+                MovieDetailsFragmentDirections.actionMovieDetailsFragmentSelf(movieId)
             )
         }
     }
@@ -313,6 +220,7 @@ class MovieDetailsFragment : Fragment() {
                     isSavedToWatchList
                 )
             )
+            viewModel.saveWatchListChangesState()
         }
     }
 
@@ -331,6 +239,16 @@ class MovieDetailsFragment : Fragment() {
         binding.textSaveMovieIconText.apply {
             setTextColor(iconColor)
             text = getString(R.string.save_to_watch_list)
+        }
+    }
+
+    private fun watchTrailer(videoId: String) {
+        binding.btnWatchTrailer.setOnClickListener {
+            findNavController().navigate(
+                MovieDetailsFragmentDirections.actionMovieDetailsFragmentToTrailer(
+                    videoId
+                )
+            )
         }
     }
 

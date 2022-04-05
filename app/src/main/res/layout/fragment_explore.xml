@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:orientation="vertical"
+    android:id="@+id/explore_constraint_layout"
     tools:context=".ui.explore.ExploreFragment">
 
     <androidx.appcompat.widget.Toolbar
@@ -13,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/home_page_toolbar_color"
-        android:theme="@style/ToolBarStyle"
         android:elevation="4dp"
+        android:theme="@style/ToolBarStyle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -37,7 +37,7 @@
             tools:ignore="RtlSymmetry" />
     </androidx.cardview.widget.CardView>
 
-    <androidx.fragment.app.FragmentContainerView
+    <!--<androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_explore_fragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -45,18 +45,18 @@
 
         android:name="com.example.movies.ui.movie_categories.MovieCategoriesFragment"
         app:layout_constraintTop_toBottomOf="@id/card_view_search"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"/>-->
 
-    <!--<androidx.fragment.app.FragmentContainerView
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_explore_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="15dp"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-
         app:defaultNavHost="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/card_view_search"
-        app:layout_constraintBottom_toBottomOf="parent"/>-->
+        app:navGraph="@navigation/explore_nav_graph" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

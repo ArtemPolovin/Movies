@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_movies">
         <action
             android:id="@+id/action_moviesFragment_to_movieDetailsFragment"
-            app:destination="@id/movieDetailsFragment"
+            app:destination="@id/Movie_details"
             app:enterAnim="@anim/enter_from_right"
             app:exitAnim="@anim/exit_to_right" />
         <action
@@ -23,29 +23,13 @@
 
     </fragment>
     <fragment
-        android:id="@+id/movieDetailsFragment"
-        android:name="com.example.movies.ui.move_details.MovieDetailsFragment"
-        tools:layout="@layout/fragment_movie_details" >
-        <argument
-            android:name="movieId"
-            app:argType="integer"/>
-        <argument
-            android:name="showSavedIcon"
-            app:argType="boolean"/>
-        <action
-            android:id="@+id/action_movieDetailsFragment_self"
-            app:destination="@id/movieDetailsFragment"
-            app:enterAnim="@anim/enter_from_right"
-            app:exitAnim="@anim/exit_to_right" />
-    </fragment>
-    <fragment
         android:id="@+id/saved_movies"
         android:name="com.example.movies.ui.saved_movie.SavedMovieFragment"
         android:label="Watch list"
         tools:layout="@layout/fragment_saved_movie">
         <action
             android:id="@+id/action_saved_movies_to_movieDetailsFragment"
-            app:destination="@id/movieDetailsFragment"
+            app:destination="@id/Movie_details"
             app:enterAnim="@anim/enter_from_right"
             app:exitAnim="@anim/exit_to_right" />
     </fragment>
@@ -56,7 +40,7 @@
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_nav_login_fragment_to_homeFragment"
-            app:destination="@id/moviesFragment"
+            app:destination="@id/homeFragment"
             app:popUpTo="@id/nav_login_fragment"
             app:popUpToInclusive="true"/>
     </fragment>
@@ -67,7 +51,7 @@
         <action
             android:id="@+id/action_settings_to_nav_login_fragment"
             app:destination="@id/nav_login_fragment"
-            app:popUpTo="@id/moviesFragment"
+            app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true"/>
     </fragment>
     <fragment
@@ -107,7 +91,7 @@
             app:destination="@id/moviesFragment" />
         <action
             android:id="@+id/action_homeFragment_to_movieDetailsFragment"
-            app:destination="@id/movieDetailsFragment"
+            app:destination="@id/Movie_details"
             app:enterAnim="@anim/enter_from_right"
             app:exitAnim="@anim/exit_to_right" />
     </fragment>
@@ -115,7 +99,52 @@
         android:id="@+id/explore_fragment"
         android:name="com.example.movies.ui.explore.ExploreFragment"
         android:label="fragment_explore"
-        tools:layout="@layout/fragment_explore" />
+        tools:layout="@layout/fragment_explore" >
+        <action
+            android:id="@+id/action_explore_fragment_to_moviesFragment"
+            app:destination="@id/moviesFragment" />
+        <action
+            android:id="@+id/action_explore_fragment_to_Movie_details"
+            app:destination="@id/Movie_details"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_right"/>
+    </fragment>
+
+
+    <navigation android:id="@+id/Movie_details"
+        app:startDestination="@id/movieDetailsFragment">
+
+        <argument
+            android:name="movieId"
+            app:argType="integer" />
+
+        <fragment
+            android:id="@+id/movieDetailsFragment"
+            android:name="com.example.movies.ui.move_details.MovieDetailsFragment"
+            tools:layout="@layout/fragment_movie_details">
+            <argument
+                android:name="movieId"
+                app:argType="integer" />
+            <action
+                android:id="@+id/action_movieDetailsFragment_self"
+                app:destination="@id/movieDetailsFragment"
+                app:enterAnim="@anim/enter_from_right"
+                app:exitAnim="@anim/exit_to_right" />
+            <action
+                android:id="@+id/action_movieDetailsFragment_to_trailer"
+                app:destination="@id/trailer" />
+
+        </fragment>
+        <activity
+            android:id="@+id/trailer"
+            android:name="com.example.movies.ui.watch_trailer.WatchTrailerActivity"
+            android:label="activity_trailer"
+            tools:layout="@layout/activity_watch_trailer" >
+            <argument
+                android:name="videoId"
+                app:argType="string" />
+        </activity>
+    </navigation>
 
 
 </navigation>

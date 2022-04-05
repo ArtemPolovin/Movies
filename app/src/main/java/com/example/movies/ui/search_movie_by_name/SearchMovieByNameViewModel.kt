@@ -1,5 +1,7 @@
 package com.example.movies.ui.search_movie_by_name
 
+import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -11,19 +13,29 @@ import com.example.domain.models.MovieModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
+import kotlin.math.log
 
 @HiltViewModel
 class SearchMovieByNameViewModel @Inject constructor(
-    private val moviesPagingSource: MoviesPagingSource
+    private val moviesPagingSource: MoviesPagingSource,
+    private val state: SavedStateHandle
 ): ViewModel() {
+
+    init {
+        fetchMoviesByName()
+    }
+
+    private var _movies: Flow<PagingData<MovieModel>>? = null
+    val movies: Flow<PagingData<MovieModel>>? get() = _movies
 
     private var lastFetchedMovieResult: Flow<PagingData<MovieModel>>? = null
 
-    fun fetchMoviesByName(movieName: String): Flow<PagingData<MovieModel>> {
-        moviesPagingSource.setupMovieName(movieName)
+  private  fun fetchMoviesByName(){
+
+      state.get<String>("movieName")?.let { moviesPagingSource.setupMovieName(it) }
 
         val lastMovieResult = lastFetchedMovieResult
-        if(lastMovieResult != null) return lastMovieResult
+        if(lastMovieResult != null) _movies = lastMovieResult
 
         val newFetchedMoviesResult = Pager(config = PagingConfig(
             pageSize = 20,
@@ -34,6 +46,7 @@ class SearchMovieByNameViewModel @Inject constructor(
 
         lastFetchedMovieResult = newFetchedMoviesResult
 
-        return newFetchedMoviesResult
+        _movies = newFetchedMoviesResult
     }
+
 }

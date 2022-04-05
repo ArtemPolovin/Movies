@@ -14,11 +14,11 @@ import com.example.domain.models.*
 import com.example.domain.repositories.MovieCategoriesRepository
 import com.example.domain.repositories.MoviesRepository
 import com.example.domain.utils.ResponseResult
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import retrofit2.Response
 import java.io.IOException
 
@@ -130,18 +130,13 @@ class MoviesRepositoryImpl(
     }
 
     override suspend fun getWatchList(sessionId: String): ResponseResult<List<MovieModel>> {
-        return try {
             val response =
                 moviesApi.getWatchList(sessionId, language = settingsDataCache.getLanguage())
-            if (response.isSuccessful) {
+           return if (response.isSuccessful) {
                 response.body()?.let {
                     return@let ResponseResult.Success(moviesApiMapper.mapMovieApiToMovieModelList(it))
                 } ?: ResponseResult.Failure(message = "Response body of getting watch list is null")
             } else ResponseResult.Failure(message = "Response of getting watch list is not success")
-        } catch (e: RuntimeException) {
-            e.printStackTrace()
-            ResponseResult.Failure(message = "There is some error in response of getting watch list")
-        }
     }
 
     override suspend fun getMovieAccountState(
@@ -167,45 +162,43 @@ class MoviesRepositoryImpl(
 
     // This function gets list of movies by user-entered words
     override suspend fun getMoviesByName(movieName: String, page: Int): List<MovieModel> {
-        val response =  moviesApi.getMoviesByName(movieName = movieName,  language = settingsDataCache.getLanguage(), page = page)
+        val response = moviesApi.getMoviesByName(
+            movieName = movieName,
+            language = settingsDataCache.getLanguage(),
+            page = page
+        )
 
         return if (response.isSuccessful) {
             response.body()?.let {
                 return@let moviesApiMapper.mapMovieApiToMovieModelList(it)
-            }?: throw IllegalArgumentException("The response is empty")
-        }else throw IllegalArgumentException("The response is not successful")
+            } ?: throw IllegalArgumentException("The response is empty")
+        } else throw IllegalArgumentException("The response is not successful")
     }
 
     // This function makes 19 requests to the server to get list of movies for each of the nineteen genres.
-// All 19 movie lists are displayed on the home screen
+    // All 19 movie lists are displayed on the home screen
     override suspend fun getMoviesSortedByGenre(): ResponseResult<List<MoviesSortedByGenreContainerModel>> {
-
         val list = mutableListOf<MoviesSortedByGenreContainerModel>()
-        return withContext(Dispatchers.IO) {
-            val genresList = movieCategoriesRepository.getGenres()
-            val runningTasks = genresList.map { genre ->
-                async {
-                    val response =
-                        moviesApi.getMoviesByGenre(
-                            genre.id,
-                            page = SECOND_PAGE,
-                            language = settingsDataCache.getLanguage()
-                        )
-                    MoviesSortedByGenreContainerModel(
-                        genre.id,
-                        genre.name,
-                        moviesApiMapper.mapMovieApiToMovieModelList(response.body())
-                    )
+
+        return withContext( Dispatchers.IO) {
+                val genresList = movieCategoriesRepository.getGenres()
+                val runningTasks = genresList.map { genre ->
+                    async{
+                            val response =
+                                moviesApi.getMoviesByGenre(
+                                    genre.id,
+                                    page = SECOND_PAGE,
+                                    language = settingsDataCache.getLanguage()
+                                )
+                            MoviesSortedByGenreContainerModel(
+                                genre.id,
+                                genre.name,
+                                moviesApiMapper.mapMovieApiToMovieModelList(response.body())
+                            )
+                    }
                 }
-            }
-            try {
                 list.addAll(runningTasks.awaitAll())
                 ResponseResult.Success(list)
-            } catch (e: IOException) {
-                e.printStackTrace()
-                ResponseResult.Failure(message = "An unknown error occured")
-            }
-
         }
     }
 
@@ -352,8 +345,6 @@ class MoviesRepositoryImpl(
 
         }
     }
-
-
 
 
 }

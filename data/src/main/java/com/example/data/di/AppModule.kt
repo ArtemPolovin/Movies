@@ -239,6 +239,10 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideWatchListChanges(sharedPref: SharedPreferences) = WatchListChanges(sharedPref)
+
+    @Provides
+    @Singleton
     fun provideSharedPrefMovieFilter(@Named("MovieFilterCache") movieFilterSharedPref: SharedPreferences) =
         SharedPrefMovieFilter(movieFilterSharedPref)
 

@@ -12,3 +12,5 @@ const val MINIMUM_SYMBOLS = 3
 const val KYE_MOVIE_NAME = "movie name"
 const val KEY_MOVIE_ID = "movie id"
 const val KEY_OPEN_MOVIES_PAGE = "pen movies page"
+const val SEARCH_MOVIE_BY_NAME_FRAGMENT = "fragment_search_movie_by_name"
+const val MOVIE_CATEGORIES_FRAGMENT = "fragment_movie_categories"
