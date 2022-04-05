@@ -3,6 +3,7 @@ package com.example.movies.ui.saved_movie
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.data.cache.SessionIdDataCache
+import com.example.data.cache.WatchListChanges
 import com.example.domain.models.MovieModel
 import com.example.domain.models.MovieWithDetailsModel
 import com.example.domain.models.SaveToWatchListModel
@@ -19,7 +20,8 @@ import javax.inject.Inject
 class SavedMovieViewModel @Inject constructor(
     private val getWatchListUseCase: GetWatchListUseCase,
     private val sessionIdDataCache: SessionIdDataCache,
-    private val saveOrDeleteMovieFromWatchListUseCase: SaveOrDeleteMovieFromWatchListUseCase
+    private val saveOrDeleteMovieFromWatchListUseCase: SaveOrDeleteMovieFromWatchListUseCase,
+    private val watchListChanges: WatchListChanges
 ) : ViewModel() {
 
     private val _watchList = MutableLiveData<ResponseResult<List<MovieModel>>>()
@@ -61,7 +63,13 @@ class SavedMovieViewModel @Inject constructor(
             b.join()
             fetchWatchList()
         }
+    }
 
+    fun refreshIfWatchListWasChanged() {
+        if (watchListChanges.loadIsWatchListChanged()) {
+            fetchWatchList()
+            watchListChanges.saveIsWatchListChanged(false)
+        }
     }
 
 }

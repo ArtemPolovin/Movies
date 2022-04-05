@@ -39,7 +39,7 @@ class SavedMovieFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+        viewModel.refreshIfWatchListWasChanged()
         (requireActivity() as MainActivity).setupActionBar(binding.toolbar)
 
         showDeleteMenuIcon.value = false

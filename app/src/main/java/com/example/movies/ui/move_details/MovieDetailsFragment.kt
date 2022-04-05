@@ -220,6 +220,7 @@ class MovieDetailsFragment : Fragment() {
                     isSavedToWatchList
                 )
             )
+            viewModel.saveWatchListChangesState()
         }
     }
 
