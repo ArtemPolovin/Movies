@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -29,6 +30,7 @@ import com.example.movies.databinding.FragmentMovieDetailsBinding
 import com.example.movies.ui.move_details.adapter.MoviesAdapter
 import com.example.movies.utils.MEDIA_TYPE_MOVIE
 import com.example.movies.utils.bindingImage
+import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -76,6 +78,7 @@ class MovieDetailsFragment : Fragment() {
         openScreenWithMovieDetailsByClickingSimilarMovie()
         openScreenWithMovieDetailsByClickingRecommendedMovie()
         changeWatchListIconState()
+        changePosterAlphaWheScrolling()
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -250,6 +253,13 @@ class MovieDetailsFragment : Fragment() {
                 )
             )
         }
+    }
+
+    private fun changePosterAlphaWheScrolling() {
+        binding.myAppBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+            val offsetAlpha = (appBarLayout.y / binding.myAppBarLayout.totalScrollRange)
+            binding.imageMovieDetails.alpha = 1 - (offsetAlpha * -1)
+        })
     }
 
     override fun onStop() {
