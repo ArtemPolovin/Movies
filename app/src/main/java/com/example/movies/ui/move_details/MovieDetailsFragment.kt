@@ -8,12 +8,14 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.math.MathUtils
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -257,7 +259,10 @@ class MovieDetailsFragment : Fragment() {
     private fun changePosterAlphaWhenScrolling() {
         binding.myAppBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
             val offsetAlpha = abs(appBarLayout.y / binding.myAppBarLayout.totalScrollRange)
-            binding.imageMovieDetails.alpha = (1 - offsetAlpha) + offsetAlpha / 4.5f
+            val value = (1 - offsetAlpha)
+            val max = 1.0f
+            val min = (1 - offsetAlpha) + offsetAlpha / 4.5f
+            binding.imageMovieDetails.alpha =  MathUtils.clamp(value,min,max)
         })
     }
 
