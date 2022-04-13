@@ -260,7 +260,7 @@ class MovieDetailsFragment : Fragment() {
         binding.myAppBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
             val offsetAlpha = abs(appBarLayout.y / binding.myAppBarLayout.totalScrollRange)
             val value = (1 - offsetAlpha)
-            binding.imageMovieDetails.alpha =  MathUtils.clamp(value,0.3f,1.0f)
+            binding.imageMovieDetails.alpha =  MathUtils.clamp(value,0.25f,1.0f)
         })
     }
 

@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:scaleType="fitXY"
-                app:loadImage="@{movieWithDetailsModel.poster}" />
+                app:loadImage="@{movieWithDetailsModel.backdropImage}" />
 
             <View
                 android:id="@+id/view_image_shadow"
