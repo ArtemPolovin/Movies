@@ -1,7 +1,6 @@
 package com.example.domain.usecases.movie_usecase
 
 import com.example.domain.models.MoviePosterViewPagerModel
-import com.example.domain.models.MovieWithDetailsModel
 import com.example.domain.repositories.MoviesRepository
 import retrofit2.HttpException
 import java.io.IOException
@@ -12,7 +11,7 @@ class GetUpComingMoviesUseCase(private val moviesRepository: MoviesRepository) {
            val moviesList =  moviesRepository.getUpcomingMoviesWithDetails(page)
           moviesList.take(10).map {
               MoviePosterViewPagerModel(
-                  poster = it.backdropPoster,
+                  poster = it.backdropImage,
                   movieName = it.movieName,
                   genreName = it.genres,
                   movieId = it.id

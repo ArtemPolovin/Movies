@@ -10,7 +10,7 @@ data class MovieWithDetailsModel(
     val rating: Float?,
     val poster: String?,
     val overview: String?,
-    val backdropPoster: String?,
+    val backdropImage: String?,
     val genres: String?,
     val homePageUrl: String?,
     val video: String?,

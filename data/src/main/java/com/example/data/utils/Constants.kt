@@ -5,7 +5,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 
 const val API_KEY = "51818d0ef5f7d51d1c3043f061c6740c"
 const val MOVIES_API_BASE_URL = "https://api.themoviedb.org"
-const val POSTER_BASE_URL = "https://image.tmdb.org/t/p/w500"
+const val POSTER_BASE_URL = "https://image.tmdb.org/t/p/original"
 const val START_PAGE = 1
 const val SECOND_PAGE = 2
 const val SHARED_PREF = "sharedPref"

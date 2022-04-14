@@ -8,12 +8,14 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.math.MathUtils
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -28,8 +30,9 @@ import com.example.movies.R
 import com.example.movies.databinding.FragmentMovieDetailsBinding
 import com.example.movies.ui.move_details.adapter.MoviesAdapter
 import com.example.movies.utils.MEDIA_TYPE_MOVIE
-import com.example.movies.utils.bindingImage
+import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.math.abs
 
 @AndroidEntryPoint
 class MovieDetailsFragment : Fragment() {
@@ -76,6 +79,7 @@ class MovieDetailsFragment : Fragment() {
         openScreenWithMovieDetailsByClickingSimilarMovie()
         openScreenWithMovieDetailsByClickingRecommendedMovie()
         changeWatchListIconState()
+        changePosterAlphaWhenScrolling()
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -250,6 +254,14 @@ class MovieDetailsFragment : Fragment() {
                 )
             )
         }
+    }
+
+    private fun changePosterAlphaWhenScrolling() {
+        binding.myAppBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+            val offsetAlpha = abs(appBarLayout.y / binding.myAppBarLayout.totalScrollRange)
+            val value = (1 - offsetAlpha)
+            binding.imageMovieDetails.alpha =  MathUtils.clamp(value,0.25f,1.0f)
+        })
     }
 
     override fun onStop() {
