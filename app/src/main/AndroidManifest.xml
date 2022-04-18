@@ -16,7 +16,8 @@
         <activity
             android:name=".ui.watch_trailer.WatchTrailerActivity"
             android:exported="false"
-            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout" />
+            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
+            android:screenOrientation="portrait"/>
 
         <activity android:name=".ui.MainActivity">
             <intent-filter>

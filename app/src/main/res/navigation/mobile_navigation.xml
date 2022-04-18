@@ -140,9 +140,6 @@
             android:name="com.example.movies.ui.watch_trailer.WatchTrailerActivity"
             android:label="activity_trailer"
             tools:layout="@layout/activity_watch_trailer" >
-            <argument
-                android:name="videoId"
-                app:argType="string" />
         </activity>
     </navigation>
 

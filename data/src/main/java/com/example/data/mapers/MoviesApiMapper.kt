@@ -4,42 +4,30 @@ import com.example.data.apimodels.movie_details.MovieDetailsModelApi
 import com.example.data.apimodels.movie_state.MovieAccountStateApiModel
 import com.example.data.apimodels.movies.MoviesListApiModel
 import com.example.data.apimodels.movies.Result
-import com.example.data.apimodels.video.VideoApiModel
+import com.example.data.apimodels.trailers.TrailersApiModel
 import com.example.data.utils.POSTER_BASE_URL
-import com.example.domain.models.GenreModel
-import com.example.domain.models.MovieAccountStateModel
-import com.example.domain.models.MovieModel
-import com.example.domain.models.MovieWithDetailsModel
+import com.example.domain.models.*
 
 class MoviesApiMapper {
 
-    private fun getVideoKeyByMovieId(videoApiModel: VideoApiModel?): String {
-        if (videoApiModel != null && videoApiModel.results.isNotEmpty()) {
-            return videoApiModel.results[0].key
-        }
-        return ""
-    }
-
     fun mapMovieDetailsApiToModel(
         movieDetailsModelApi: MovieDetailsModelApi?,
-        videoApiModel: VideoApiModel?
     ): MovieWithDetailsModel? {
 
         if (movieDetailsModelApi != null) {
-            return createMovieWithDetailsModel(movieDetailsModelApi, videoApiModel)
+            return createMovieWithDetailsModel(movieDetailsModelApi)
         }
         return null
     }
 
     fun mapMovieDetailsApiToModel(
         movieDetailsModelApi: MovieDetailsModelApi?,
-        videoApiModel: VideoApiModel?,
         genreList: List<GenreModel>,
         movieApiModel: Result,
     ): MovieWithDetailsModel {
 
         return if (movieDetailsModelApi != null) {
-            return createMovieWithDetailsModel(movieDetailsModelApi, videoApiModel)
+            return createMovieWithDetailsModel(movieDetailsModelApi)
         } else {
             MovieWithDetailsModel(
                 releaseData = movieApiModel.release_date,
@@ -51,7 +39,6 @@ class MoviesApiMapper {
                 overview = movieApiModel.overview,
                 genres = getGenreNames(genreList, movieApiModel.genre_ids),
                 homePageUrl = "",
-                video = getVideoKeyByMovieId(videoApiModel),
                 id = movieApiModel.id,
                 voteCount = movieApiModel.vote_count.toString()
             )
@@ -59,8 +46,7 @@ class MoviesApiMapper {
     }
 
     private fun createMovieWithDetailsModel(
-        movieDetailsModelApi: MovieDetailsModelApi,
-        videoApiModel: VideoApiModel?
+        movieDetailsModelApi: MovieDetailsModelApi
     ): MovieWithDetailsModel {
         return MovieWithDetailsModel(
             releaseData = movieDetailsModelApi.release_date,
@@ -72,7 +58,6 @@ class MoviesApiMapper {
             overview = movieDetailsModelApi.overview,
             genres = movieDetailsModelApi.genres?.joinToString(", ") { it.name ?: "" },
             homePageUrl = movieDetailsModelApi.homepage,
-            video = getVideoKeyByMovieId(videoApiModel),
             id = movieDetailsModelApi.id,
             voteCount = movieDetailsModelApi.vote_count.toString()
         )
@@ -115,6 +100,16 @@ class MoviesApiMapper {
             rated = movieAccountStateApiModel.rated,
             watchlist = movieAccountStateApiModel.watchlist
         )
+
+    fun mapTrailerApiToModelsList(trailersApiModel: TrailersApiModel): List<TrailerModel> {
+        return trailersApiModel.results.map {
+            TrailerModel(
+                thumbnailUrl = "https://img.youtube.com/vi/${it.key}/maxresdefault.jpg",
+                videoKey = it.key,
+                id = it.id
+            )
+        }
+    }
 
 
 }

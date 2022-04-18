@@ -18,7 +18,6 @@ class MoviesEntityMapper {
             backdropPoster = movie.backdropImage,
             genres = movie.genres,
             homePageUrl = movie.homePageUrl,
-            video = movie.video,
             vote_count = movie.voteCount
         )
     }
@@ -38,7 +37,6 @@ class MoviesEntityMapper {
                 backdropImage = movieEntity.backdropPoster,
                 genres = movieEntity.genres,
                 homePageUrl = movieEntity.homePageUrl,
-                video = movieEntity.video,
                 voteCount = movieEntity.vote_count
             )
         }

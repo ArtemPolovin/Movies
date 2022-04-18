@@ -1,5 +1,6 @@
 package com.example.movies.ui.welcome_screen
 
+import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -33,9 +34,6 @@ class WelcomeScreenFragment : Fragment() {
     @Inject
    lateinit var sharedPrefLoginAndPassword: SharedPrefLoginAndPassword
 
-//    @Inject
-//    lateinit var loginSharedPreferencesRememberMe: SharedPreferencesLoginRememberMe
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,7 +42,6 @@ class WelcomeScreenFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-      // loginSharedPreferencesRememberMe.saveIsRememberMeChecked(false)
         hideSystemUi(view)
         sharedPrefMovieCategory.clearMovieCategory()
         sharedPrefMovieFilter.clearFilterCache()
@@ -66,8 +63,6 @@ class WelcomeScreenFragment : Fragment() {
     }
 
     private fun hideSystemUi(view: View) {
-       // activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-
         WindowCompat.setDecorFitsSystemWindows(requireActivity().window, false)
         WindowInsetsControllerCompat(requireActivity().window, view).let { controller ->
             controller.hide(WindowInsetsCompat.Type.systemBars())
@@ -75,6 +70,17 @@ class WelcomeScreenFragment : Fragment() {
                 WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
 
+    }
+
+    @SuppressLint("SourceLockedOrientationActivity")
+    override fun onResume() {
+        super.onResume()
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    }
+
+    override fun onStop() {
+        super.onStop()
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER
     }
 
 }

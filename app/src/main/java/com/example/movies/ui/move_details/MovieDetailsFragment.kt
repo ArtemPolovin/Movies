@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -24,16 +23,21 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.domain.models.MovieWithDetailsModel
 import com.example.domain.models.SaveToWatchListModel
+import com.example.domain.models.TrailerModel
 import com.example.domain.utils.ResponseResult
 import com.example.movies.MovieDetailsArgs
 import com.example.movies.R
 import com.example.movies.databinding.FragmentMovieDetailsBinding
 import com.example.movies.ui.move_details.adapter.MoviesAdapter
+import com.example.movies.utils.BUNDLE_TRAILER_LIST_KEY
 import com.example.movies.utils.MEDIA_TYPE_MOVIE
+import com.example.movies.utils.putKSerializable
 import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlin.math.abs
 
+@ExperimentalSerializationApi
 @AndroidEntryPoint
 class MovieDetailsFragment : Fragment() {
 
@@ -88,7 +92,6 @@ class MovieDetailsFragment : Fragment() {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
-
     private fun checkMovieWithDetailsResponseState() {
 
         viewModel.fetchMovieDetails(movieId)
@@ -116,16 +119,29 @@ class MovieDetailsFragment : Fragment() {
         binding.movieWithDetailsModel = movieModel
 
         movieModel.homePageUrl?.let { underlineText(binding.textHomepageUrl, it) }
-        movieModel.video?.let { watchTrailer(it) }
-
-        showWatchTrailerButton(movieModel)
+        getTrailerList(movieModel.id)
     }
 
-    private fun showWatchTrailerButton(movieModel: MovieWithDetailsModel) {
-        movieModel.video?.let { video ->
-            if (video.isNotBlank()) binding.btnWatchTrailer.visibility = VISIBLE
-            else binding.btnWatchTrailer.visibility = GONE
+    private fun getTrailerList(movieId: Int) {
+        viewModel.fetchTrailersFromNetwork(movieId)
+        viewModel.trailerList.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is ResponseResult.Success -> {
+                    showWatchTrailerButton(it.data)
+                    openScreenWithTrailer(it.data)
+                }
+                is ResponseResult.Failure -> {
+                    binding.btnWatchTrailer.visibility = GONE
+                }
+                else -> binding.btnWatchTrailer.visibility = GONE
+            }
         }
+    }
+
+    private fun showWatchTrailerButton(trailerList: List<TrailerModel>) {
+        if (trailerList.isNotEmpty()) binding.btnWatchTrailer.visibility = VISIBLE
+        else binding.btnWatchTrailer.visibility = GONE
     }
 
     private fun underlineText(textView: TextView, text: String) {
@@ -246,13 +262,13 @@ class MovieDetailsFragment : Fragment() {
         }
     }
 
-    private fun watchTrailer(videoId: String) {
+    private fun openScreenWithTrailer(trailerList: List<TrailerModel>) {
         binding.btnWatchTrailer.setOnClickListener {
-            findNavController().navigate(
-                MovieDetailsFragmentDirections.actionMovieDetailsFragmentToTrailer(
-                    videoId
-                )
-            )
+
+            val bundle = Bundle()
+            bundle.putKSerializable(BUNDLE_TRAILER_LIST_KEY, trailerList)
+
+            findNavController().navigate(R.id.action_movieDetailsFragment_to_trailer,bundle)
         }
     }
 
@@ -260,7 +276,7 @@ class MovieDetailsFragment : Fragment() {
         binding.myAppBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
             val offsetAlpha = abs(appBarLayout.y / binding.myAppBarLayout.totalScrollRange)
             val value = (1 - offsetAlpha)
-            binding.imageMovieDetails.alpha =  MathUtils.clamp(value,0.25f,1.0f)
+            binding.imageMovieDetails.alpha = MathUtils.clamp(value, 0.25f, 1.0f)
         })
     }
 
