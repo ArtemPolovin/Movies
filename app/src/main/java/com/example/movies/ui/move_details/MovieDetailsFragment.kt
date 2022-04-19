@@ -140,8 +140,7 @@ class MovieDetailsFragment : Fragment() {
     }
 
     private fun showWatchTrailerButton(trailerList: List<TrailerModel>) {
-        if (trailerList.isNotEmpty()) binding.btnWatchTrailer.visibility = VISIBLE
-        else binding.btnWatchTrailer.visibility = GONE
+        binding.btnWatchTrailer.visibility = if (trailerList.isNotEmpty()) VISIBLE else GONE
     }
 
     private fun underlineText(textView: TextView, text: String) {
@@ -268,7 +267,7 @@ class MovieDetailsFragment : Fragment() {
             val bundle = Bundle()
             bundle.putKSerializable(BUNDLE_TRAILER_LIST_KEY, trailerList)
 
-            findNavController().navigate(R.id.action_movieDetailsFragment_to_trailer,bundle)
+            findNavController().navigate(R.id.action_movieDetailsFragment_to_trailer, bundle)
         }
     }
 
