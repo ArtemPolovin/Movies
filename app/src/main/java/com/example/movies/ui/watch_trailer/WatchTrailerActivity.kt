@@ -119,6 +119,9 @@ class WatchTrailerActivity : AppCompatActivity() {
     }
 
     private fun hideSystemUi(view: View) {
+
+        binding.viewPagerVideoThumbnails.visibility = View.GONE
+
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
         WindowCompat.setDecorFitsSystemWindows(this.window, false)
@@ -132,6 +135,8 @@ class WatchTrailerActivity : AppCompatActivity() {
 
     @SuppressLint("SourceLockedOrientationActivity")
     private fun showSystemUi(view: View) {
+
+        binding.viewPagerVideoThumbnails.visibility = View.VISIBLE
 
        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
