@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/home_page_background_color"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.watch_trailer.WatchTrailerActivity">
@@ -14,6 +15,40 @@
         app:autoPlay="false"
         app:showFullScreenButton="true"
         app:showYouTubeButton="false"
-        app:useWebUi="false" />
+        app:useWebUi="false"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/text_more_videos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="150dp"
+        android:fontFamily="@font/aclonica"
+        android:text="@string/more_videos_text"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/youtube_player" />
+
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager_video_thumbnails"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_more_videos"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_trailer_page_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="view_pager_video_thumbnails,text_more_videos" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

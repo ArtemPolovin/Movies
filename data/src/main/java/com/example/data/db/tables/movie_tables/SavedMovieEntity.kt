@@ -16,6 +16,5 @@ class SavedMovieEntity(
     val backdropPoster: String?,
     val genres: String?,
     val homePageUrl: String?,
-    val video: String?,
     val vote_count: String?
 )

@@ -3,10 +3,7 @@ package com.example.movies.ui.move_details
 import androidx.lifecycle.*
 import com.example.data.cache.SessionIdDataCache
 import com.example.data.cache.WatchListChanges
-import com.example.domain.models.MovieAccountStateModel
-import com.example.domain.models.MovieModel
-import com.example.domain.models.MovieWithDetailsModel
-import com.example.domain.models.SaveToWatchListModel
+import com.example.domain.models.*
 import com.example.domain.usecases.movie_usecase.*
 import com.example.domain.utils.ResponseResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,14 +12,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MovieDetailsViewModel @Inject constructor(
-    private val insertMovieToDbUseCase: InsertMovieToDbUseCase,
     private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
     private val getSimilarMoviesUseCase: GetSimilarMoviesUseCase,
     private val getRecommendationsMoviesUseCase: GetRecommendationsMoviesUseCase,
     private val sessionIdDataCache: SessionIdDataCache,
     private val saveOrDeleteMovieFromWatchListUseCase: SaveOrDeleteMovieFromWatchListUseCase,
     private val getMovieAccountStateUseCase: GetMovieAccountStateUseCase,
-    private val watchListChanges: WatchListChanges
+    private val watchListChanges: WatchListChanges,
+    private val getTrailerListUseCase: GetTrailerListUseCase
 ) : ViewModel() {
 
     private val _movieDetailsModel = MutableLiveData<ResponseResult<MovieWithDetailsModel>>()
@@ -38,10 +35,8 @@ class MovieDetailsViewModel @Inject constructor(
     private val _movieAccountState = MutableLiveData<MovieAccountStateModel>()
     val movieAccountState: LiveData<MovieAccountStateModel> get() = _movieAccountState
 
-
-   /* fun insertMovieToDb(movie: MovieWithDetailsModel) {
-        viewModelScope.launch { insertMovieToDbUseCase(movie) }
-    }*/
+    private val _trailerList = MutableLiveData<ResponseResult<List<TrailerModel>>>()
+    val trailerList: LiveData<ResponseResult<List<TrailerModel>>> get() = _trailerList
 
     fun saveOrDeleteMovieFromWatchList(saveToWatchListModel: SaveToWatchListModel) {
         viewModelScope.launch {
@@ -56,6 +51,14 @@ class MovieDetailsViewModel @Inject constructor(
             _similarMovies.value = getSimilarMoviesUseCase.execute(movieId)
             _recommendationsMovies.value = getRecommendationsMoviesUseCase.execute(movieId)
 
+        }
+    }
+
+     fun fetchTrailersFromNetwork(movieId: Int) {
+        _trailerList.value = ResponseResult.Loading
+
+        viewModelScope.launch {
+            _trailerList.value = getTrailerListUseCase.execute(movieId)
         }
     }
 

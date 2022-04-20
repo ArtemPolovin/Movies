@@ -106,7 +106,7 @@ object AppModule {
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context) =
         Room.databaseBuilder(context, AppDatabase::class.java, "MovieDB")
-            //  .fallbackToDestructiveMigration()
+             // .fallbackToDestructiveMigration()
             // .addMigrations(AppDatabase.MIGRATION_2_3)
             .build()
 
@@ -189,6 +189,9 @@ object AppModule {
 
     @Provides
     fun provideGetMovieAccountStateUseCase(movieRepository: MoviesRepository) = GetMovieAccountStateUseCase(movieRepository)
+
+    @Provides
+    fun provideGetTrailerListUseCase(movieRepository: MoviesRepository) = GetTrailerListUseCase(movieRepository)
 
     @Provides
     fun provideGetMoviesCategoriesCells(movieCategoriesRepo: MovieCategoriesRepository) =

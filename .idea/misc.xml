@@ -9,8 +9,11 @@
         <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable/background_botton_watch_trailer.xml" value="0.325" />
         <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable/background_button_watch_trailer.xml" value="0.325" />
         <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable/background_search_view.xml" value="0.238" />
+        <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable/background_trailer.xml" value="0.2815" />
+        <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable/movie_cell_background.xml" value="0.2815" />
         <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable/ripple_catecory_cell.xml" value="0.325" />
         <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable/ripple_effect.xml" value="0.325" />
+        <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable/ripple_signup_text.xml" value="0.2815" />
         <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable/setting_cell_background.xml" value="0.238" />
         <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/layout-land/fragment_login.xml" value="0.45768282662284304" />
         <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/layout-sw320dp-land/fragment_login.xml" value="0.5105663567202029" />
@@ -27,9 +30,10 @@
         <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/layout/cell_movie_horizontal_list.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/layout/cell_movie_poster_view_pager.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/layout/cell_saved_movie.xml" value="0.5" />
+        <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/layout/cell_thumbnail.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/layout/custop_player_ui.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/layout/fragment_explore.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/layout/fragment_home.xml" value="0.19882246376811594" />
+        <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/layout/fragment_home.xml" value="0.33" />
         <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/layout/fragment_login.xml" value="0.33" />
         <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/layout/fragment_movie_categories.xml" value="0.17831813576494426" />
         <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/layout/fragment_movie_details.xml" value="0.33" />

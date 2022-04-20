@@ -13,7 +13,6 @@ data class MovieWithDetailsModel(
     val backdropImage: String?,
     val genres: String?,
     val homePageUrl: String?,
-    val video: String?,
     val id: Int,
     val voteCount: String?
 )

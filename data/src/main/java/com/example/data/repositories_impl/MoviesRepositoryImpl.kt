@@ -3,7 +3,6 @@ package com.example.data.repositories_impl
 import com.example.data.apimodels.movie_details.MovieDetailsModelApi
 import com.example.data.apimodels.movies.MoviesListApiModel
 import com.example.data.apimodels.movies.Result
-import com.example.data.apimodels.video.VideoApiModel
 import com.example.data.cache.SettingsDataCache
 import com.example.data.db.dao.MoviesDao
 import com.example.data.mapers.MoviesApiMapper
@@ -14,11 +13,14 @@ import com.example.domain.models.*
 import com.example.domain.repositories.MovieCategoriesRepository
 import com.example.domain.repositories.MoviesRepository
 import com.example.domain.utils.ResponseResult
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 import retrofit2.Response
 import java.io.IOException
 
@@ -130,13 +132,13 @@ class MoviesRepositoryImpl(
     }
 
     override suspend fun getWatchList(sessionId: String): ResponseResult<List<MovieModel>> {
-            val response =
-                moviesApi.getWatchList(sessionId, language = settingsDataCache.getLanguage())
-           return if (response.isSuccessful) {
-                response.body()?.let {
-                    return@let ResponseResult.Success(moviesApiMapper.mapMovieApiToMovieModelList(it))
-                } ?: ResponseResult.Failure(message = "Response body of getting watch list is null")
-            } else ResponseResult.Failure(message = "Response of getting watch list is not success")
+        val response =
+            moviesApi.getWatchList(sessionId, language = settingsDataCache.getLanguage())
+        return if (response.isSuccessful) {
+            response.body()?.let {
+                return@let ResponseResult.Success(moviesApiMapper.mapMovieApiToMovieModelList(it))
+            } ?: ResponseResult.Failure(message = "Response body of getting watch list is null")
+        } else ResponseResult.Failure(message = "Response of getting watch list is not success")
     }
 
     override suspend fun getMovieAccountState(
@@ -175,30 +177,45 @@ class MoviesRepositoryImpl(
         } else throw IllegalArgumentException("The response is not successful")
     }
 
+    //This function gets list of video keys for youtube videos
+    override suspend fun getTrailersList(movieId: Int): ResponseResult<List<TrailerModel>> {
+        return try {
+            val response = moviesApi.getTrailerList(movieId, settingsDataCache.getLanguage())
+            if (response.isSuccessful) {
+                response.body()?.let {
+                    return@let ResponseResult.Success(moviesApiMapper.mapTrailerApiToModelsList(it))
+                } ?: ResponseResult.Failure(message = "The response is empty")
+            } else ResponseResult.Failure(message = "The response is ot successful")
+        } catch (e: RuntimeException) {
+            e.printStackTrace()
+            ResponseResult.Failure(message = "Some error has occurred from network request")
+        }
+    }
+
     // This function makes 19 requests to the server to get list of movies for each of the nineteen genres.
     // All 19 movie lists are displayed on the home screen
     override suspend fun getMoviesSortedByGenre(): ResponseResult<List<MoviesSortedByGenreContainerModel>> {
         val list = mutableListOf<MoviesSortedByGenreContainerModel>()
 
-        return withContext( Dispatchers.IO) {
-                val genresList = movieCategoriesRepository.getGenres()
-                val runningTasks = genresList.map { genre ->
-                    async{
-                            val response =
-                                moviesApi.getMoviesByGenre(
-                                    genre.id,
-                                    page = SECOND_PAGE,
-                                    language = settingsDataCache.getLanguage()
-                                )
-                            MoviesSortedByGenreContainerModel(
-                                genre.id,
-                                genre.name,
-                                moviesApiMapper.mapMovieApiToMovieModelList(response.body())
-                            )
-                    }
+        return withContext(Dispatchers.IO) {
+            val genresList = movieCategoriesRepository.getGenres()
+            val runningTasks = genresList.map { genre ->
+                async {
+                    val response =
+                        moviesApi.getMoviesByGenre(
+                            genre.id,
+                            page = SECOND_PAGE,
+                            language = settingsDataCache.getLanguage()
+                        )
+                    MoviesSortedByGenreContainerModel(
+                        genre.id,
+                        genre.name,
+                        moviesApiMapper.mapMovieApiToMovieModelList(response.body())
+                    )
                 }
-                list.addAll(runningTasks.awaitAll())
-                ResponseResult.Success(list)
+            }
+            list.addAll(runningTasks.awaitAll())
+            ResponseResult.Success(list)
         }
     }
 
@@ -265,21 +282,6 @@ class MoviesRepositoryImpl(
         }
     }
 
-    // This function fetches video model by movie id
-    private suspend fun getVideo(movieId: Int): VideoApiModel? {
-
-        val response = moviesApi.getVideo(movieId, settingsDataCache.getLanguage())
-        return if (response.isSuccessful) {
-            response.body()?.let { body ->
-                return@let body
-            }
-        } else {
-            println("mLog: The request for $movieId movie id was unsuccessful")
-            null
-        }
-
-    }
-
     // This function fetches movie details api  model by movie id
     private suspend fun getMovieDetailsForList(movieId: Int): MovieDetailsModelApi? {
 
@@ -302,22 +304,17 @@ class MoviesRepositoryImpl(
         genreList: List<GenreModel>,
         movieApiModel: Result
     ): MovieWithDetailsModel {
-        return withContext(Dispatchers.IO) {
-            val movieDetails = async { getMovieDetailsForList(movieId) }
-            val video = async { getVideo(movieId) }
 
-            try {
-                return@withContext moviesApiMapper.mapMovieDetailsApiToModel(
-                    movieDetails.await(),
-                    video.await(),
-                    genreList,
-                    movieApiModel
-                )
-            } catch (e: IOException) {
-                e.printStackTrace()
-                throw java.lang.IllegalArgumentException("Error!! Please check internet connection")
-            }
-
+        return try {
+            val movieDetails = getMovieDetailsForList(movieId)
+            moviesApiMapper.mapMovieDetailsApiToModel(
+                movieDetails,
+                genreList,
+                movieApiModel
+            )
+        } catch (e: IOException) {
+            e.printStackTrace()
+            throw IllegalArgumentException("Error!! Please check internet connection")
         }
     }
 
@@ -325,24 +322,18 @@ class MoviesRepositoryImpl(
 // "video api model" , "movie with details model" and maps it all into a MovieWithDetailsModel
 // adn returns it for "Movie details page"
     override suspend fun getMovieDetailsForDetailsPage(movieId: Int): ResponseResult<MovieWithDetailsModel> {
-        return withContext(Dispatchers.IO) {
-            val movieDetails = async { getMovieDetailsForList(movieId) }
-            val video = async { getVideo(movieId) }
 
-            try {
-
-                val movieWithDetails = moviesApiMapper.mapMovieDetailsApiToModel(
-                    movieDetails.await(),
-                    video.await()
-                )
-                movieWithDetails?.let {
-                    return@let ResponseResult.Success(it)
-                } ?: ResponseResult.Failure(message = "The Movie details object is null")
-            } catch (e: IOException) {
-                e.printStackTrace()
-                ResponseResult.Failure(message = "Error!! Please check internet connection")
-            }
-
+        return try {
+            val movieDetails = getMovieDetailsForList(movieId)
+            val movieWithDetails = moviesApiMapper.mapMovieDetailsApiToModel(
+                movieDetails
+            )
+            movieWithDetails?.let {
+                return@let ResponseResult.Success(it)
+            } ?: ResponseResult.Failure(message = "The Movie details object is null")
+        } catch (e: IOException) {
+            e.printStackTrace()
+            ResponseResult.Failure(message = "Error!! Please check internet connection")
         }
     }
 

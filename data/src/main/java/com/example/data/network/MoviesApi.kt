@@ -4,7 +4,7 @@ import com.example.data.apimodels.genres.GenresApiModel
 import com.example.data.apimodels.movie_details.MovieDetailsModelApi
 import com.example.data.apimodels.movie_state.MovieAccountStateApiModel
 import com.example.data.apimodels.movies.MoviesListApiModel
-import com.example.data.apimodels.video.VideoApiModel
+import com.example.data.apimodels.trailers.TrailersApiModel
 import com.example.data.utils.API_KEY
 import com.example.data.utils.MOVIES_API_BASE_URL
 import com.example.domain.models.SaveToWatchListModel
@@ -50,12 +50,6 @@ interface MoviesApi {
         @Query("page") page: Int? = null,
         @Query("language") language: String? = null
     ): Response<MoviesListApiModel>
-
-    @GET("/3/movie/{movie_id}/videos")
-    suspend fun getVideo(
-        @Path("movie_id") movieId: Int,
-        @Query("language") language: String?
-    ): Response<VideoApiModel>
 
     @GET("/3/movie/{movie_id}")
     suspend fun getMoviesDetails(
@@ -105,6 +99,12 @@ interface MoviesApi {
         @Query("query") movieName: String,
         @Query("language") language: String?
     ): Response<MoviesListApiModel>
+
+    @GET("/3/movie/{movie_id}/videos")
+    suspend fun getTrailerList(
+        @Path("movie_id") movieId: Int,
+        @Query("language") language: String?
+    ): Response<TrailersApiModel>
 
 
     companion object {
