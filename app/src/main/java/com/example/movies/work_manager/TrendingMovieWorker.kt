@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Vibrator
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.hilt.work.HiltWorker
@@ -48,6 +49,11 @@ class TrendingMovieWorker @AssistedInject constructor(
                     if (movieId != sharedPref.loadTrendingMovieId()) {
                         trendingMovieNotification.showNotification(movieName,context,btmImage,movieId)
                         sharedPref.saveTrendingMovieId(movieId)
+                    }
+
+                    for (i in 0..100) {
+                        Log.i("mTag","working $i")
+                        delay(500)
                     }
 
                     return@withContext Result.success()
