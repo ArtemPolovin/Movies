@@ -31,6 +31,7 @@ import com.example.domain.usecases.movie_usecase.*
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
@@ -182,6 +183,10 @@ object AppModule {
         GetRecommendationsMoviesUseCase(moviesRepository)
 
     @Provides
+    fun provideGetMoviePosterUseCase(moviesRepository: MoviesRepository) = GetMoviePosterUseCase(moviesRepository)
+
+
+    @Provides
     fun provideSaveToWatchListUseCase(movieRepository: MoviesRepository) = SaveOrDeleteMovieFromWatchListUseCase(movieRepository)
 
     @Provides
@@ -196,6 +201,9 @@ object AppModule {
     @Provides
     fun provideGetMoviesCategoriesCells(movieCategoriesRepo: MovieCategoriesRepository) =
         GetMoviesCategoriesUseCase(movieCategoriesRepo)
+
+    @Provides
+    fun provideGetTrendingMovieUseCase(movieRepository: MoviesRepository) = GetTrendingMovieUseCase(movieRepository)
 
     @Provides
     @Singleton
@@ -246,6 +254,11 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideSharedPrefTrendingMovieId(sharedPref: SharedPreferences) = SharedPrefTrendingMovieId(sharedPref)
+
+
+    @Provides
+    @Singleton
     fun provideSharedPrefMovieFilter(@Named("MovieFilterCache") movieFilterSharedPref: SharedPreferences) =
         SharedPrefMovieFilter(movieFilterSharedPref)
 
@@ -257,6 +270,5 @@ object AppModule {
 
     @Provides
     fun provideGson() = Gson()
-
 
 }

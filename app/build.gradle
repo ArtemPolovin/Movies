@@ -116,6 +116,16 @@ dependencies {
 
     implementation Deps.coordinatorLayout
 
+    //WorkManager with Coroutines
+    implementation Deps.work_manager_ktx
+
+    //WorkManger with Hilt
+    implementation Deps.work_manager_hilt
+    kapt Deps.work_manager_hilt_compiler
+
+    //Retrofit2
+    implementation Deps.retrofit
+
 
 
 

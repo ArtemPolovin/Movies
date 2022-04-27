@@ -111,5 +111,16 @@ class MoviesApiMapper {
         }
     }
 
+    fun mapTrendingMoviesListToMovieModel(movieApiModelsList: MoviesListApiModel): MovieModel {
+      val firstMovie = movieApiModelsList.results[0]
+        return MovieModel(
+            movieId = firstMovie.id,
+            poster = "${POSTER_BASE_URL}${firstMovie.poster_path}",
+            title = firstMovie.title,
+            voteCount = firstMovie.vote_count,
+            rating = firstMovie.vote_average
+        )
+    }
+
 
 }
