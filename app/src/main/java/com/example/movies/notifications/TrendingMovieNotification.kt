@@ -31,6 +31,7 @@ class TrendingMovieNotification @Inject constructor () {
               .createPendingIntent()
 
         val  builder = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setSmallIcon(R.drawable.ic_movie)
             .setContentText(movieName)
             .setContentTitle("New leader")

@@ -42,18 +42,14 @@ class TrendingMovieWorker @AssistedInject constructor(
             val responseResult = getTrendingMovieUseCase.execute()
             when (responseResult) {
                 is ResponseResult.Success -> {
-                    val movieName = responseResult.data.title
-                    val btmImage = getImage(responseResult.data.poster)
+
                     val movieId = responseResult.data.movieId
 
                     if (movieId != sharedPref.loadTrendingMovieId()) {
+                        val btmImage = getImage(responseResult.data.poster)
+                        val movieName = responseResult.data.title
                         trendingMovieNotification.showNotification(movieName,context,btmImage,movieId)
                         sharedPref.saveTrendingMovieId(movieId)
-                    }
-
-                    for (i in 0..100) {
-                        Log.i("mTag","working $i")
-                        delay(500)
                     }
 
                     return@withContext Result.success()

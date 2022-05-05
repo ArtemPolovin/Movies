@@ -1,11 +1,13 @@
 package com.example.movies.work_manager
 
 import android.content.Context
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.Observer
 import androidx.work.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class TrendingMovieWorkerScheduler @Inject constructor() {
+class TrendingMovieWorkerScheduler @Inject constructor(): LifecycleObserver {
 
     fun startTrendingMovieRequest(context: Context) {
 
@@ -26,7 +28,7 @@ class TrendingMovieWorkerScheduler @Inject constructor() {
             trendingMovieRequest
         )
 
-         //WorkManager.getInstance(context).cancelAllWork()
+       //WorkManager.getInstance(context).cancelAllWork()
 
     }
 }
