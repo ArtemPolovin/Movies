@@ -15,6 +15,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.math.MathUtils
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -30,6 +31,7 @@ import com.example.movies.R
 import com.example.movies.databinding.FragmentMovieDetailsBinding
 import com.example.movies.ui.move_details.adapter.MoviesAdapter
 import com.example.movies.utils.BUNDLE_TRAILER_LIST_KEY
+import com.example.movies.utils.KEY_MOVIE_ID
 import com.example.movies.utils.MEDIA_TYPE_MOVIE
 import com.example.movies.utils.putKSerializable
 import com.google.android.material.appbar.AppBarLayout
@@ -58,6 +60,14 @@ class MovieDetailsFragment : Fragment() {
     private lateinit var recommendedMoviesAdapter: MoviesAdapter
 
     private var isSavedToWatchList = false
+
+    companion object{
+        fun newInstance(movieId: Int?): MovieDetailsFragment{
+            return MovieDetailsFragment().apply {
+                arguments = bundleOf(KEY_MOVIE_ID to movieId)
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

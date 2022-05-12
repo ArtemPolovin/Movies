@@ -160,7 +160,7 @@ class MoviesRepositoryImpl(
             } else ResponseResult.Failure(message = "Get movie account state response is not successful")
         } catch (e: RuntimeException) {
             e.printStackTrace()
-            ResponseResult.Failure(message = "The unknown error in response of movie account state")
+            ResponseResult.Failure(message = "${e.message}")
         }
     }
 

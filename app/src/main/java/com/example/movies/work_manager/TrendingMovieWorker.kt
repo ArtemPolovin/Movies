@@ -45,6 +45,8 @@ class TrendingMovieWorker @AssistedInject constructor(
 
                     val movieId = responseResult.data.movieId
 
+                    sharedPref.saveTrendingMovieId(4)
+
                     if (movieId != sharedPref.loadTrendingMovieId()) {
                         val btmImage = getImage(responseResult.data.poster)
                         val movieName = responseResult.data.title

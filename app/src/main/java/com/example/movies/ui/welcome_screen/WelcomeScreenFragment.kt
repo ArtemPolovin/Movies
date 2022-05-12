@@ -53,10 +53,11 @@ class WelcomeScreenFragment : Fragment() {
             val userName = sharedPrefLoginAndPassword.loadUserName()
             val password = sharedPrefLoginAndPassword.loadPassword()
             delay(3000)
+            findNavController().popBackStack(R.id.welcome_screen,true)
             if (isLoginRememberMe.loadIsRememberMeChecked() && userName.isNotBlank() && password.isNotBlank()) {
-                findNavController().navigate(R.id.action_welcome_screen_to_homeFragment)
+                findNavController().navigate(R.id.homeFragment)
             } else {
-                findNavController().navigate(R.id.action_welcomeScreenFragment_to_nav_login_fragment)
+                findNavController().navigate(R.id.nav_login_fragment)
             }
 
         }

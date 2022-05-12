@@ -3,7 +3,9 @@ package com.example.movies.notifications
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
@@ -21,14 +23,26 @@ class TrendingMovieNotification @Inject constructor () {
 
       fun showNotification(movieName: String?, context: Context,btm:Bitmap, movieId: Int) {
 
-          val bundle = Bundle()
-          bundle.putInt("movieId",movieId)
+        /*  val bundle = Bundle().apply {
+              putInt("movieId",movieId)
+              putBoolean("isNotification",true)
+          }*/
 
-          val pendingIntent = NavDeepLinkBuilder(context)
+
+
+          /*val pendingIntent = NavDeepLinkBuilder(context)
               .setGraph(R.navigation.mobile_navigation)
+              //.addDestination(R.id.homeFragment)
               .setDestination(R.id.Movie_details)
               .setArguments(bundle)
-              .createPendingIntent()
+              .createPendingIntent()*/
+
+          val intent = Intent(context,MainActivity::class.java).apply {
+              flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+              putExtra("movieId",movieId)
+              putExtra("isNotification",true)
+          }
+          val pendingIntent = PendingIntent.getActivity(context,0,intent,0)
 
         val  builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
