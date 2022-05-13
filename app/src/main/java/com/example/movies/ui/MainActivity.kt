@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if(savedInstanceState == null) checkIfAppLaunchedByNotification()
+      //  if(savedInstanceState == null) checkIfAppLaunchedByNotification()
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -84,18 +84,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-    private fun checkIfAppLaunchedByNotification() {
-        val movieId =  intent.extras?.getInt("movieId")
-        val isNotification = intent.extras?.getBoolean("isNotification")
-        val movieDetailsFragment =   MovieDetailsFragment.newInstance(movieId)
-
-        if (isNotification != null && isNotification == true) {
-            supportFragmentManager.beginTransaction()
-                .add(R.id.nav_host_fragment, HomeFragment())
-                .add(R.id.nav_host_fragment, movieDetailsFragment)
-                .addToBackStack(null)
-                .commit()
-        }
-    }
 }
