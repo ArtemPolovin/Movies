@@ -30,7 +30,7 @@ class TrendingMovieNotification @Inject constructor () {
           val pendingIntent = NavDeepLinkBuilder(context)
               .setGraph(R.navigation.mobile_navigation)
               .addDestination(R.id.homeFragment)
-              .setDestination(R.id.Movie_details)
+              .addDestination(R.id.Movie_details)
               .setArguments(bundle)
               .createPendingIntent()
 

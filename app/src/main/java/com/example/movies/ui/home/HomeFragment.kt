@@ -74,7 +74,8 @@ class HomeFragment : Fragment() {
         setupSortedMoviesList()
         openScreenWithAllMoviesWithGenre()
         openScreenWithMovieDetails()
-       // handlePressBackWhenAppOpenedByNotification()
+
+        handlePressBackWhenAppOpenedByNotification()
     }
 
     private fun setupRecyclerView() {
@@ -187,18 +188,15 @@ class HomeFragment : Fragment() {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER
     }
 
-   /* private fun handlePressBackWhenAppOpenedByNotification() {
+    private fun handlePressBackWhenAppOpenedByNotification() {
         val isNotification = arguments?.getBoolean("isNotification")
+
         if (isNotification != null && isNotification == true) {
-            println("mLog: isNotification = $isNotification")
-            val navGraph = findNavController().navInflater.inflate(R.navigation.mobile_navigation)
-            navGraph.setStartDestination(R.id.welcome_screen)
-            findNavController().graph = navGraph
             requireActivity().onBackPressedDispatcher.addCallback() {
                 requireActivity().finish()
             }
         }
-    }*/
+    }
 
 
 

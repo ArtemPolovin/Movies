@@ -95,7 +95,7 @@ class MovieDetailsFragment : Fragment() {
         changeWatchListIconState()
         changePosterAlphaWhenScrolling()
 
-        changeStartDestinationIfAppOpenedByNotification()
+       // changeStartDestinationIfAppOpenedByNotification()
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -296,7 +296,7 @@ class MovieDetailsFragment : Fragment() {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER
     }
 
-    private fun changeStartDestinationIfAppOpenedByNotification() {
+   /* private fun changeStartDestinationIfAppOpenedByNotification() {
         val isNotification = arguments?.getBoolean("isNotification")
 
         if (isNotification != null && isNotification == true) {
@@ -304,6 +304,6 @@ class MovieDetailsFragment : Fragment() {
             navGraph.setStartDestination(R.id.welcome_screen)
             findNavController().graph = navGraph
         }
-    }
+    }*/
 
 }
