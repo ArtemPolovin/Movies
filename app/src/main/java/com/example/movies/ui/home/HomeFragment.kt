@@ -74,8 +74,6 @@ class HomeFragment : Fragment() {
         setupSortedMoviesList()
         openScreenWithAllMoviesWithGenre()
         openScreenWithMovieDetails()
-
-        handlePressBackWhenAppOpenedByNotification()
     }
 
     private fun setupRecyclerView() {
@@ -187,17 +185,6 @@ class HomeFragment : Fragment() {
         super.onStop()
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER
     }
-
-    private fun handlePressBackWhenAppOpenedByNotification() {
-        val isNotification = arguments?.getBoolean("isNotification")
-
-        if (isNotification != null && isNotification == true) {
-            requireActivity().onBackPressedDispatcher.addCallback() {
-                requireActivity().finish()
-            }
-        }
-    }
-
 
 
 }

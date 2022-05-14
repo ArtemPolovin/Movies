@@ -25,7 +25,6 @@ class TrendingMovieNotification @Inject constructor () {
 
           val bundle = Bundle().apply {
               putInt("movieId",movieId)
-              putBoolean("isNotification",true)
           }
           val pendingIntent = NavDeepLinkBuilder(context)
               .setGraph(R.navigation.mobile_navigation)
@@ -33,14 +32,6 @@ class TrendingMovieNotification @Inject constructor () {
               .addDestination(R.id.Movie_details)
               .setArguments(bundle)
               .createPendingIntent()
-
-
-      /*    val intent = Intent(context,MainActivity::class.java).apply {
-              flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-              putExtra("movieId",movieId)
-              putExtra("isNotification",true)
-          }
-          val pendingIntent = PendingIntent.getActivity(context,0,intent,0)*/
 
         val  builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setPriority(NotificationCompat.PRIORITY_HIGH)

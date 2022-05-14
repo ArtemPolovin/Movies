@@ -296,14 +296,4 @@ class MovieDetailsFragment : Fragment() {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER
     }
 
-   /* private fun changeStartDestinationIfAppOpenedByNotification() {
-        val isNotification = arguments?.getBoolean("isNotification")
-
-        if (isNotification != null && isNotification == true) {
-            val navGraph = findNavController().navInflater.inflate(R.navigation.mobile_navigation)
-            navGraph.setStartDestination(R.id.welcome_screen)
-            findNavController().graph = navGraph
-        }
-    }*/
-
 }

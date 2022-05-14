@@ -24,7 +24,7 @@ class TrendingMovieWorkerScheduler @Inject constructor(): LifecycleObserver {
 
         workManager.enqueueUniquePeriodicWork(
             "show trending movie in notification",
-            ExistingPeriodicWorkPolicy.REPLACE,
+            ExistingPeriodicWorkPolicy.KEEP,
             trendingMovieRequest
         )
 

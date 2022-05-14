@@ -84,4 +84,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if (navController.currentDestination?.id == R.id.welcome_screen) finish()
+    }
+
 }
