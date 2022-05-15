@@ -3,6 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable-anydpi/ic_delete.xml" value="0.289" />
+        <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable-anydpi/ic_explore.xml" value="0.289" />
+        <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable-anydpi/ic_forward_arrow.xml" value="0.289" />
+        <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable-anydpi/ic_movie.xml" value="0.289" />
+        <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable-anydpi/ic_save.xml" value="0.289" />
+        <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable-hdpi/ic_save.xml" value="0.289" />
         <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable-xxhdpi/background_selector.xml" value="0.238" />
         <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable-xxhdpi/button_background.xml" value="0.238" />
         <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable-xxhdpi/header_background.xml" value="0.238" />
@@ -10,6 +16,12 @@
         <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable/background_button_watch_trailer.xml" value="0.325" />
         <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable/background_search_view.xml" value="0.238" />
         <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable/background_trailer.xml" value="0.2815" />
+        <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable/ic_explore.xml" value="0.289" />
+        <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable/ic_filter.xml" value="0.289" />
+        <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable/ic_forward_arrow.xml" value="0.289" />
+        <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable/ic_movie.xml" value="0.289" />
+        <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable/ic_save.xml" value="0.289" />
+        <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable/ic_saved_movies.xml" value="0.289" />
         <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable/movie_cell_background.xml" value="0.2815" />
         <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable/ripple_catecory_cell.xml" value="0.325" />
         <entry key="..\:/Users/Artem/AndroidStudioProjects/Movies/app/src/main/res/drawable/ripple_effect.xml" value="0.325" />

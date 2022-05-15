@@ -1,5 +1,6 @@
 package com.example.data.repositories_impl
 
+import android.graphics.Bitmap
 import com.example.data.apimodels.movie_details.MovieDetailsModelApi
 import com.example.data.apimodels.movies.MoviesListApiModel
 import com.example.data.apimodels.movies.Result
@@ -21,6 +22,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
+import okhttp3.ResponseBody
 import retrofit2.Response
 import java.io.IOException
 
@@ -158,7 +160,7 @@ class MoviesRepositoryImpl(
             } else ResponseResult.Failure(message = "Get movie account state response is not successful")
         } catch (e: RuntimeException) {
             e.printStackTrace()
-            ResponseResult.Failure(message = "The unknown error in response of movie account state")
+            ResponseResult.Failure(message = "${e.message}")
         }
     }
 
@@ -187,6 +189,20 @@ class MoviesRepositoryImpl(
                 } ?: ResponseResult.Failure(message = "The response is empty")
             } else ResponseResult.Failure(message = "The response is ot successful")
         } catch (e: RuntimeException) {
+            e.printStackTrace()
+            ResponseResult.Failure(message = "Some error has occurred from network request")
+        }
+    }
+
+    override suspend fun getTrendingMovie(): ResponseResult<MovieModel> {
+        return try {
+            val response = moviesApi.getTrendingMovie( language = settingsDataCache.getLanguage())
+            if (response.isSuccessful) {
+                response.body()?.let {
+                    return@let ResponseResult.Success(moviesApiMapper.mapTrendingMoviesListToMovieModel(it))
+                }?: ResponseResult.Failure(message = "The response is empty")
+            }else ResponseResult.Failure(message = "The response is ot successful")
+        } catch (e: IOException) {
             e.printStackTrace()
             ResponseResult.Failure(message = "Some error has occurred from network request")
         }
@@ -334,6 +350,21 @@ class MoviesRepositoryImpl(
         } catch (e: IOException) {
             e.printStackTrace()
             ResponseResult.Failure(message = "Error!! Please check internet connection")
+        }
+    }
+
+    //This function gets movie poster for notification
+    override suspend fun getMoviePoster(url: String): ResponseResult<ResponseBody> {
+        return try {
+            val response = moviesApi.getMoviePoster(url)
+            if (response.isSuccessful) {
+                response.body()?.let {
+                    return@let ResponseResult.Success(it)
+                } ?: ResponseResult.Failure(message = "The response body is null")
+            } else ResponseResult.Failure(message = "The response is not success")
+        } catch (e: IOException) {
+            e.printStackTrace()
+            ResponseResult.Failure(message = "The unknown error. Check the internet connection")
         }
     }
 

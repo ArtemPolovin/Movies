@@ -3,6 +3,8 @@ package com.example.domain.repositories
 import com.example.domain.models.*
 import com.example.domain.utils.ResponseResult
 import kotlinx.coroutines.flow.Flow
+import okhttp3.ResponseBody
+import retrofit2.Response
 
 interface MoviesRepository {
 
@@ -44,5 +46,7 @@ interface MoviesRepository {
     suspend fun getMovieAccountState(sessionId: String,movieId: Int): ResponseResult<MovieAccountStateModel>
     suspend fun getMoviesByName(movieName: String, page: Int): List<MovieModel>
     suspend fun getTrailersList(movieId: Int): ResponseResult<List<TrailerModel>>
+    suspend fun getTrendingMovie():ResponseResult<MovieModel>
+    suspend fun getMoviePoster(url: String): ResponseResult<ResponseBody>
 
 }

@@ -12,6 +12,7 @@ import com.example.domain.models.SaveToWatchListResponseModel
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -82,7 +83,7 @@ interface MoviesApi {
     ): Response<SaveToWatchListResponseModel>
 
     @GET("/3/account/{account_id}/watchlist/movies")
-   suspend fun getWatchList(
+    suspend fun getWatchList(
         @Query("session_id") sessionId: String,
         @Query("language") language: String?
     ): Response<MoviesListApiModel>
@@ -105,6 +106,12 @@ interface MoviesApi {
         @Path("movie_id") movieId: Int,
         @Query("language") language: String?
     ): Response<TrailersApiModel>
+
+    @GET("/3/trending/movie/day")
+    suspend fun getTrendingMovie(@Query("language") language: String?): Response<MoviesListApiModel>
+
+    @GET
+    suspend fun getMoviePoster(@Url url: String): Response<ResponseBody>
 
 
     companion object {

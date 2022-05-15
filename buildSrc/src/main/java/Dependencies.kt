@@ -24,6 +24,8 @@ object Versions {
     const val gif = "4.1.0"
     const val coordinatorLayout = "1.2.0"
     const val retrofitKtx = "0.9.2"
+    const val workMangerKtx = "2.7.1"
+    const val workManagerHilt = "1.0.0"
 }
 
 object Deps {
@@ -49,6 +51,9 @@ object Deps {
     const val gif = "com.airbnb.android:lottie:${Versions.gif}"
     const val coordinatorLayout = "androidx.coordinatorlayout:coordinatorlayout:${Versions.coordinatorLayout}"
     const val retrofit_kotlin_coroutines_adapter = "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:${Versions.retrofitKtx}"
+    const val work_manager_ktx = "androidx.work:work-runtime-ktx:${Versions.workMangerKtx}"
+    const val work_manager_hilt = "androidx.hilt:hilt-work:${Versions.workManagerHilt}"
+    const val work_manager_hilt_compiler = "androidx.hilt:hilt-compiler:${Versions.workManagerHilt}"
 
     //Coroutines
     const val coroutinesCore =

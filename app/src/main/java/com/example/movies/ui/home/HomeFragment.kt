@@ -9,6 +9,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -184,5 +185,6 @@ class HomeFragment : Fragment() {
         super.onStop()
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER
     }
+
 
 }
