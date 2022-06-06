@@ -10,6 +10,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.data.cache.*
@@ -34,6 +35,8 @@ class WelcomeScreenFragment : Fragment() {
     @Inject
    lateinit var sharedPrefLoginAndPassword: SharedPrefLoginAndPassword
 
+   private val viewModel: WelcomeScreenViewModel by viewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,14 +53,12 @@ class WelcomeScreenFragment : Fragment() {
 
     private fun delayWelcomeScreen() {
         viewLifecycleOwner.lifecycleScope.launch {
-            val userName = sharedPrefLoginAndPassword.loadUserName()
-            val password = sharedPrefLoginAndPassword.loadPassword()
             delay(3000)
             findNavController().popBackStack(R.id.welcome_screen,true)
-            if (isLoginRememberMe.loadIsRememberMeChecked() && userName.isNotBlank() && password.isNotBlank()) {
+            if (viewModel.isAuthorized()) {
                 findNavController().navigate(R.id.homeFragment)
             } else {
-                findNavController().navigate(R.id.nav_login_fragment)
+                findNavController().navigate(R.id.authorizationFragment)
             }
 
         }

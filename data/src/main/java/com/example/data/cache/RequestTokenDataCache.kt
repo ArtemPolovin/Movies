@@ -7,6 +7,10 @@ class RequestTokenDataCache(
     private val sharedPref: SharedPreferences
 ) {
 
+    fun removeRequestToken() {
+        sharedPref.edit().clear().apply()
+    }
+
     fun loadRequestToken(): String =
         sharedPref.getString(REQUEST_TOKEN, "" ) ?: ""
 

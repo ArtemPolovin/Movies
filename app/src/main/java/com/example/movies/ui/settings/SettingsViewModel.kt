@@ -1,9 +1,11 @@
 package com.example.movies.ui.settings
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.app.Application
+import android.content.Context
+import android.os.Build
+import android.webkit.CookieManager
+import androidx.lifecycle.*
+import com.example.data.cache.RequestTokenDataCache
 import com.example.data.cache.SessionIdDataCache
 import com.example.data.cache.SharedPrefLoginAndPassword
 import com.example.data.cache.SharedPreferencesLoginRememberMe
@@ -15,12 +17,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
+    application: Application,
     private val logoutUseCase: LogoutUseCase,
     private val sessionIdDataCache: SessionIdDataCache,
-    private val loginSharedPreferencesRememberMe: SharedPreferencesLoginRememberMe,
-    private val sharedPrefLoginAndPassword: SharedPrefLoginAndPassword,
-
-    ): ViewModel() {
+    private val requestTokenDataCache: RequestTokenDataCache,
+    ): AndroidViewModel(application) {
 
     private val _isLoggedOut = MutableLiveData<Boolean>().apply { value = false }
     val isLoggedOut: LiveData<Boolean> get() = _isLoggedOut
@@ -30,14 +31,23 @@ class SettingsViewModel @Inject constructor(
             val logoutRequestBodyModel = LogoutRequestBodyModel(sessionIdDataCache.loadSessionId())
 
             val isLoggedOutFromApi = logoutUseCase.execute(logoutRequestBodyModel)
-            if (isLoggedOutFromApi) clearLoginRememberMeData()
+            if (isLoggedOutFromApi){
+                deleteTokenFromCache()
+                clearCookies()
+            }
             _isLoggedOut.value = isLoggedOutFromApi
         }
     }
 
-    private fun clearLoginRememberMeData() {
-        loginSharedPreferencesRememberMe.saveIsRememberMeChecked(false)
-        sharedPrefLoginAndPassword.clearUserName()
-        sharedPrefLoginAndPassword.clearPassword()
+    private fun clearCookies() {
+        CookieManager.getInstance().apply {
+            removeAllCookies(null)
+            flush()
+        }
+    }
+
+    private fun deleteTokenFromCache() {
+        sessionIdDataCache.removeSessionId()
+        requestTokenDataCache.removeRequestToken()
     }
 }

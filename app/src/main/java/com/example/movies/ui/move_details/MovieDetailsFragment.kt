@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -226,11 +227,19 @@ class MovieDetailsFragment : Fragment() {
 
     private fun checkMovieAccountState() {
         viewModel.getMovieAccountState(movieId)
-        viewModel.movieAccountState.observe(viewLifecycleOwner) { movieAccountState ->
-            movieAccountState.watchlist?.let { it ->
-                if (it) createSavedMovieIconStyle()
-                else createDeletedMovieIconStyle()
-                isSavedToWatchList = it
+        viewModel.movieAccountState.observe(viewLifecycleOwner){
+            when (it) {
+               is ResponseResult.Failure ->{
+                   Log.i("TAG", it.message)
+                   findNavController().navigate(R.id.authorizationFragment)
+               }
+                is ResponseResult.Success ->{
+                    it.data.watchlist?.let { isNotSavedToWatchList ->
+                        if (isNotSavedToWatchList) createSavedMovieIconStyle()
+                        else createDeletedMovieIconStyle()
+                        isSavedToWatchList = isNotSavedToWatchList
+                    }
+                }
             }
         }
     }

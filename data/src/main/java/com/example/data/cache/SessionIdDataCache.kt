@@ -7,6 +7,10 @@ class SessionIdDataCache(
     private val sharedPref: SharedPreferences
 ) {
 
+    fun removeSessionId() {
+        sharedPref.edit().clear().apply()
+    }
+
     fun saveSessionId(sessionId: String) {
         sharedPref.edit().putString(SESSION_ID,sessionId).commit()
     }
