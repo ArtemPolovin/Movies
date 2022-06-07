@@ -9,6 +9,9 @@ import com.example.domain.models.LogoutRequestBodyModel
 import com.example.domain.models.SessionIdRequestBodyModel
 import com.example.domain.repositories.AuthMovieRepository
 import com.example.domain.utils.ResponseResult
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import org.json.JSONObject
 
 class AuthMovieRepositoryImpl(
     private val authMovieApiService: AuthMovieAPIService,

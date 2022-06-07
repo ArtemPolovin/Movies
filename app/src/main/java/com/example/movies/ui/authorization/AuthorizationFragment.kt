@@ -73,13 +73,12 @@ class AuthorizationFragment : Fragment() {
             }
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                if (viewModel.isAuthorizationApproved(url!!)) {
+                if (viewModel.isAuthorizationApproved(url?:"")) {
                     viewLifecycleOwner.lifecycleScope.launch {
                         val isAccessIdSaved =
                             withContext(Dispatchers.Default) { viewModel.saveSessionId() }
                         if (isAccessIdSaved) {
-                            findNavController().popBackStack(R.id.authorizationFragment, true)
-                            findNavController().navigate(R.id.homeFragment)
+                            findNavController().navigate(R.id.action_authorizationFragment_to_homeFragment)
                         }
                     }
                 }

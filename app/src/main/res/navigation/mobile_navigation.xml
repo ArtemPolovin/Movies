@@ -50,7 +50,9 @@
         android:label="Settings">
         <action
             android:id="@+id/action_settings_to_authorizationFragment"
-            app:destination="@id/authorizationFragment" />
+            app:destination="@id/authorizationFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/welcome_screen"
