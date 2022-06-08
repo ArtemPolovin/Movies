@@ -27,6 +27,9 @@ class AuthorizationViewModel @Inject constructor(
     private val _requestToken = MutableLiveData<String>()
     val requestToken: LiveData<String> get() = _requestToken
 
+    private val _isSessionIdSaved = MutableLiveData<Boolean>().apply { value = false }
+    val isSessionIdSaved: LiveData<Boolean> get() = _isSessionIdSaved
+
     init {
         getRequestToken()
     }
@@ -41,9 +44,11 @@ class AuthorizationViewModel @Inject constructor(
        return (url.contains("/allow"))
     }
 
-    suspend fun saveSessionId(): Boolean {
+     fun saveSessionId() {
+        viewModelScope.launch {
             val model = SessionIdRequestBodyModel(requestTokenDataCache.loadRequestToken())
-            return saveSessionIdUseCase.save(model)
+           _isSessionIdSaved.value =  saveSessionIdUseCase.save(model)
+        }
     }
 
      fun clearCookies() {

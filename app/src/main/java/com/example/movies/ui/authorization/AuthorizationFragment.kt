@@ -12,9 +12,6 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.data.cache.RequestTokenDataCache
 import com.example.movies.R
@@ -22,18 +19,12 @@ import com.example.movies.databinding.FragmentAuthorizationBinding
 import com.example.movies.utils.AUTH_URI
 import com.example.movies.utils.LOGOUT_URL_IN_WEB_VIEW
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class AuthorizationFragment : Fragment() {
 
-    private var _binding: FragmentAuthorizationBinding? = null
-    private val binding: FragmentAuthorizationBinding
-        get() =
-            _binding ?: throw RuntimeException("FragmentAuthorizationBinding == null")
+    private lateinit var binding: FragmentAuthorizationBinding
 
     private val viewModel: AuthorizationViewModel by viewModels()
 
@@ -44,7 +35,7 @@ class AuthorizationFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentAuthorizationBinding.inflate(inflater, container, false)
+        binding = FragmentAuthorizationBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -74,12 +65,9 @@ class AuthorizationFragment : Fragment() {
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 if (viewModel.isAuthorizationApproved(url?:"")) {
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        val isAccessIdSaved =
-                            withContext(Dispatchers.Default) { viewModel.saveSessionId() }
-                        if (isAccessIdSaved) {
-                            findNavController().navigate(R.id.action_authorizationFragment_to_homeFragment)
-                        }
+                    viewModel.saveSessionId()
+                    viewModel.isSessionIdSaved.observe(viewLifecycleOwner){isSessionIdSaved ->
+                        if(isSessionIdSaved) findNavController().navigate(R.id.action_authorizationFragment_to_homeFragment)
                     }
                 }
                 binding.progressBarWebView.visibility = View.VISIBLE
