@@ -15,14 +15,10 @@ import com.example.data.mapers.MoviesApiMapper
 import com.example.data.mapers.MoviesEntityMapper
 import com.example.data.network.AuthMovieAPIService
 import com.example.data.network.MoviesApi
-import com.example.data.repositories_impl.AuthMovieRepositoryImpl
-import com.example.data.repositories_impl.MovieCategoriesRepositoryImpl
-import com.example.data.repositories_impl.MoviesRepositoryImpl
+import com.example.data.repositories_impl.*
 import com.example.data.utils.SHARED_PREF
 import com.example.data.utils.SHARED_PREF_MOVIE_FILTER
-import com.example.domain.repositories.AuthMovieRepository
-import com.example.domain.repositories.MovieCategoriesRepository
-import com.example.domain.repositories.MoviesRepository
+import com.example.domain.repositories.*
 import com.example.domain.usecases.auth.LoginUseCase
 import com.example.domain.usecases.auth.LogoutUseCase
 import com.example.domain.usecases.auth.SaveRequestTokenUseCase
@@ -31,7 +27,6 @@ import com.example.domain.usecases.movie_usecase.*
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
@@ -86,14 +81,31 @@ object AppModule {
         MovieCategoriesRepositoryImpl(movieGenresMapper, settingsDataCache, moviesApi)
 
     @Provides
+    @Singleton
+    fun provideCacheRepositoryImpl(
+        sessionIdDataCache: SessionIdDataCache,
+        requestTokenDataCache: RequestTokenDataCache
+    ): CacheRepository = CacheRepositoryImpl(sessionIdDataCache, requestTokenDataCache)
+
+    @Provides
+    @Singleton
+    fun provideCookieRepositoryImpl(): CookieRepository = CookieRepositoryImpl()
+
+
+    @Provides
     fun provideMovieWithDetailsPagingSource(
         movieRepository: MoviesRepository,
         sharedPrefMovieCategory: SharedPrefMovieCategory,
         shardPrefMovieFilter: SharedPrefMovieFilter
-    ) = MoviesWithDetailsPagingSource(movieRepository, sharedPrefMovieCategory, shardPrefMovieFilter)
+    ) = MoviesWithDetailsPagingSource(
+        movieRepository,
+        sharedPrefMovieCategory,
+        shardPrefMovieFilter
+    )
 
     @Provides
-    fun provideMoviesPagingSource(movieRepository: MoviesRepository) = MoviesPagingSource(movieRepository)
+    fun provideMoviesPagingSource(movieRepository: MoviesRepository) =
+        MoviesPagingSource(movieRepository)
 
     @Provides
     @Singleton
@@ -107,7 +119,7 @@ object AppModule {
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context) =
         Room.databaseBuilder(context, AppDatabase::class.java, "MovieDB")
-             // .fallbackToDestructiveMigration()
+            // .fallbackToDestructiveMigration()
             // .addMigrations(AppDatabase.MIGRATION_2_3)
             .build()
 
@@ -155,8 +167,11 @@ object AppModule {
         SaveSessionIdUseCase(authMovieRepository)
 
     @Provides
-    fun provideLogoutUseCase(authMovieRepository: AuthMovieRepository) =
-        LogoutUseCase(authMovieRepository)
+    fun provideLogoutUseCase(
+        authMovieRepository: AuthMovieRepository,
+        cookieRepository: CookieRepository,
+        cacheRepository: CacheRepository
+    ) = LogoutUseCase(authMovieRepository, cookieRepository, cacheRepository)
 
     @Provides
     fun provideGetGenresUseCase(movieCategoriesRepo: MovieCategoriesRepository) =
@@ -183,27 +198,33 @@ object AppModule {
         GetRecommendationsMoviesUseCase(moviesRepository)
 
     @Provides
-    fun provideGetMoviePosterUseCase(moviesRepository: MoviesRepository) = GetMoviePosterUseCase(moviesRepository)
+    fun provideGetMoviePosterUseCase(moviesRepository: MoviesRepository) =
+        GetMoviePosterUseCase(moviesRepository)
 
 
     @Provides
-    fun provideSaveToWatchListUseCase(movieRepository: MoviesRepository) = SaveOrDeleteMovieFromWatchListUseCase(movieRepository)
+    fun provideSaveToWatchListUseCase(movieRepository: MoviesRepository) =
+        SaveOrDeleteMovieFromWatchListUseCase(movieRepository)
 
     @Provides
-    fun provideGetWatchListUseCase(movieRepository: MoviesRepository) = GetWatchListUseCase(movieRepository)
+    fun provideGetWatchListUseCase(movieRepository: MoviesRepository) =
+        GetWatchListUseCase(movieRepository)
 
     @Provides
-    fun provideGetMovieAccountStateUseCase(movieRepository: MoviesRepository) = GetMovieAccountStateUseCase(movieRepository)
+    fun provideGetMovieAccountStateUseCase(movieRepository: MoviesRepository) =
+        GetMovieAccountStateUseCase(movieRepository)
 
     @Provides
-    fun provideGetTrailerListUseCase(movieRepository: MoviesRepository) = GetTrailerListUseCase(movieRepository)
+    fun provideGetTrailerListUseCase(movieRepository: MoviesRepository) =
+        GetTrailerListUseCase(movieRepository)
 
     @Provides
     fun provideGetMoviesCategoriesCells(movieCategoriesRepo: MovieCategoriesRepository) =
         GetMoviesCategoriesUseCase(movieCategoriesRepo)
 
     @Provides
-    fun provideGetTrendingMovieUseCase(movieRepository: MoviesRepository) = GetTrendingMovieUseCase(movieRepository)
+    fun provideGetTrendingMovieUseCase(movieRepository: MoviesRepository) =
+        GetTrendingMovieUseCase(movieRepository)
 
     @Provides
     @Singleton
@@ -254,7 +275,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideSharedPrefTrendingMovieId(sharedPref: SharedPreferences) = SharedPrefTrendingMovieId(sharedPref)
+    fun provideSharedPrefTrendingMovieId(sharedPref: SharedPreferences) =
+        SharedPrefTrendingMovieId(sharedPref)
 
 
     @Provides

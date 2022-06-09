@@ -16,7 +16,6 @@ class SettingsViewModel @Inject constructor(
     application: Application,
     private val logoutUseCase: LogoutUseCase,
     private val sessionIdDataCache: SessionIdDataCache,
-    private val requestTokenDataCache: RequestTokenDataCache,
     ): AndroidViewModel(application) {
 
     private val _isLoggedOut = MutableLiveData<Boolean>().apply { value = false }
@@ -24,26 +23,10 @@ class SettingsViewModel @Inject constructor(
 
     fun logout() {
         viewModelScope.launch {
+
             val logoutRequestBodyModel = LogoutRequestBodyModel(sessionIdDataCache.loadSessionId())
-
-            val isLoggedOutFromApi = logoutUseCase.execute(logoutRequestBodyModel)
-            if (isLoggedOutFromApi){
-                deleteTokenFromCache()
-                clearCookies()
-            }
-            _isLoggedOut.value = isLoggedOutFromApi
+            _isLoggedOut.value = logoutUseCase.execute(logoutRequestBodyModel)
         }
     }
 
-    private fun clearCookies() {
-        CookieManager.getInstance().apply {
-            removeAllCookies(null)
-            flush()
-        }
-    }
-
-    private fun deleteTokenFromCache() {
-        sessionIdDataCache.removeSessionId()
-        requestTokenDataCache.removeRequestToken()
-    }
 }
