@@ -1,14 +1,13 @@
 package com.example.movies.ui.authorization
 
 import android.app.Application
-import android.webkit.CookieManager
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.data.cache.RequestTokenDataCache
-import com.example.data.cache.SessionIdDataCache
 import com.example.domain.models.SessionIdRequestBodyModel
+import com.example.domain.usecases.auth.LoadRequestTokenUseCase
+import com.example.domain.usecases.auth.LogoutFromWebPageUseCase
 import com.example.domain.usecases.auth.SaveRequestTokenUseCase
 import com.example.domain.usecases.auth.SaveSessionIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,9 +18,9 @@ import javax.inject.Inject
 class AuthorizationViewModel @Inject constructor(
     application: Application,
     private val saveRequestTokenUseCase: SaveRequestTokenUseCase,
-    private val requestTokenDataCache: RequestTokenDataCache,
+    private val loadRequestTokenUseCase: LoadRequestTokenUseCase,
     private val saveSessionIdUseCase: SaveSessionIdUseCase,
-    private val sessionIdDataCache: SessionIdDataCache
+    private val logoutFromWebPageUseCase: LogoutFromWebPageUseCase
 ) : AndroidViewModel(application) {
 
     private val _requestToken = MutableLiveData<String>()
@@ -46,12 +45,17 @@ class AuthorizationViewModel @Inject constructor(
 
      fun saveSessionId() {
         viewModelScope.launch {
-            val model = SessionIdRequestBodyModel(requestTokenDataCache.loadRequestToken())
+            val model = SessionIdRequestBodyModel(loadRequestTokenUseCase.execute())
            _isSessionIdSaved.value =  saveSessionIdUseCase.save(model)
         }
     }
 
-     fun clearCookies() {
+
+    fun logout() {
+        logoutFromWebPageUseCase.execute()
+    }
+
+   /*  fun clearCookies() {
         CookieManager.getInstance().apply {
             removeAllCookies(null)
             flush()
@@ -61,7 +65,7 @@ class AuthorizationViewModel @Inject constructor(
      fun deleteTokenFromCache() {
         sessionIdDataCache.removeSessionId()
         requestTokenDataCache.removeRequestToken()
-    }
+    }*/
 
 
 }

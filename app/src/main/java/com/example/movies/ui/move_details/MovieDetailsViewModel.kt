@@ -1,9 +1,9 @@
 package com.example.movies.ui.move_details
 
 import androidx.lifecycle.*
-import com.example.data.cache.SessionIdDataCache
 import com.example.data.cache.WatchListChanges
 import com.example.domain.models.*
+import com.example.domain.usecases.auth.LoadSessionIdUseCase
 import com.example.domain.usecases.movie_usecase.*
 import com.example.domain.utils.ResponseResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +15,7 @@ class MovieDetailsViewModel @Inject constructor(
     private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
     private val getSimilarMoviesUseCase: GetSimilarMoviesUseCase,
     private val getRecommendationsMoviesUseCase: GetRecommendationsMoviesUseCase,
-    private val sessionIdDataCache: SessionIdDataCache,
+    private val loadSessionIdUseCase: LoadSessionIdUseCase,
     private val saveOrDeleteMovieFromWatchListUseCase: SaveOrDeleteMovieFromWatchListUseCase,
     private val getMovieAccountStateUseCase: GetMovieAccountStateUseCase,
     private val watchListChanges: WatchListChanges,
@@ -40,7 +40,7 @@ class MovieDetailsViewModel @Inject constructor(
 
     fun saveOrDeleteMovieFromWatchList(saveToWatchListModel: SaveToWatchListModel) {
         viewModelScope.launch {
-            saveOrDeleteMovieFromWatchListUseCase.execute(saveToWatchListModel, sessionIdDataCache.loadSessionId())
+            saveOrDeleteMovieFromWatchListUseCase.execute(saveToWatchListModel, loadSessionIdUseCase.execute())
         }
     }
 
@@ -65,7 +65,7 @@ class MovieDetailsViewModel @Inject constructor(
 
     fun getMovieAccountState(movieId: Int) {
         viewModelScope.launch {
-            _movieAccountState.value = getMovieAccountStateUseCase.execute(sessionIdDataCache.loadSessionId(), movieId)
+            _movieAccountState.value = getMovieAccountStateUseCase.execute(loadSessionIdUseCase.execute(), movieId)
         }
     }
 

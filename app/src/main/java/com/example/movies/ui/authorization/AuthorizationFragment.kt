@@ -13,13 +13,11 @@ import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.example.data.cache.RequestTokenDataCache
 import com.example.movies.R
 import com.example.movies.databinding.FragmentAuthorizationBinding
 import com.example.movies.utils.AUTH_URI
 import com.example.movies.utils.LOGOUT_URL_IN_WEB_VIEW
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class AuthorizationFragment : Fragment() {
@@ -27,9 +25,6 @@ class AuthorizationFragment : Fragment() {
     private lateinit var binding: FragmentAuthorizationBinding
 
     private val viewModel: AuthorizationViewModel by viewModels()
-
-    @Inject
-    lateinit var requestTokenDataCache: RequestTokenDataCache
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,8 +47,7 @@ class AuthorizationFragment : Fragment() {
                 val url = request?.url.toString()
 
                 if (url == LOGOUT_URL_IN_WEB_VIEW) {
-                    viewModel.clearCookies()
-                    viewModel.deleteTokenFromCache()
+                    viewModel.logout()
                     viewModel.getRequestToken()
                     return true
                 }

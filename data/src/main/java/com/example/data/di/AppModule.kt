@@ -19,10 +19,7 @@ import com.example.data.repositories_impl.*
 import com.example.data.utils.SHARED_PREF
 import com.example.data.utils.SHARED_PREF_MOVIE_FILTER
 import com.example.domain.repositories.*
-import com.example.domain.usecases.auth.LoginUseCase
-import com.example.domain.usecases.auth.LogoutUseCase
-import com.example.domain.usecases.auth.SaveRequestTokenUseCase
-import com.example.domain.usecases.auth.SaveSessionIdUseCase
+import com.example.domain.usecases.auth.*
 import com.example.domain.usecases.movie_usecase.*
 import com.google.gson.Gson
 import dagger.Module
@@ -60,15 +57,13 @@ object AppModule {
     @Singleton
     fun provideAuthMovieRepository(
         authMovieAPIService: AuthMovieAPIService,
-        requestTokenDataCache: RequestTokenDataCache,
         errorLoginMapper: ErrorLoginMapper,
-        sessionIdDataCache: SessionIdDataCache
+       cacheRepository: CacheRepository
     ): AuthMovieRepository =
         AuthMovieRepositoryImpl(
             authMovieAPIService,
-            requestTokenDataCache,
             errorLoginMapper,
-            sessionIdDataCache
+            cacheRepository
         )
 
     @Provides
@@ -83,9 +78,8 @@ object AppModule {
     @Provides
     @Singleton
     fun provideCacheRepositoryImpl(
-        sessionIdDataCache: SessionIdDataCache,
-        requestTokenDataCache: RequestTokenDataCache
-    ): CacheRepository = CacheRepositoryImpl(sessionIdDataCache, requestTokenDataCache)
+       sharedPref: SharedPreferences
+    ): CacheRepository = CacheRepositoryImpl(sharedPref)
 
     @Provides
     @Singleton
@@ -227,6 +221,18 @@ object AppModule {
         GetTrendingMovieUseCase(movieRepository)
 
     @Provides
+    fun provideLoadSessionIdUseCase(cacheRepository: CacheRepository) = LoadSessionIdUseCase(cacheRepository)
+
+    @Provides
+    fun provideLoadRequestTokenUseCase(cacheRepository: CacheRepository) = LoadRequestTokenUseCase(cacheRepository)
+
+    @Provides
+    fun provideLogoutFromWebPageUseCase(
+        cookieRepository: CookieRepository,
+        cacheRepository: CacheRepository
+    ) = LogoutFromWebPageUseCase( cookieRepository,cacheRepository)
+
+    @Provides
     @Singleton
     fun provideSharedPreferences(
         @ApplicationContext context: Context
@@ -238,16 +244,6 @@ object AppModule {
     @Named("MovieFilterCache")
     fun provideMovieFilterSharedPreferences(@ApplicationContext context: Context) =
         context.getSharedPreferences(SHARED_PREF_MOVIE_FILTER, Context.MODE_PRIVATE)
-
-
-    @Provides
-    @Singleton
-    fun provideRequestTokenDataCache(sharedPref: SharedPreferences) =
-        RequestTokenDataCache(sharedPref)
-
-    @Provides
-    @Singleton
-    fun provideSessionIdDataCache(sharedPref: SharedPreferences) = SessionIdDataCache(sharedPref)
 
     @Provides
     @Singleton

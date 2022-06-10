@@ -1,11 +1,9 @@
 package com.example.movies.ui.settings
 
 import android.app.Application
-import android.webkit.CookieManager
 import androidx.lifecycle.*
-import com.example.data.cache.RequestTokenDataCache
-import com.example.data.cache.SessionIdDataCache
 import com.example.domain.models.LogoutRequestBodyModel
+import com.example.domain.usecases.auth.LoadSessionIdUseCase
 import com.example.domain.usecases.auth.LogoutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -15,7 +13,7 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     application: Application,
     private val logoutUseCase: LogoutUseCase,
-    private val sessionIdDataCache: SessionIdDataCache,
+    private val loadSessionIdUseCase: LoadSessionIdUseCase,
     ): AndroidViewModel(application) {
 
     private val _isLoggedOut = MutableLiveData<Boolean>().apply { value = false }
@@ -23,8 +21,7 @@ class SettingsViewModel @Inject constructor(
 
     fun logout() {
         viewModelScope.launch {
-
-            val logoutRequestBodyModel = LogoutRequestBodyModel(sessionIdDataCache.loadSessionId())
+            val logoutRequestBodyModel = LogoutRequestBodyModel(loadSessionIdUseCase.execute())
             _isLoggedOut.value = logoutUseCase.execute(logoutRequestBodyModel)
         }
     }

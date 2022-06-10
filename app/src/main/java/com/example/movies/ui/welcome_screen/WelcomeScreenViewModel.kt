@@ -1,16 +1,16 @@
 package com.example.movies.ui.welcome_screen
 
 import androidx.lifecycle.ViewModel
-import com.example.data.cache.SessionIdDataCache
+import com.example.domain.usecases.auth.LoadSessionIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class WelcomeScreenViewModel @Inject constructor(
-    private val sessionIdDataCache: SessionIdDataCache
+    private val loadSessionIdUseCase: LoadSessionIdUseCase
 ) : ViewModel() {
 
     fun isAuthorized(): Boolean {
-        return sessionIdDataCache.loadSessionId().isNotEmpty()
+        return loadSessionIdUseCase.execute().isNotEmpty()
     }
 }
