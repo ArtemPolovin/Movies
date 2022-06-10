@@ -76,9 +76,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun hideBottomNavBar() {
         navController.addOnDestinationChangedListener { _, distination, _ ->
-            binding.bottomNav.visibility = when (distination.id) {
-                R.id.welcome_screen, R.id.moviesFilterFragment, R.id.authorizationFragment -> View.GONE
-                else -> View.VISIBLE
+              when (distination.id) {
+                R.id.welcome_screen, R.id.moviesFilterFragment, R.id.authorizationFragment ->{
+                    binding.bottomNav.visibility =  View.GONE
+                    binding.viewLine.visibility = View.GONE
+                }
+                else -> {
+                    binding.bottomNav.visibility =  View.VISIBLE
+                    binding.viewLine.visibility = View.VISIBLE
+                }
             }
         }
     }
