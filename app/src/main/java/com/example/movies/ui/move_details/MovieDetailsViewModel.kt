@@ -1,9 +1,9 @@
 package com.example.movies.ui.move_details
 
 import androidx.lifecycle.*
-import com.example.data.cache.SessionIdDataCache
 import com.example.data.cache.WatchListChanges
 import com.example.domain.models.*
+import com.example.domain.usecases.auth.LoadSessionIdUseCase
 import com.example.domain.usecases.movie_usecase.*
 import com.example.domain.utils.ResponseResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +15,7 @@ class MovieDetailsViewModel @Inject constructor(
     private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
     private val getSimilarMoviesUseCase: GetSimilarMoviesUseCase,
     private val getRecommendationsMoviesUseCase: GetRecommendationsMoviesUseCase,
-    private val sessionIdDataCache: SessionIdDataCache,
+    private val loadSessionIdUseCase: LoadSessionIdUseCase,
     private val saveOrDeleteMovieFromWatchListUseCase: SaveOrDeleteMovieFromWatchListUseCase,
     private val getMovieAccountStateUseCase: GetMovieAccountStateUseCase,
     private val watchListChanges: WatchListChanges,
@@ -32,15 +32,15 @@ class MovieDetailsViewModel @Inject constructor(
     private val _recommendationsMovies = MutableLiveData<ResponseResult<List<MovieModel>>>()
     val recommendationsMovies: LiveData<ResponseResult<List<MovieModel>>> get() = _recommendationsMovies
 
-    private val _movieAccountState = MutableLiveData<MovieAccountStateModel>()
-    val movieAccountState: LiveData<MovieAccountStateModel> get() = _movieAccountState
+    private val _movieAccountState = MutableLiveData< ResponseResult<MovieAccountStateModel>>()
+    val movieAccountState: LiveData< ResponseResult<MovieAccountStateModel>> get() = _movieAccountState
 
     private val _trailerList = MutableLiveData<ResponseResult<List<TrailerModel>>>()
     val trailerList: LiveData<ResponseResult<List<TrailerModel>>> get() = _trailerList
 
     fun saveOrDeleteMovieFromWatchList(saveToWatchListModel: SaveToWatchListModel) {
         viewModelScope.launch {
-            saveOrDeleteMovieFromWatchListUseCase.execute(saveToWatchListModel, sessionIdDataCache.loadSessionId())
+            saveOrDeleteMovieFromWatchListUseCase.execute(saveToWatchListModel, loadSessionIdUseCase.execute())
         }
     }
 
@@ -65,13 +65,7 @@ class MovieDetailsViewModel @Inject constructor(
 
     fun getMovieAccountState(movieId: Int) {
         viewModelScope.launch {
-            val movieAccountResponse =
-                getMovieAccountStateUseCase.execute(sessionIdDataCache.loadSessionId(), movieId)
-            when (movieAccountResponse) {
-                is ResponseResult.Success -> _movieAccountState.value = movieAccountResponse.data
-                is ResponseResult.Failure -> throw RuntimeException(movieAccountResponse.message)
-            }
-
+            _movieAccountState.value = getMovieAccountStateUseCase.execute(loadSessionIdUseCase.execute(), movieId)
         }
     }
 

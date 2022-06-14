@@ -1,12 +1,10 @@
 package com.example.movies.ui.saved_movie
 
-import android.util.Log
 import androidx.lifecycle.*
-import com.example.data.cache.SessionIdDataCache
 import com.example.data.cache.WatchListChanges
 import com.example.domain.models.MovieModel
-import com.example.domain.models.MovieWithDetailsModel
 import com.example.domain.models.SaveToWatchListModel
+import com.example.domain.usecases.auth.LoadSessionIdUseCase
 import com.example.domain.usecases.movie_usecase.GetWatchListUseCase
 import com.example.domain.usecases.movie_usecase.SaveOrDeleteMovieFromWatchListUseCase
 import com.example.domain.utils.ResponseResult
@@ -19,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SavedMovieViewModel @Inject constructor(
     private val getWatchListUseCase: GetWatchListUseCase,
-    private val sessionIdDataCache: SessionIdDataCache,
+    private val loadSessionIdUseCase: LoadSessionIdUseCase,
     private val saveOrDeleteMovieFromWatchListUseCase: SaveOrDeleteMovieFromWatchListUseCase,
     private val watchListChanges: WatchListChanges
 ) : ViewModel() {
@@ -40,14 +38,14 @@ class SavedMovieViewModel @Inject constructor(
            )
        }
         viewModelScope.launch(handler) {
-            _watchList.value = getWatchListUseCase.execute(sessionIdDataCache.loadSessionId())
+            _watchList.value = getWatchListUseCase.execute(loadSessionIdUseCase.execute())
         }
     }
 
     private suspend fun saveOrDeleteMovieFromWatchList(saveToWatchListModel: SaveToWatchListModel) {
         saveOrDeleteMovieFromWatchListUseCase.execute(
             saveToWatchListModel,
-            sessionIdDataCache.loadSessionId()
+            loadSessionIdUseCase.execute()
         )
     }
 

@@ -33,7 +33,7 @@
             app:enterAnim="@anim/enter_from_right"
             app:exitAnim="@anim/exit_to_right" />
     </fragment>
-    <fragment
+  <!--  <fragment
         android:id="@+id/nav_login_fragment"
         android:name="com.example.movies.ui.login.LoginFragment"
         android:label="fragment_login"
@@ -43,14 +43,14 @@
             app:destination="@id/homeFragment"
             app:popUpTo="@id/nav_login_fragment"
             app:popUpToInclusive="true"/>
-    </fragment>
+    </fragment>-->
     <fragment
         android:id="@+id/settings"
         android:name="com.example.movies.ui.settings.SettingsFragment"
         android:label="Settings">
         <action
-            android:id="@+id/action_settings_to_nav_login_fragment"
-            app:destination="@id/nav_login_fragment"
+            android:id="@+id/action_settings_to_authorizationFragment"
+            app:destination="@id/authorizationFragment"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true"/>
     </fragment>
@@ -149,5 +149,17 @@
         </activity>
 
     </navigation>
+    <fragment
+        android:id="@+id/authorizationFragment"
+        android:name="com.example.movies.ui.authorization.AuthorizationFragment"
+        android:label="fragment_authorization"
+        tools:layout="@layout/fragment_authorization" >
+        <action
+            android:id="@+id/action_authorizationFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/authorizationFragment"
+            app:popUpToInclusive="true"
+            />
+    </fragment>
 
 </navigation>

@@ -81,10 +81,7 @@ class SettingsFragment : PreferenceFragmentCompat(),Preference.OnPreferenceClick
 
     private fun logOut() {
         viewModel.isLoggedOut.observe(viewLifecycleOwner) {
-            if (it) {
-                sharedPreferencesLoginRememberMe.saveIsRememberMeChecked(false)
-                findNavController().navigate(R.id.action_settings_to_nav_login_fragment)
-            }
+            if (it) findNavController().navigate(R.id.action_settings_to_authorizationFragment)
         }
     }
 

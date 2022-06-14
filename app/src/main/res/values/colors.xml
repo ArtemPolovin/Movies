@@ -38,4 +38,5 @@
     <color name="vertical_cell_title_background_color">#7EC0C0C0</color>
     <color name="text_save_icon_color">#918D8D</color>
     <color name="button_watch_trailer_color">#41DADADA</color>
+    <color name="view_line_gray">#E3E0E0</color>
 </resources>

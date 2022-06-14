@@ -2,19 +2,17 @@ package com.example.data.repositories_impl
 
 import com.example.data.mapers.ErrorLoginMapper
 import com.example.data.network.AuthMovieAPIService
-import com.example.data.cache.RequestTokenDataCache
-import com.example.data.cache.SessionIdDataCache
 import com.example.domain.models.LoginBodyModel
 import com.example.domain.models.LogoutRequestBodyModel
 import com.example.domain.models.SessionIdRequestBodyModel
 import com.example.domain.repositories.AuthMovieRepository
+import com.example.domain.repositories.CacheRepository
 import com.example.domain.utils.ResponseResult
 
 class AuthMovieRepositoryImpl(
     private val authMovieApiService: AuthMovieAPIService,
-    private val requestTokenDataCache: RequestTokenDataCache,
     private val errorLoginMapper: ErrorLoginMapper,
-    private val sessionIdDataCache: SessionIdDataCache
+    private val cacheRepository: CacheRepository
 ) : AuthMovieRepository {
 
     // This function fetches request token from server and saves it to local cache
@@ -24,7 +22,7 @@ class AuthMovieRepositoryImpl(
             val response = authMovieApiService.getRequestToken()
             if (response.isSuccessful) {
                 response.body()?.let { body ->
-                    requestTokenDataCache.saveRequestToken(body.request_token)
+                    cacheRepository.saveRequestToken(body.request_token)
                     requestToken = body.request_token
                 }
             } else {
@@ -67,7 +65,7 @@ class AuthMovieRepositoryImpl(
             val response = authMovieApiService.getSessionId(sessionIdModel)
             if (response.isSuccessful) {
                 response.body()?.let { body ->
-                    sessionIdDataCache.saveSessionId(body.session_id)
+                    cacheRepository.saveSessionId(body.session_id)
                     return@let body.success
                 } ?: false
             } else {
