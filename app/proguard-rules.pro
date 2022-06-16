@@ -19,3 +19,11 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class com.example.data.apimodels.** {*;}
+
+-keep class com.example.domain.models.LoginBodyModel {*;}
+-keep class com.example.domain.models.SessionIdRequestBodyModel {*;}
+-keep class com.example.domain.models.LogoutRequestBodyModel {*;}
+-keep class com.example.domain.models.SaveToWatchListModel {*;}
+-keep class com.example.domain.models.SaveToWatchListResponseModel {*;}

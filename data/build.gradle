@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 31
 
     defaultConfig {
         minSdkVersion 23
-        targetSdkVersion 29
+        targetSdkVersion 31
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -19,7 +19,6 @@ android {
     buildTypes {
         release {
             minifyEnabled true
-            //shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -84,8 +83,6 @@ dependencies {
     implementation Deps.pref_ktx
 
     implementation Deps.retrofit_kotlin_coroutines_adapter
-
-
 
 
 
