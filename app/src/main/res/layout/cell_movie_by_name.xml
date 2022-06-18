@@ -3,7 +3,7 @@
     <data>
         <variable
             name="movieBindingModel"
-            type="com.example.domain.models.MovieModel" />
+            type="com.sacramento.domain.models.MovieModel" />
     </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout

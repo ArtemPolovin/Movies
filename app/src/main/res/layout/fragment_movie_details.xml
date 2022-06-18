@@ -8,7 +8,7 @@
 
         <variable
             name="movieWithDetailsModel"
-            type="com.example.domain.models.MovieWithDetailsModel" />
+            type="com.sacramento.domain.models.MovieWithDetailsModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

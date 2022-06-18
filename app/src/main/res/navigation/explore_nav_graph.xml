@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/movieCategoriesFragment"
-        android:name="com.example.movies.ui.movie_categories.MovieCategoriesFragment"
+        android:name="com.sacramento.movies.ui.movie_categories.MovieCategoriesFragment"
         android:label="fragment_movie_categories"
         tools:layout="@layout/fragment_movie_categories" >
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/searchMovieByNameFragment"
-        android:name="com.example.movies.ui.search_movie_by_name.SearchMovieByNameFragment"
+        android:name="com.sacramento.movies.ui.search_movie_by_name.SearchMovieByNameFragment"
         android:label="fragment_search_movie_by_name"
         tools:layout="@layout/fragment_search_movie_by_name" >
         <argument

@@ -4,7 +4,7 @@
     <data>
         <variable
             name="posterModel"
-            type="com.example.domain.models.MoviePosterViewPagerModel" />
+            type="com.sacramento.domain.models.MoviePosterViewPagerModel" />
     </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.movies">
+    package="com.sacramento.movies">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-        android:name=".App"
+        android:name="com.sacramento.movies.App"
         android:allowBackup="true"
         android:icon="@mipmap/launcher_icon"
         android:label="@string/app_name"
@@ -17,12 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Movies">
         <activity
-            android:name=".ui.watch_trailer.WatchTrailerActivity"
+            android:name="com.sacramento.movies.ui.watch_trailer.WatchTrailerActivity"
             android:exported="false"
             android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
             android:screenOrientation="portrait"/>
 
-        <activity android:name=".ui.MainActivity"
+        <activity android:name="com.sacramento.movies.ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
