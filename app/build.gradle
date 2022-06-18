@@ -6,6 +6,8 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'kotlinx-serialization'
     id 'androidx.navigation.safeargs'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -14,7 +16,7 @@ android {
     defaultConfig {
         applicationId "com.example.movies"
         minSdkVersion 27
-        targetSdkVersion 29
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
 
@@ -27,7 +29,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -43,6 +46,11 @@ android {
         viewBinding = true
        dataBinding = true
     }
+
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
+
 }
 
 dependencies {
@@ -131,7 +139,10 @@ dependencies {
     //Retrofit2
     implementation Deps.retrofit
 
-
+    // Firebase
+    implementation Deps.firebase_analytics_ktx
+    implementation Deps.firebase_crashlytics_ktx
+    implementation platform('com.google.firebase:firebase-bom:30.1.0')
 
 
 }

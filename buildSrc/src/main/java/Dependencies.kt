@@ -26,6 +26,8 @@ object Versions {
     const val retrofitKtx = "0.9.2"
     const val workMangerKtx = "2.7.1"
     const val workManagerHilt = "1.0.0"
+    const val firebase_analytics = "firebase-analytics-ktx"
+    const val  firebase_crashlytics = "firebase-crashlytics-ktx"
 }
 
 object Deps {
@@ -54,6 +56,8 @@ object Deps {
     const val work_manager_ktx = "androidx.work:work-runtime-ktx:${Versions.workMangerKtx}"
     const val work_manager_hilt = "androidx.hilt:hilt-work:${Versions.workManagerHilt}"
     const val work_manager_hilt_compiler = "androidx.hilt:hilt-compiler:${Versions.workManagerHilt}"
+    const val firebase_analytics_ktx =  "com.google.firebase:${Versions.firebase_analytics}"
+    const val firebase_crashlytics_ktx =  "com.google.firebase:${Versions.firebase_crashlytics}"
 
     //Coroutines
     const val coroutinesCore =
