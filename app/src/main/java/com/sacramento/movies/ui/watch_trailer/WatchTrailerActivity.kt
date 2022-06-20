@@ -50,8 +50,12 @@ class WatchTrailerActivity : AppCompatActivity() {
             showVideo(trailers[0].videoKey)
 
             if (trailers.size > 1) setupViewPager(trailers)
-            else binding.groupTrailerPageView.visibility = View.GONE
-        }
+            else hidePageView()
+        }?: hidePageView()
+    }
+
+   private fun hidePageView() {
+        binding.groupTrailerPageView.visibility = View.GONE
     }
 
     private fun setupViewPager(trailerList: List<TrailerModel>) {
