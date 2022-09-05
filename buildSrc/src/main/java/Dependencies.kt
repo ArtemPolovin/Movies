@@ -7,7 +7,7 @@ object Versions {
     const val junit = "4.12"
     const val junitTest = "1.1.2"
     const val espressoCore = "3.3.0"
-    const val navFragment = "2.4.1"
+    const val navFragment = "2.5.1"
     const val recyclerView = "1.2.1"
     const val retrofit = "2.9.0"
     const val daggerHilt = "2.38.1"
