@@ -2,6 +2,7 @@ package com.sacramento.movies.ui.movies
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -10,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.appbar.AppBarLayout
 import com.sacramento.data.cache.SharedPrefMovieCategory
 import com.sacramento.domain.models.MovieWithDetailsModel
 import com.sacramento.movies.R
@@ -18,7 +20,9 @@ import com.sacramento.movies.ui.MainActivity
 import com.sacramento.movies.ui.movies.adapter.MoviesWithDetailsAdapter
 import com.sacramento.movies.utils.MovieLoadStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 import java.lang.RuntimeException
 import javax.inject.Inject
@@ -29,6 +33,8 @@ class MoviesFragment : Fragment() {
     private var _binding: FragmentMoviesBinding? = null
     private val binding: FragmentMoviesBinding get() =
         _binding ?: throw RuntimeException("FragmentMoviesBinding = null")
+
+  private var job: Job? = null
 
     private val viewModel: MoviesViewModel by viewModels()
 
@@ -50,9 +56,9 @@ class MoviesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         (requireActivity() as MainActivity).setupActionBar(binding.toolbar)
-
         binding.buttonRetry.setOnClickListener { moviesAdapter.retry() }
 
+        refreshList()
         setupToolbar()
         setupAdapter()
         setupMoviesList()
@@ -62,14 +68,12 @@ class MoviesFragment : Fragment() {
     }
 
     private fun setupMoviesList() {
-
-        lifecycleScope.launch {
-            viewModel.fetchPopularMoviesWithDetails().collectLatest {
-                moviesAdapter.submitData(it)
-            }
+       job =  lifecycleScope.launch {
+              viewModel.getMovies().collectLatest {
+                  moviesAdapter.submitData(it)
+              }
         }
     }
-
 
     private fun setupAdapter() {
         moviesAdapter = MoviesWithDetailsAdapter()
@@ -83,10 +87,10 @@ class MoviesFragment : Fragment() {
         }
 
         moviesAdapter.addLoadStateListener { loadState ->
-            binding.rvMovies?.let { it.isVisible = loadState.source.refresh is LoadState.NotLoading }
-            binding.progressBar?.let { it.isVisible = loadState.source.refresh is LoadState.Loading }
-            binding.textError?.let { it.isVisible = loadState.source.refresh is LoadState.Error }
-            binding.buttonRetry?.let { it.isVisible = loadState.source.refresh is LoadState.Error }
+            binding.rvMovies.isVisible = loadState.source.refresh is LoadState.NotLoading
+            binding.pullRefreshLayout.isRefreshing = loadState.source.refresh is LoadState.Loading
+            binding.textError.isVisible = loadState.source.refresh is LoadState.Error
+            binding.buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
         }
     }
 
@@ -121,5 +125,15 @@ class MoviesFragment : Fragment() {
 
 
     }
+
+    private fun refreshList() {
+        binding.pullRefreshLayout.setOnRefreshListener {
+            job?.cancel()
+            job = null
+            viewModel.refreshList()
+            setupMoviesList()
+        }
+    }
+
 
 }

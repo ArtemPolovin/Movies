@@ -71,7 +71,7 @@ class SharedPrefMovieFilter(private val sharPref: SharedPreferences) {
         sharPref.edit().putString(SORT_BY_POPULARITY, POPULARITY_DATA).apply()
     }
 
-    fun loadSortByPopularity() = sharPref.getString(SORT_BY_POPULARITY, "")
+    fun loadSortByPopularity() = sharPref.getString(SORT_BY_POPULARITY, null)
 
     fun saveSortByPopularityCheckBoxState(isChecked: Boolean) {
         sharPref.edit().putBoolean(SORT_BY_POPULARITY_CHECK_BOX, isChecked).apply()

@@ -1,13 +1,20 @@
 package com.sacramento.data.mapers
 
 import android.content.Context
+import com.google.gson.Gson
 import com.sacramento.data.R
 import com.sacramento.data.apimodels.genres.GenresApiModel
-import com.sacramento.domain.models.MovieCategoryModel
+import com.sacramento.data.cache.SettingsDataCache
+import com.sacramento.data.db.tables.movie_tables.GenreEntity
+import com.sacramento.data.utils.DEFAULT_ENGLISH_LANGUAGE_VALUE
 import com.sacramento.domain.models.GenreModel
-import com.google.gson.Gson
+import com.sacramento.domain.models.MovieCategoryModel
 
-class MovieGenresMapper(private val gson: Gson, private val context: Context) {
+class MovieGenresMapper(
+    private val gson: Gson,
+    private val context: Context,
+    private val settingsDataCache: SettingsDataCache
+) {
 
     //This function adds genre names to existing movieCategoryModels by id
     fun mapGenresListApiToCategoriesList(
@@ -29,7 +36,7 @@ class MovieGenresMapper(private val gson: Gson, private val context: Context) {
     // This function maps GenresApiMode list  to model list
     fun mapGenresApiListToModelList(genreApiModel: GenresApiModel): List<GenreModel> {
         return genreApiModel.genres.map { genre ->
-            GenreModel(id = genre.id.toString(),name = genre.name)
+            GenreModel(id = genre.id.toString(), name = genre.name)
         }
     }
 
@@ -38,5 +45,15 @@ class MovieGenresMapper(private val gson: Gson, private val context: Context) {
         val json = context.resources.openRawResource(R.raw.genres).bufferedReader()
             .use { it.readText() }
         return gson.fromJson(json, Array<GenreModel>::class.java).toList()
+    }
+
+    fun mapGenresModelToGenresEntity(genresApi: GenresApiModel): List<GenreEntity> {
+        return genresApi.genres.map {
+            GenreEntity(
+                genreId = it.id.toString(),
+                genreName = it.name,
+                language = settingsDataCache.getLanguage()?: DEFAULT_ENGLISH_LANGUAGE_VALUE
+            )
+        }
     }
 }

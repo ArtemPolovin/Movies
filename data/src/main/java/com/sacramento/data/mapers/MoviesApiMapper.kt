@@ -7,6 +7,7 @@ import com.sacramento.data.apimodels.movies.Result
 import com.sacramento.data.apimodels.trailers.TrailersApiModel
 import com.sacramento.data.utils.POSTER_BASE_URL
 import com.sacramento.domain.models.*
+import kotlin.math.roundToInt
 
 class MoviesApiMapper {
 
@@ -33,7 +34,7 @@ class MoviesApiMapper {
                 releaseData = movieApiModel.release_date,
                 popularityScore = movieApiModel.popularity.toString(),
                 movieName = movieApiModel.title,
-                rating = movieApiModel.vote_average.toFloat(),
+                rating =  String.format("%.1f",movieApiModel.vote_average).toFloat(),
                 poster = "${POSTER_BASE_URL}${movieApiModel.poster_path}",
                 backdropImage = "${POSTER_BASE_URL}${movieApiModel.backdrop_path}",
                 overview = movieApiModel.overview,
@@ -52,7 +53,7 @@ class MoviesApiMapper {
             releaseData = movieDetailsModelApi.release_date,
             popularityScore = movieDetailsModelApi.popularity.toString(),
             movieName = movieDetailsModelApi.title,
-            rating = movieDetailsModelApi.vote_average?.toFloat(),
+            rating =  String.format("%.1f",movieDetailsModelApi.vote_average).toFloat(),
             poster = "${POSTER_BASE_URL}${movieDetailsModelApi.poster_path}",
             backdropImage = "${POSTER_BASE_URL}${movieDetailsModelApi.backdrop_path}",
             overview = movieDetailsModelApi.overview,

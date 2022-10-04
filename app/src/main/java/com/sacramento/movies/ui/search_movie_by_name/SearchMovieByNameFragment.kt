@@ -18,6 +18,7 @@ import com.sacramento.movies.ui.explore.ExploreFragmentDirections
 import com.sacramento.movies.utils.MovieLoadStateAdapter
 import com.sacramento.movies.ui.search_movie_by_name.adapters.MoviesAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -32,6 +33,8 @@ class SearchMovieByNameFragment : Fragment() {
     private val binding: FragmentSearchMovieByNameBinding
         get() = _binding ?: throw RuntimeException("FragmentSearchMovieByNameBinding is  null")
 
+    private var job: Job? = null
+
     private val args: SearchMovieByNameFragmentArgs by navArgs()
 
     override fun onCreateView(
@@ -44,14 +47,17 @@ class SearchMovieByNameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        refreshList()
         setUpAdapter()
         setUpMovieList()
         openMovieDetailsScreen()
     }
 
     private fun setUpMovieList() {
-        lifecycleScope.launch {
-            viewModel.movies?.collectLatest { movieAdapter.submitData(it) }
+       job =  lifecycleScope.launch {
+            viewModel.getMovies().collectLatest {
+                movieAdapter.submitData(it)
+            }
         }
     }
 
@@ -66,7 +72,7 @@ class SearchMovieByNameFragment : Fragment() {
 
         movieAdapter.addLoadStateListener { loadState ->
             binding.rvExploreMovies.isVisible = loadState.source.refresh is LoadState.NotLoading
-            binding.progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+            binding.swipeRefresh.isRefreshing = loadState.source.refresh is LoadState.Loading
             binding.buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
             binding.textError.isVisible = loadState.source.refresh is LoadState.Error
         }
@@ -76,6 +82,15 @@ class SearchMovieByNameFragment : Fragment() {
         movieAdapter.onItemClickLister = {movieId ->
             val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
             navController.navigate(ExploreFragmentDirections.actionExploreFragmentToMovieDetails(movieId))
+        }
+    }
+
+    private fun refreshList() {
+        binding.swipeRefresh.setOnRefreshListener {
+            job?.cancel()
+            job = null
+            viewModel.refreshList()
+            setUpMovieList()
         }
     }
 

@@ -1,44 +1,85 @@
 package com.sacramento.data.mapers
 
+import com.sacramento.data.apimodels.movie_details.Genre
+import com.sacramento.data.apimodels.movie_details.MovieDetailsModelApi
+import com.sacramento.data.cache.SettingsDataCache
+import com.sacramento.data.db.models.MovieWithGenresDBModel
+import com.sacramento.data.db.tables.movie_tables.GenreEntity
+import com.sacramento.data.db.tables.movie_tables.MovieGenreCrossRef
 import com.sacramento.data.db.tables.movie_tables.SavedMovieEntity
+import com.sacramento.data.utils.DEFAULT_ENGLISH_LANGUAGE_VALUE
+import com.sacramento.data.utils.POSTER_BASE_URL
+import com.sacramento.domain.models.GenreModel
+import com.sacramento.domain.models.MovieModel
 import com.sacramento.domain.models.MovieWithDetailsModel
+import kotlin.math.roundToInt
 
-class MoviesEntityMapper {
+class MoviesEntityMapper(
+    private val settingsDataCache: SettingsDataCache
+) {
 
-    //This function maps MovieWithDetailsModel to Entity model
-    fun mapMovieModelToEntity(movie: MovieWithDetailsModel): SavedMovieEntity {
+    //This function maps MovieWithDetailsModelApi to Entity model
+    fun mapMovieModelToEntity(movie: MovieDetailsModelApi): SavedMovieEntity {
+        val curLanguage = settingsDataCache.getLanguage()?: DEFAULT_ENGLISH_LANGUAGE_VALUE
         return SavedMovieEntity(
             movieId = movie.id,
-            releaseData = movie.releaseData,
-            popularityScore = movie.popularityScore,
-            movieName = movie.movieName,
-            rating = movie.rating,
-            poster = movie.poster,
+            releaseData = movie.release_date,
+            popularityScore = movie.popularity,
+            movieName = movie.title,
+            rating =  String.format("%.1f",movie.vote_average).toFloat(),
+            poster = movie.poster_path,
             overview = movie.overview,
-            backdropPoster = movie.backdropImage,
-            genres = movie.genres,
-            homePageUrl = movie.homePageUrl,
-            vote_count = movie.voteCount
+            backdropPoster = movie.backdrop_path,
+            homePageUrl = movie.homepage,
+            vote_count = movie.vote_count.toString(),
+            language = curLanguage
         )
     }
 
     //This function takes all saved movies from DB and maps the list to model list
-    fun mapMovieEntityListToModelList(movieEntityList: List<SavedMovieEntity>):List<MovieWithDetailsModel> {
+    fun mapMovieEntityListToMovieWithDetailsModelList(movieEntityList: List<MovieWithGenresDBModel>):List<MovieWithDetailsModel> {
 
         return movieEntityList.map { movieEntity ->
             MovieWithDetailsModel(
-                id = movieEntity.movieId,
-                releaseData = movieEntity.releaseData,
-                popularityScore = movieEntity.popularityScore,
-                movieName = movieEntity.movieName,
-                rating = movieEntity.rating,
-                poster = movieEntity.poster,
-                overview = movieEntity.overview,
-                backdropImage = movieEntity.backdropPoster,
-                genres = movieEntity.genres,
-                homePageUrl = movieEntity.homePageUrl,
-                voteCount = movieEntity.vote_count
+                id = movieEntity.movie.movieId,
+                releaseData = movieEntity.movie.releaseData,
+                popularityScore = movieEntity.movie.popularityScore.toString(),
+                movieName = movieEntity.movie.movieName,
+                rating = movieEntity.movie.rating,
+                poster =  "$POSTER_BASE_URL${movieEntity.movie.poster}",
+                overview = movieEntity.movie.overview,
+                backdropImage =  "${POSTER_BASE_URL}${movieEntity.movie.backdropPoster}",
+                homePageUrl = movieEntity.movie.homePageUrl,
+                voteCount = movieEntity.movie.vote_count,
+                genres = mapGenres(movieEntity.genres)
             )
         }
     }
+
+    fun mapMovieApiToMovieGenreCrossRefEntity(movieApi: MovieDetailsModelApi): List<MovieGenreCrossRef>? {
+        val movieId = movieApi.id
+        return movieApi.genres?.map {
+            MovieGenreCrossRef(movieId,it.id.toString())
+        }
+    }
+
+    fun mapMovieEntityListToMovieModelList(movieEntityList: List<MovieWithGenresDBModel>):List<MovieModel> {
+        return movieEntityList.map { movieEntity ->
+            MovieModel(
+                movieId = movieEntity.movie.movieId,
+                title = movieEntity.movie.movieName,
+                rating = movieEntity.movie.rating?.toDouble(),
+                poster =  "$POSTER_BASE_URL${movieEntity.movie.poster}",
+                voteCount = movieEntity.movie.vote_count?.toInt(),
+            )
+        }
+    }
+
+    private fun mapGenres(genres: List<GenreEntity>): String {
+        val curLanguage = settingsDataCache.getLanguage()?: DEFAULT_ENGLISH_LANGUAGE_VALUE
+       return genres.filter { it.language == curLanguage }.joinToString(", "){it.genreName}
+    }
+
+
+
 }

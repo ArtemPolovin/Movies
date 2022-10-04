@@ -22,6 +22,8 @@ import com.sacramento.domain.repositories.*
 import com.sacramento.domain.usecases.auth.*
 import com.sacramento.domain.usecases.movie_usecase.*
 import com.google.gson.Gson
+import com.sacramento.data.datasource.MoviesPagingSourceDB
+import com.sacramento.data.datasource.MoviesWithDetailsPagingSourceDB
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,18 +41,29 @@ object AppModule {
     fun provideMoviesRepository(
         moviesApi: MoviesApi,
         moviesApiMapper: MoviesApiMapper,
-        movieDao: MoviesDao,
-        movieEntityMapper: MoviesEntityMapper,
         settingsDataCache: SettingsDataCache,
-        movieCategoriesRepository: MovieCategoriesRepository
+        movieCategoriesRepository: MovieCategoriesRepository,
+        movieDbRepository: MovieDBRepository
     ): MoviesRepository =
         MoviesRepositoryImpl(
             moviesApi,
             moviesApiMapper,
+            settingsDataCache,
+            movieCategoriesRepository,
+            movieDbRepository
+        )
+
+    @Provides
+    @Singleton
+    fun provideMovieDBRepository(
+        movieDao: MoviesDao,
+        movieEntityMapper: MoviesEntityMapper,
+        settingsDataCache: SettingsDataCache
+    ): MovieDBRepository =
+        MovieDBRepositoryImpl(
             movieDao,
             movieEntityMapper,
-            settingsDataCache,
-            movieCategoriesRepository
+            settingsDataCache
         )
 
     @Provides
@@ -71,9 +84,10 @@ object AppModule {
     fun provideBackendLessRepositoryImpl(
         movieGenresMapper: MovieGenresMapper,
         settingsDataCache: SettingsDataCache,
-        moviesApi: MoviesApi
+        moviesApi: MoviesApi,
+        moviesDao: MoviesDao
     ): MovieCategoriesRepository =
-        MovieCategoriesRepositoryImpl(movieGenresMapper, settingsDataCache, moviesApi)
+        MovieCategoriesRepositoryImpl(movieGenresMapper, settingsDataCache, moviesApi,moviesDao)
 
     @Provides
     @Singleton
@@ -98,6 +112,21 @@ object AppModule {
     )
 
     @Provides
+    fun provideMovieWithDetailsPagingSourceDB(
+        movieDBRepository: MovieDBRepository,
+        sharedPrefMovieCategory: SharedPrefMovieCategory,
+        shardPrefMovieFilter: SharedPrefMovieFilter
+    ) = MoviesWithDetailsPagingSourceDB(
+        movieDBRepository,
+        sharedPrefMovieCategory,
+        shardPrefMovieFilter
+    )
+
+    @Provides
+    fun provideMoviesPagingSourceDB(movieDBRepository: MovieDBRepository) =
+        MoviesPagingSourceDB(movieDBRepository)
+
+    @Provides
     fun provideMoviesPagingSource(movieRepository: MoviesRepository) =
         MoviesPagingSource(movieRepository)
 
@@ -113,7 +142,7 @@ object AppModule {
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context) =
         Room.databaseBuilder(context, AppDatabase::class.java, "MovieDB")
-            // .fallbackToDestructiveMigration()
+             //.fallbackToDestructiveMigration()
             // .addMigrations(AppDatabase.MIGRATION_2_3)
             .build()
 
@@ -125,7 +154,7 @@ object AppModule {
     fun provideMoviesApiMapper() = MoviesApiMapper()
 
     @Provides
-    fun provideMovieEntityMapper() = MoviesEntityMapper()
+    fun provideMovieEntityMapper(settingsDataCache: SettingsDataCache) = MoviesEntityMapper(settingsDataCache)
 
     @Provides
     fun provideErrorLoginMapper() = ErrorLoginMapper()
@@ -133,20 +162,17 @@ object AppModule {
     @Provides
     fun provideMovieCategoriesMapper(
         gson: Gson,
-        @ApplicationContext context: Context
-    ) = MovieGenresMapper(gson, context)
+        @ApplicationContext context: Context,
+        settingsDataCache: SettingsDataCache
+    ) = MovieGenresMapper(gson, context,settingsDataCache)
 
     @Provides
-    fun provideDeleteMovieByIdFromDbUseCase(movieRepository: MoviesRepository) =
-        DeleteMovieByIdFromDbUseCase(movieRepository)
+    fun provideDeleteMovieByIdFromDbUseCase(movieDBRepository: MovieDBRepository) =
+        DeleteMovieByIdFromDbUseCase(movieDBRepository)
 
     @Provides
-    fun provideGetAllMoviesFromDbUseCase(movieRepository: MoviesRepository) =
-        GetAllSavedMoviesFromDbUseCase(movieRepository)
-
-    @Provides
-    fun provideInsertMovieToDbUseCase(movieRepository: MoviesRepository) =
-        InsertMovieToDbUseCase(movieRepository)
+    fun provideInsertMovieToDbUseCase(movieDBRepository: MovieDBRepository) =
+        InsertMovieToDbUseCase(movieDBRepository)
 
     @Provides
     fun provideLoginUseCase(authMovieRepository: AuthMovieRepository) =

@@ -3,22 +3,19 @@ package com.sacramento.data.datasource
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.sacramento.data.cache.MovieCategories
-import com.sacramento.data.utils.START_PAGE
 import com.sacramento.data.cache.SharedPrefMovieCategory
 import com.sacramento.data.cache.SharedPrefMovieFilter
+import com.sacramento.data.utils.START_PAGE
 import com.sacramento.domain.models.MovieWithDetailsModel
+import com.sacramento.domain.repositories.MovieDBRepository
 import com.sacramento.domain.repositories.MoviesRepository
-import retrofit2.HttpException
 import java.io.IOException
-import java.lang.IllegalArgumentException
 
-
-class MoviesWithDetailsPagingSource(
-    private val movieRepository: MoviesRepository,
+class MoviesWithDetailsPagingSourceDB(
+    private val movieDBRepository: MovieDBRepository,
     private val sharedPrefMovieCategory: SharedPrefMovieCategory,
     private val shardPrefMovieFilter: SharedPrefMovieFilter
 ) : PagingSource<Int, MovieWithDetailsModel>() {
-
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieWithDetailsModel> {
         val page = params.key ?: START_PAGE
@@ -30,25 +27,29 @@ class MoviesWithDetailsPagingSource(
         val sortByPopulation = shardPrefMovieFilter.loadSortByPopularity()
 
         return try {
+                when (movieCategory) {
+                    MovieCategories.Upcoming.category -> {
+                        moviesWithDetailsList.addAll(movieDBRepository.getUpcomingMovies())
+                    }
+                    MovieCategories.TopRated.category -> {
+                        moviesWithDetailsList.addAll(movieDBRepository.getTopRatedMovies())
+                    }
+                    MovieCategories.Popular.category -> {
+                        moviesWithDetailsList.addAll(movieDBRepository.getMoviesFromDBSortedByPopularity())
+                    }
+                    else -> {
+                        moviesWithDetailsList.addAll(
+                            movieDBRepository.getFilteredMovies(
+                                genreId = genreId,
+                                year = releaseYear,
+                                rating = rating.toFloat(),
+                                sortedByPopularity = sortByPopulation,
+                                limit = params.loadSize
+                            )
+                        )
+                    }
 
-            when (movieCategory) {
-                MovieCategories.Upcoming.category -> {
-                    moviesWithDetailsList.addAll(movieRepository.getUpcomingMoviesWithDetails(page,rating,releaseYear))
                 }
-                MovieCategories.TopRated.category -> {
-                    moviesWithDetailsList.addAll(movieRepository.getTopRatedMoviesWithDetails(page,rating,releaseYear))
-                }
-                MovieCategories.Popular.category -> {
-                    moviesWithDetailsList.addAll(movieRepository.getPopularMoviesWithDetails(page,rating,releaseYear))
-                }
-                else -> {
-                    moviesWithDetailsList.addAll(movieRepository.getMoviesByGenre(genreId,rating,releaseYear,sortByPopulation,page))
-                }
-
-
-            }
-
-            //ORDER BY CASE WHEN :sorted NOT NULL THEN rating  END DESC
 
             LoadResult.Page(
                 data = moviesWithDetailsList,
@@ -58,10 +59,7 @@ class MoviesWithDetailsPagingSource(
         } catch (e: IOException) {
             e.printStackTrace()
             LoadResult.Error(e)
-        } catch (e: HttpException) {
-            e.printStackTrace()
-            LoadResult.Error(e)
-        }catch (e: IllegalArgumentException){
+        } catch (e: IllegalArgumentException) {
             e.printStackTrace()
             LoadResult.Error(e)
         }
