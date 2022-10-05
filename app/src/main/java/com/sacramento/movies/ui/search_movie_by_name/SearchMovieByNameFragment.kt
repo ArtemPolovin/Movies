@@ -47,7 +47,7 @@ class SearchMovieByNameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        refreshList()
+        setRefreshListener()
         setUpAdapter()
         setUpMovieList()
         openMovieDetailsScreen()
@@ -92,7 +92,7 @@ class SearchMovieByNameFragment : Fragment() {
         }
     }
 
-    private fun refreshList() {
+    private fun setRefreshListener() {
         binding.swipeRefresh.setOnRefreshListener {
             viewModel.clearLastFetchedData()
             setUpMovieList()

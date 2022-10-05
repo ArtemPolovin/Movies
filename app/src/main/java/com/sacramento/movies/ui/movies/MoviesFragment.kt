@@ -55,7 +55,7 @@ class MoviesFragment : Fragment() {
         (requireActivity() as MainActivity).setupActionBar(binding.toolbar)
         binding.buttonRetry.setOnClickListener { moviesAdapter.retry() }
 
-        refreshList()
+        setRefreshListener()
         setupToolbar()
         setupAdapter()
         setupMoviesList()
@@ -127,7 +127,7 @@ class MoviesFragment : Fragment() {
 
     }
 
-    private fun refreshList() {
+    private fun setRefreshListener() {
         binding.pullRefreshLayout.setOnRefreshListener {
             viewModel.clearLastFetchedData()
             setupMoviesList()
