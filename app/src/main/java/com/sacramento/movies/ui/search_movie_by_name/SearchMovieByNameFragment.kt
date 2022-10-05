@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.sacramento.movies.R
 import com.sacramento.movies.databinding.FragmentSearchMovieByNameBinding
 import com.sacramento.movies.ui.explore.ExploreFragmentDirections
-import com.sacramento.movies.utils.MovieLoadStateAdapter
 import com.sacramento.movies.ui.search_movie_by_name.adapters.MoviesAdapter
+import com.sacramento.movies.utils.MovieLoadStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
@@ -54,7 +54,9 @@ class SearchMovieByNameFragment : Fragment() {
     }
 
     private fun setUpMovieList() {
-       job =  lifecycleScope.launch {
+        job?.cancel()
+        job = null
+        job = lifecycleScope.launch {
             viewModel.getMovies().collectLatest {
                 movieAdapter.submitData(it)
             }
@@ -79,17 +81,20 @@ class SearchMovieByNameFragment : Fragment() {
     }
 
     private fun openMovieDetailsScreen() {
-        movieAdapter.onItemClickLister = {movieId ->
-            val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-            navController.navigate(ExploreFragmentDirections.actionExploreFragmentToMovieDetails(movieId))
+        movieAdapter.onItemClickLister = { movieId ->
+            val navController =
+                Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+            navController.navigate(
+                ExploreFragmentDirections.actionExploreFragmentToMovieDetails(
+                    movieId
+                )
+            )
         }
     }
 
     private fun refreshList() {
         binding.swipeRefresh.setOnRefreshListener {
-            job?.cancel()
-            job = null
-            viewModel.refreshList()
+            viewModel.clearLastFetchedData()
             setUpMovieList()
         }
     }

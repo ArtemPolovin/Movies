@@ -2,7 +2,6 @@ package com.sacramento.movies.ui.movies
 
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -11,7 +10,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.appbar.AppBarLayout
 import com.sacramento.data.cache.SharedPrefMovieCategory
 import com.sacramento.domain.models.MovieWithDetailsModel
 import com.sacramento.movies.R
@@ -22,19 +20,18 @@ import com.sacramento.movies.utils.MovieLoadStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
-import java.lang.RuntimeException
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MoviesFragment : Fragment() {
 
     private var _binding: FragmentMoviesBinding? = null
-    private val binding: FragmentMoviesBinding get() =
-        _binding ?: throw RuntimeException("FragmentMoviesBinding = null")
+    private val binding: FragmentMoviesBinding
+        get() =
+            _binding ?: throw RuntimeException("FragmentMoviesBinding = null")
 
-  private var job: Job? = null
+    private var job: Job? = null
 
     private val viewModel: MoviesViewModel by viewModels()
 
@@ -68,10 +65,12 @@ class MoviesFragment : Fragment() {
     }
 
     private fun setupMoviesList() {
-       job =  lifecycleScope.launch {
-              viewModel.getMovies().collectLatest {
-                  moviesAdapter.submitData(it)
-              }
+        job?.cancel()
+        job = null
+        job = lifecycleScope.launch {
+            viewModel.getMovies().collectLatest {
+                moviesAdapter.submitData(it)
+            }
         }
     }
 
@@ -95,10 +94,12 @@ class MoviesFragment : Fragment() {
     }
 
     private fun openMovieDetailsScreen() {
-        moviesAdapter.onClickItem(object : MoviesWithDetailsAdapter.OnClickAdapterPopularMovieListener {
+        moviesAdapter.onClickItem(object :
+            MoviesWithDetailsAdapter.OnClickAdapterPopularMovieListener {
             override fun getMovie(movie: MovieWithDetailsModel) {
                 findNavController().navigate(
-                    MoviesFragmentDirections.actionMoviesFragmentToMovieDetailsFragment(movie.id))
+                    MoviesFragmentDirections.actionMoviesFragmentToMovieDetailsFragment(movie.id)
+                )
             }
 
         })
@@ -128,9 +129,7 @@ class MoviesFragment : Fragment() {
 
     private fun refreshList() {
         binding.pullRefreshLayout.setOnRefreshListener {
-            job?.cancel()
-            job = null
-            viewModel.refreshList()
+            viewModel.clearLastFetchedData()
             setupMoviesList()
         }
     }

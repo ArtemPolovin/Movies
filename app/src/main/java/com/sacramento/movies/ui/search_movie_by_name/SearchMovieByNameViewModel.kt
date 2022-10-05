@@ -15,6 +15,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.sacramento.data.datasource.MoviesPagingSource
 import com.sacramento.data.datasource.MoviesPagingSourceDB
+import com.sacramento.data.utils.ConnectionHelper
 import com.sacramento.domain.models.MovieModel
 import com.sacramento.domain.models.MovieWithDetailsModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,19 +24,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchMovieByNameViewModel @Inject constructor(
-    application: Application,
     private val moviesPagingSource: MoviesPagingSource,
     private val moviesPagingSourceDB: MoviesPagingSourceDB,
-    private val state: SavedStateHandle
-): AndroidViewModel(application) {
-
-    private val context = getApplication<Application>()
+    private val state: SavedStateHandle,
+    private val connectionHelper: ConnectionHelper
+): ViewModel() {
 
     private var lastFetchedMovieResult: Flow<PagingData<MovieModel>>? = null
     private var lastFetchedMovieResultDB: Flow<PagingData<MovieModel>>? = null
 
     fun getMovies(): Flow<PagingData<MovieModel>>{
-        return if (isNetworkAvailable()) {
+        return if (connectionHelper.isNetworkAvailable()) {
             fetchMoviesByName()
         } else{
             fetchMoviesByNameFormDB()
@@ -81,28 +80,9 @@ class SearchMovieByNameViewModel @Inject constructor(
         return newFetchedMoviesResult
     }
 
-    fun refreshList() {
+    fun clearLastFetchedData() {
         lastFetchedMovieResult = null
         lastFetchedMovieResultDB = null
-    }
-
-
-
-    private fun isNetworkAvailable(): Boolean {
-        val cm =
-            context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val network = cm.activeNetwork ?: return false
-            val actNetwork = cm.getNetworkCapabilities(network) ?: return false
-            return when {
-                actNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-                actNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-                actNetwork.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-                else -> false
-            }
-        } else {
-            return cm.activeNetworkInfo?.isConnected ?: false
-        }
     }
 
 }

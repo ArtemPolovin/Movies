@@ -24,6 +24,7 @@ import com.sacramento.domain.usecases.movie_usecase.*
 import com.google.gson.Gson
 import com.sacramento.data.datasource.MoviesPagingSourceDB
 import com.sacramento.data.datasource.MoviesWithDetailsPagingSourceDB
+import com.sacramento.data.utils.ConnectionHelper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -314,5 +315,9 @@ object AppModule {
 
     @Provides
     fun provideGson() = Gson()
+
+    @Provides
+    @Singleton
+    fun provideConnectionHelper(@ApplicationContext context: Context) = ConnectionHelper(context)
 
 }
