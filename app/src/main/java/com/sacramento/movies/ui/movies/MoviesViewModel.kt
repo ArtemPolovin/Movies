@@ -33,7 +33,7 @@ class MoviesViewModel @Inject constructor(
     fun getMovies(): Flow<PagingData<MovieWithDetailsModel>> {
         return if (connectionHelper.isNetworkAvailable()) {
             fetchMoviesWithDetailsFromService()
-           // fetchMoviesWithDetailsFromDB()
+            //fetchMoviesWithDetailsFromDB()
         } else{
             fetchMoviesWithDetailsFromDB()
         }

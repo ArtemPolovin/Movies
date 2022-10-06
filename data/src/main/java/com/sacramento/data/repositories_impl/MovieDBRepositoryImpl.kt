@@ -19,6 +19,8 @@ class MovieDBRepositoryImpl(
     private val movieEntityMapper: MoviesEntityMapper,
     private val settingsDataCache: SettingsDataCache
 ) : MovieDBRepository {
+   private val curYear = SimpleDateFormat(YEAR, Locale.getDefault()).format(Date())
+   private val curMonth = SimpleDateFormat(MONTH, Locale.getDefault()).format(Date())
 
     override suspend fun insertMoviesToDB(movieApi: ApiModel) {
         moviesDao.run {
@@ -44,11 +46,9 @@ class MovieDBRepositoryImpl(
     }
 
     override suspend fun getUpcomingMovies(): List<MovieWithDetailsModel> {
-        val year = SimpleDateFormat(YEAR, Locale.getDefault()).format(Date())
-        val month = SimpleDateFormat(MONTH, Locale.getDefault()).format(Date())
         val curLanguage = settingsDataCache.getLanguage() ?: DEFAULT_ENGLISH_LANGUAGE_VALUE
 
-        val movies = moviesDao.getUpcomingMovies(year, month,curLanguage)
+        val movies = moviesDao.getUpcomingMovies(curYear, curMonth,curLanguage)
         return movieEntityMapper.mapMovieEntityListToMovieWithDetailsModelList(movies)
     }
 

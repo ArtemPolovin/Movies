@@ -6,6 +6,7 @@ import com.sacramento.data.cache.MovieCategories
 import com.sacramento.data.utils.START_PAGE
 import com.sacramento.data.cache.SharedPrefMovieCategory
 import com.sacramento.data.cache.SharedPrefMovieFilter
+import com.sacramento.data.utils.MovieFilterParams
 import com.sacramento.domain.models.MovieWithDetailsModel
 import com.sacramento.domain.repositories.MoviesRepository
 import retrofit2.HttpException
@@ -15,19 +16,18 @@ import java.lang.IllegalArgumentException
 
 class MoviesWithDetailsPagingSource(
     private val movieRepository: MoviesRepository,
-    private val sharedPrefMovieCategory: SharedPrefMovieCategory,
-    private val shardPrefMovieFilter: SharedPrefMovieFilter
+    private val movieFilterParams: MovieFilterParams
 ) : PagingSource<Int, MovieWithDetailsModel>() {
 
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieWithDetailsModel> {
         val page = params.key ?: START_PAGE
         val moviesWithDetailsList = mutableListOf<MovieWithDetailsModel>()
-        val movieCategory = sharedPrefMovieCategory.loadMovieCategory()
-        val genreId = sharedPrefMovieCategory.loadGenreId()
-        val rating = shardPrefMovieFilter.loadRating()
-        val releaseYear = shardPrefMovieFilter.loadReleaseYear()
-        val sortByPopulation = shardPrefMovieFilter.loadSortByPopularity()
+        val movieCategory = movieFilterParams.getMovieCategory()
+        val genreId = movieFilterParams.getGenreId()
+        val rating = movieFilterParams.getRating()
+        val releaseYear = movieFilterParams.getReleaseYear()
+        val sortByPopulation = movieFilterParams.getSortByPopulationState()
 
         return try {
 

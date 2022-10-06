@@ -25,6 +25,7 @@ import com.google.gson.Gson
 import com.sacramento.data.datasource.MoviesPagingSourceDB
 import com.sacramento.data.datasource.MoviesWithDetailsPagingSourceDB
 import com.sacramento.data.utils.ConnectionHelper
+import com.sacramento.data.utils.MovieFilterParams
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -104,24 +105,17 @@ object AppModule {
     @Provides
     fun provideMovieWithDetailsPagingSource(
         movieRepository: MoviesRepository,
-        sharedPrefMovieCategory: SharedPrefMovieCategory,
-        shardPrefMovieFilter: SharedPrefMovieFilter
+        movieFilterParams: MovieFilterParams
     ) = MoviesWithDetailsPagingSource(
         movieRepository,
-        sharedPrefMovieCategory,
-        shardPrefMovieFilter
+        movieFilterParams
     )
 
     @Provides
     fun provideMovieWithDetailsPagingSourceDB(
         movieDBRepository: MovieDBRepository,
-        sharedPrefMovieCategory: SharedPrefMovieCategory,
-        shardPrefMovieFilter: SharedPrefMovieFilter
-    ) = MoviesWithDetailsPagingSourceDB(
-        movieDBRepository,
-        sharedPrefMovieCategory,
-        shardPrefMovieFilter
-    )
+        movieFilterParams: MovieFilterParams
+    ) = MoviesWithDetailsPagingSourceDB(movieDBRepository, movieFilterParams)
 
     @Provides
     fun provideMoviesPagingSourceDB(movieDBRepository: MovieDBRepository) =
@@ -319,5 +313,11 @@ object AppModule {
     @Provides
     @Singleton
     fun provideConnectionHelper(@ApplicationContext context: Context) = ConnectionHelper(context)
+
+    @Provides
+    fun provideMovieFilterParams(
+        sharedPrefMovieCategory: SharedPrefMovieCategory,
+        sharedPrefMovieFilter: SharedPrefMovieFilter
+    ) = MovieFilterParams(sharedPrefMovieCategory,sharedPrefMovieFilter)
 
 }
