@@ -1,16 +1,13 @@
 package com.sacramento.data.utils
 
-import com.sacramento.data.cache.SharedPrefMovieCategory
-import com.sacramento.data.cache.SharedPrefMovieFilter
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class MovieFilterParams(
-    private val sharedPrefMovieCategory: SharedPrefMovieCategory,
-    private val shardPrefMovieFilter: SharedPrefMovieFilter
-) {
-
-    fun getMovieCategory() = sharedPrefMovieCategory.loadMovieCategory()
-    fun getGenreId() = sharedPrefMovieCategory.loadGenreId()
-    fun getRating() = shardPrefMovieFilter.loadRating()
-    fun getReleaseYear() = shardPrefMovieFilter.loadReleaseYear()
-    fun getSortByPopulationState() = shardPrefMovieFilter.loadSortByPopularity()
-}
+    val movieCategory: String? = null,
+    val genreId: String? = null,
+    val releaseYear : String? = null,
+    val sortByPopularity: String? = null,
+    val rating: Int? = null
+): Parcelable

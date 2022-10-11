@@ -15,6 +15,7 @@ import androidx.paging.cachedIn
 import com.sacramento.data.datasource.MoviesWithDetailsPagingSource
 import com.sacramento.data.datasource.MoviesWithDetailsPagingSourceDB
 import com.sacramento.data.utils.ConnectionHelper
+import com.sacramento.data.utils.MovieFilterParams
 import com.sacramento.domain.models.MovieWithDetailsModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -30,18 +31,20 @@ class MoviesViewModel @Inject constructor(
     private var lastFetchedMovieResultFromServer: Flow<PagingData<MovieWithDetailsModel>>? = null
     private var lastFetchedMovieResultFromDB: Flow<PagingData<MovieWithDetailsModel>>? = null
 
-    fun getMovies(): Flow<PagingData<MovieWithDetailsModel>> {
+    fun getMovies(filterParams: MovieFilterParams): Flow<PagingData<MovieWithDetailsModel>> {
         return if (connectionHelper.isNetworkAvailable()) {
-            fetchMoviesWithDetailsFromService()
-            //fetchMoviesWithDetailsFromDB()
+            fetchMoviesWithDetailsFromService(filterParams)
+                //fetchMoviesWithDetailsFromDB()
         } else{
-            fetchMoviesWithDetailsFromDB()
+            fetchMoviesWithDetailsFromDB(filterParams)
         }
     }
 
-    private fun fetchMoviesWithDetailsFromService(): Flow<PagingData<MovieWithDetailsModel>> {
+    private fun fetchMoviesWithDetailsFromService(filterParams: MovieFilterParams): Flow<PagingData<MovieWithDetailsModel>> {
         val lastMovieResult = lastFetchedMovieResultFromServer
         if (lastMovieResult != null) return lastMovieResult
+
+        moviesWithDetailsPagingSource.setUpFilter(filterParams)
 
         val newFetchedMovieResult = Pager(config = PagingConfig(
             pageSize = 20,
@@ -55,9 +58,11 @@ class MoviesViewModel @Inject constructor(
         return newFetchedMovieResult
     }
 
-    private fun fetchMoviesWithDetailsFromDB() :Flow<PagingData<MovieWithDetailsModel>>{
+    private fun fetchMoviesWithDetailsFromDB(filterParams: MovieFilterParams) :Flow<PagingData<MovieWithDetailsModel>>{
         val lastMovieResult = lastFetchedMovieResultFromDB
         if (lastMovieResult != null) return lastMovieResult
+
+        moviesWithDetailsPagingSourceDB.setUpFilter(filterParams)
 
         val newFetchedMovieResult = Pager(config = PagingConfig(
             pageSize = 100,

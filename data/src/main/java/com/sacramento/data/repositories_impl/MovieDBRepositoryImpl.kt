@@ -77,6 +77,6 @@ class MovieDBRepositoryImpl(
             limit = limit,
             language = curLanguage
         )
-        return movieEntityMapper.mapMovieEntityListToMovieWithDetailsModelList(movies)
+        return movieEntityMapper.mapMovieEntityListToMovieWithDetailsModelList2(movies)
     }
 }

@@ -3,28 +3,30 @@ package com.sacramento.data.datasource
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.sacramento.data.cache.MovieCategories
-import com.sacramento.data.cache.SharedPrefMovieCategory
-import com.sacramento.data.cache.SharedPrefMovieFilter
 import com.sacramento.data.utils.MovieFilterParams
 import com.sacramento.data.utils.START_PAGE
 import com.sacramento.domain.models.MovieWithDetailsModel
 import com.sacramento.domain.repositories.MovieDBRepository
-import com.sacramento.domain.repositories.MoviesRepository
 import java.io.IOException
 
 class MoviesWithDetailsPagingSourceDB(
-    private val movieDBRepository: MovieDBRepository,
-    private val movieFilterParams: MovieFilterParams
+    private val movieDBRepository: MovieDBRepository
 ) : PagingSource<Int, MovieWithDetailsModel>() {
+
+    private var movieFilterParams: MovieFilterParams? = null
+
+    fun setUpFilter(newFilterParams: MovieFilterParams) {
+        movieFilterParams = newFilterParams
+    }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieWithDetailsModel> {
         val page = params.key ?: START_PAGE
         val moviesWithDetailsList = mutableListOf<MovieWithDetailsModel>()
-        val movieCategory = movieFilterParams.getMovieCategory()
-        val genreId = movieFilterParams.getGenreId()
-        val rating = movieFilterParams.getRating()
-        val releaseYear = movieFilterParams.getReleaseYear()
-        val sortByPopulation = movieFilterParams.getSortByPopulationState()
+        val movieCategory = movieFilterParams?.movieCategory
+        val genreId = movieFilterParams?.genreId
+        val rating = movieFilterParams?.rating
+        val releaseYear = movieFilterParams?.releaseYear
+        val sortByPopulation = movieFilterParams?.sortByPopularity
 
         return try {
                 when (movieCategory) {
@@ -42,7 +44,7 @@ class MoviesWithDetailsPagingSourceDB(
                             movieDBRepository.getFilteredMovies(
                                 genreId = genreId,
                                 year = releaseYear,
-                                rating = rating.toFloat(),
+                                rating = rating?.toFloat(),
                                 sortedByPopularity = sortByPopulation,
                                 limit = params.loadSize
                             )

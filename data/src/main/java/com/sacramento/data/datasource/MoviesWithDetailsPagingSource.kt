@@ -3,10 +3,8 @@ package com.sacramento.data.datasource
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.sacramento.data.cache.MovieCategories
-import com.sacramento.data.utils.START_PAGE
-import com.sacramento.data.cache.SharedPrefMovieCategory
-import com.sacramento.data.cache.SharedPrefMovieFilter
 import com.sacramento.data.utils.MovieFilterParams
+import com.sacramento.data.utils.START_PAGE
 import com.sacramento.domain.models.MovieWithDetailsModel
 import com.sacramento.domain.repositories.MoviesRepository
 import retrofit2.HttpException
@@ -15,19 +13,24 @@ import java.lang.IllegalArgumentException
 
 
 class MoviesWithDetailsPagingSource(
-    private val movieRepository: MoviesRepository,
-    private val movieFilterParams: MovieFilterParams
+    private val movieRepository: MoviesRepository
 ) : PagingSource<Int, MovieWithDetailsModel>() {
+
+    private var movieFilterParams: MovieFilterParams? = null
+
+    fun setUpFilter(newFilterParams: MovieFilterParams) {
+        movieFilterParams = newFilterParams
+    }
 
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieWithDetailsModel> {
         val page = params.key ?: START_PAGE
         val moviesWithDetailsList = mutableListOf<MovieWithDetailsModel>()
-        val movieCategory = movieFilterParams.getMovieCategory()
-        val genreId = movieFilterParams.getGenreId()
-        val rating = movieFilterParams.getRating()
-        val releaseYear = movieFilterParams.getReleaseYear()
-        val sortByPopulation = movieFilterParams.getSortByPopulationState()
+        val movieCategory = movieFilterParams?.movieCategory
+        val genreId = movieFilterParams?.genreId
+        val rating = movieFilterParams?.rating
+        val releaseYear = movieFilterParams?.releaseYear
+        val sortByPopulation = movieFilterParams?.sortByPopularity
 
         return try {
 

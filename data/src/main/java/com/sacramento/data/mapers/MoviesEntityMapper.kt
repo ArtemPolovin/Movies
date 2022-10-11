@@ -51,9 +51,52 @@ class MoviesEntityMapper(
                 backdropImage =  "${POSTER_BASE_URL}${movieEntity.movie.backdropPoster}",
                 homePageUrl = movieEntity.movie.homePageUrl,
                 voteCount = movieEntity.movie.vote_count,
-                genres = mapGenres(movieEntity.genres)
+                //genres = mapGenres(movieEntity.genres)
+                genres = movieEntity.genres.joinToString(", "){it.genreName}
             )
         }
+    }
+
+    fun mapMovieEntityListToMovieWithDetailsModelList2(movieEntityList: Map<SavedMovieEntity,List<GenreEntity>>):List<MovieWithDetailsModel> {
+
+        val moviesList = mutableListOf<MovieWithDetailsModel>()
+
+        for ((key, value) in movieEntityList) {
+            moviesList.add(
+                MovieWithDetailsModel(
+                    id = key.movieId,
+                    releaseData = key.releaseData,
+                    popularityScore = key.popularityScore.toString(),
+                    movieName = key.movieName,
+                    rating = key.rating,
+                    poster =  "$POSTER_BASE_URL${key.poster}",
+                    overview = key.overview,
+                    backdropImage =  "${POSTER_BASE_URL}${key.backdropPoster}",
+                    homePageUrl = key.homePageUrl,
+                    voteCount =key.vote_count,
+                    //genres = mapGenres(movieEntity.genres)
+                    genres = value.joinToString(", "){it.genreName}
+                )
+            )
+        }
+
+        /*return movieEntityList.map { movieEntity ->
+            MovieWithDetailsModel(
+                id = movieEntity.movie.movieId,
+                releaseData = movieEntity.movie.releaseData,
+                popularityScore = movieEntity.movie.popularityScore.toString(),
+                movieName = movieEntity.movie.movieName,
+                rating = movieEntity.movie.rating,
+                poster =  "$POSTER_BASE_URL${movieEntity.movie.poster}",
+                overview = movieEntity.movie.overview,
+                backdropImage =  "${POSTER_BASE_URL}${movieEntity.movie.backdropPoster}",
+                homePageUrl = movieEntity.movie.homePageUrl,
+                voteCount = movieEntity.movie.vote_count,
+                //genres = mapGenres(movieEntity.genres)
+                genres = movieEntity.genres.joinToString(", "){it.genreName}
+            )
+        }*/
+        return moviesList
     }
 
     fun mapMovieApiToMovieGenreCrossRefEntity(movieApi: MovieDetailsModelApi): List<MovieGenreCrossRef>? {

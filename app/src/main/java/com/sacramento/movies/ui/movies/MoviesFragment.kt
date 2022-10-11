@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sacramento.data.cache.SharedPrefMovieCategory
@@ -16,6 +17,7 @@ import com.sacramento.movies.R
 import com.sacramento.movies.databinding.FragmentMoviesBinding
 import com.sacramento.movies.ui.MainActivity
 import com.sacramento.movies.ui.movies.adapter.MoviesWithDetailsAdapter
+import com.sacramento.movies.ui.search_movie_by_name.SearchMovieByNameFragmentArgs
 import com.sacramento.movies.utils.MovieLoadStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -36,6 +38,8 @@ class MoviesFragment : Fragment() {
     private val viewModel: MoviesViewModel by viewModels()
 
     private lateinit var moviesAdapter: MoviesWithDetailsAdapter
+
+    private val args: MoviesFragmentArgs by navArgs()
 
     @Inject
     lateinit var sharedPrefMovieCategory: SharedPrefMovieCategory
@@ -68,7 +72,7 @@ class MoviesFragment : Fragment() {
         job?.cancel()
         job = null
         job = lifecycleScope.launch {
-            viewModel.getMovies().collectLatest {
+            viewModel.getMovies(args.filterParams).collectLatest {
                 moviesAdapter.submitData(it)
             }
         }
@@ -106,7 +110,7 @@ class MoviesFragment : Fragment() {
     }
 
     private fun setupToolbar() {
-        binding.toolbar.title = sharedPrefMovieCategory.loadMovieCategory()
+        binding.toolbar.title = args.filterParams.movieCategory ?: ""
         (activity as? AppCompatActivity)?.setSupportActionBar(binding.toolbar)
     }
 
