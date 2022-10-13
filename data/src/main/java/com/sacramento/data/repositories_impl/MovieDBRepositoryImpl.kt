@@ -71,12 +71,12 @@ class MovieDBRepositoryImpl(
         val curLanguage = settingsDataCache.getLanguage() ?: DEFAULT_ENGLISH_LANGUAGE_VALUE
         val movies = moviesDao.getFilteredMovies(
             genreId = genreId,
-            year = year,
-            rating = rating,
-            sortedByPopularity = sortedByPopularity,
+            language = curLanguage,
             limit = limit,
-            language = curLanguage
+            sortedByPopularity = sortedByPopularity,
+            rating = rating,
+            year = year
         )
-        return movieEntityMapper.mapMovieEntityListToMovieWithDetailsModelList2(movies)
+        return movieEntityMapper.mapMovieEntityListToMovieWithDetailsModelList(movies)
     }
 }

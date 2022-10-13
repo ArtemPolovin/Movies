@@ -6,9 +6,13 @@ import com.sacramento.domain.models.MovieWithDetailsModel
 
 interface  MovieDBRepository {
     suspend fun insertMoviesToDB(movieApi: ApiModel)
+
     suspend fun getMoviesFromDBSortedByPopularity(): List<MovieWithDetailsModel>
+
     suspend fun getTopRatedMovies(): List<MovieWithDetailsModel>
+
     suspend fun getUpcomingMovies(): List<MovieWithDetailsModel>
+
     suspend fun getMoviesByNameFromDB(movieName: String, limit: Int, offset: Int):  List<MovieModel>
 
     suspend fun getFilteredMovies(

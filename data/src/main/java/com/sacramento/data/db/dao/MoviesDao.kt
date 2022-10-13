@@ -27,51 +27,81 @@ interface MoviesDao {
     @Query("DELETE FROM moviegenrecrossref")
     suspend fun deleteFromCrossRef()
 
+   @Transaction
+   @Query(
+       "SELECT  saved_movie.*, genre.* FROM saved_movie " +
+               "JOIN moviegenrecrossref ON moviegenrecrossref.movieId = saved_movie.movieId " +
+               "JOIN genre ON genre.genreId = moviegenrecrossref.genreId " +
+               "WHERE saved_movie.language = :language " +
+               "AND genre.language = :language " +
+               "ORDER BY popularityScore DESC"
+   )
+   suspend fun getMovieSortedByPopularity(language: String):  Map<SavedMovieEntity, List<GenreEntity>>
+
     @Transaction
     @Query(
-        "SELECT * FROM saved_movie JOIN moviegenrecrossref ON " +
-                "moviegenrecrossref.movieId = saved_movie.movieId WHERE " +
-                "moviegenrecrossref.genreId = :genreId "
+        "SELECT  saved_movie.*, genre.* FROM saved_movie " +
+                "JOIN moviegenrecrossref ON moviegenrecrossref.movieId = saved_movie.movieId " +
+                "JOIN genre ON genre.genreId = moviegenrecrossref.genreId " +
+                "WHERE saved_movie.language = :language " +
+                "AND genre.language = :language " +
+                "ORDER BY rating DESC"
     )
-    suspend fun getMoviesByGenre(genreId: String?): List<MovieWithGenresDBModel>
-
-    @Transaction
-    @Query("SELECT * FROM saved_movie WHERE saved_movie.language = :language ORDER BY popularityScore DESC ")
-    suspend fun getMovieSortedByPopularity(language: String): List<MovieWithGenresDBModel>
-
-    @Transaction
-    @Query("SELECT * FROM saved_movie WHERE saved_movie.language = :language ORDER BY rating DESC")
-    suspend fun getTopRatedMovies(language: String): List<MovieWithGenresDBModel>
+    suspend fun getTopRatedMovies(language: String):  Map<SavedMovieEntity, List<GenreEntity>>
 
     @Transaction
     @Query(
-        "SELECT * FROM saved_movie WHERE " +
-                "saved_movie.language = :language " +
+        "SELECT  saved_movie.*, genre.* FROM saved_movie " +
+                "JOIN moviegenrecrossref ON moviegenrecrossref.movieId = saved_movie.movieId " +
+                "JOIN genre ON genre.genreId = moviegenrecrossref.genreId " +
+                "WHERE saved_movie.language = :language " +
+                "AND genre.language = :language " +
                 "AND releaseData LIKE '%' || :year || '%' " +
                 "AND releaseData LIKE '%' || :month || '%' " +
                 "ORDER BY popularityScore DESC"
     )
-    suspend fun getUpcomingMovies(year: String, month: String, language: String): List<MovieWithGenresDBModel>
+    suspend fun getUpcomingMovies(
+        year: String,
+        month: String,
+        language: String
+    ): Map<SavedMovieEntity, List<GenreEntity>>
 
     @Transaction
-    @Query("SELECT * FROM saved_movie JOIN moviegenrecrossref ON " +
-            "moviegenrecrossref.movieId = saved_movie.movieId " +
-            "WHERE moviegenrecrossref.genreId = :genreId " +
-            "AND saved_movie.language = :language " +
-            "AND CASE WHEN :rating NOT NULL THEN saved_movie.rating >= :rating END " +
-            "AND CASE WHEN :year NOT NULL THEN releaseData LIKE '%' || :year || '%' END " +
-            "ORDER BY CASE WHEN :sortedByPopularity NOT NULL THEN popularityScore END DESC " +
-            "LIMIT :limit")
-    suspend fun getFilteredMovies(genreId: String? = null,
-                                  language: String,
-                                  year: String? = null,
-                                  rating: Float? = null,
-                                  sortedByPopularity: String? = null,
-                                  limit: Int
-    ): List<MovieWithGenresDBModel>
+    @Query(
+        "SELECT  saved_movie.*, genre.* FROM saved_movie " +
+                "JOIN moviegenrecrossref ON moviegenrecrossref.movieId = saved_movie.movieId " +
+                "JOIN genre ON genre.genreId = moviegenrecrossref.genreId " +
+                "WHERE saved_movie.language = :language " +
+                "AND genre.language = :language " +
+                "AND saved_movie.movieId IN " +
+                "(" +
+                "SELECT saved_movie.movieId FROM saved_movie " +
+                "JOIN moviegenrecrossref ON moviegenrecrossref.movieId = saved_movie.movieId " +
+                "JOIN genre ON genre.genreId = moviegenrecrossref.genreId " +
+                "WHERE moviegenrecrossref.genreId = :genreId " +
+                "AND saved_movie.language = :language " +
+                "AND genre.language = :language " +
+                "AND CASE WHEN :rating NOT NULL THEN rating >= :rating ELSE 1 == 1 END " +
+                "AND CASE WHEN :year NOT NULL THEN releaseData LIKE '%' || :year || '%' ELSE 1 == 1 END" +
+                ")" +
+                "ORDER BY CASE WHEN :sortedByPopularity NOT NULL THEN saved_movie.popularityScore END DESC " +
+                "LIMIT :limit"
+    )
+    suspend fun getFilteredMovies(
+        genreId: String? = null,
+        language: String,
+        limit: Int,
+        sortedByPopularity: String? = null,
+        rating: Float? = null,
+        year: String? = null
+    ): Map<SavedMovieEntity, List<GenreEntity>>
 
     @Transaction
     @Query("SELECT * FROM saved_movie  WHERE movieName LIKE '%' || :movieName || '%' LIMIT :limit OFFSET :offset ")
-    suspend fun getMoviesByName(movieName: String, limit: Int, offset: Int):  List<MovieWithGenresDBModel>
+    suspend fun getMoviesByName(
+        movieName: String,
+        limit: Int,
+        offset: Int
+    ): List<MovieWithGenresDBModel>
 
 }

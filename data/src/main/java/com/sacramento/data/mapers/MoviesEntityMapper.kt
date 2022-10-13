@@ -37,27 +37,7 @@ class MoviesEntityMapper(
     }
 
     //This function takes all saved movies from DB and maps the list to model list
-    fun mapMovieEntityListToMovieWithDetailsModelList(movieEntityList: List<MovieWithGenresDBModel>):List<MovieWithDetailsModel> {
-
-        return movieEntityList.map { movieEntity ->
-            MovieWithDetailsModel(
-                id = movieEntity.movie.movieId,
-                releaseData = movieEntity.movie.releaseData,
-                popularityScore = movieEntity.movie.popularityScore.toString(),
-                movieName = movieEntity.movie.movieName,
-                rating = movieEntity.movie.rating,
-                poster =  "$POSTER_BASE_URL${movieEntity.movie.poster}",
-                overview = movieEntity.movie.overview,
-                backdropImage =  "${POSTER_BASE_URL}${movieEntity.movie.backdropPoster}",
-                homePageUrl = movieEntity.movie.homePageUrl,
-                voteCount = movieEntity.movie.vote_count,
-                //genres = mapGenres(movieEntity.genres)
-                genres = movieEntity.genres.joinToString(", "){it.genreName}
-            )
-        }
-    }
-
-    fun mapMovieEntityListToMovieWithDetailsModelList2(movieEntityList: Map<SavedMovieEntity,List<GenreEntity>>):List<MovieWithDetailsModel> {
+    fun mapMovieEntityListToMovieWithDetailsModelList(movieEntityList: Map<SavedMovieEntity,List<GenreEntity>>):List<MovieWithDetailsModel> {
 
         val moviesList = mutableListOf<MovieWithDetailsModel>()
 
@@ -74,28 +54,10 @@ class MoviesEntityMapper(
                     backdropImage =  "${POSTER_BASE_URL}${key.backdropPoster}",
                     homePageUrl = key.homePageUrl,
                     voteCount =key.vote_count,
-                    //genres = mapGenres(movieEntity.genres)
                     genres = value.joinToString(", "){it.genreName}
                 )
             )
         }
-
-        /*return movieEntityList.map { movieEntity ->
-            MovieWithDetailsModel(
-                id = movieEntity.movie.movieId,
-                releaseData = movieEntity.movie.releaseData,
-                popularityScore = movieEntity.movie.popularityScore.toString(),
-                movieName = movieEntity.movie.movieName,
-                rating = movieEntity.movie.rating,
-                poster =  "$POSTER_BASE_URL${movieEntity.movie.poster}",
-                overview = movieEntity.movie.overview,
-                backdropImage =  "${POSTER_BASE_URL}${movieEntity.movie.backdropPoster}",
-                homePageUrl = movieEntity.movie.homePageUrl,
-                voteCount = movieEntity.movie.vote_count,
-                //genres = mapGenres(movieEntity.genres)
-                genres = movieEntity.genres.joinToString(", "){it.genreName}
-            )
-        }*/
         return moviesList
     }
 
@@ -117,12 +79,5 @@ class MoviesEntityMapper(
             )
         }
     }
-
-    private fun mapGenres(genres: List<GenreEntity>): String {
-        val curLanguage = settingsDataCache.getLanguage()?: DEFAULT_ENGLISH_LANGUAGE_VALUE
-       return genres.filter { it.language == curLanguage }.joinToString(", "){it.genreName}
-    }
-
-
 
 }

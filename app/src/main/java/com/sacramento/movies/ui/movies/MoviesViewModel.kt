@@ -1,11 +1,5 @@
 package com.sacramento.movies.ui.movies
 
-import android.app.Application
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.os.Build
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -34,8 +28,8 @@ class MoviesViewModel @Inject constructor(
     fun getMovies(filterParams: MovieFilterParams): Flow<PagingData<MovieWithDetailsModel>> {
         return if (connectionHelper.isNetworkAvailable()) {
             fetchMoviesWithDetailsFromService(filterParams)
-                //fetchMoviesWithDetailsFromDB()
-        } else{
+            //fetchMoviesWithDetailsFromDB(filterParams)
+        } else {
             fetchMoviesWithDetailsFromDB(filterParams)
         }
     }
@@ -58,7 +52,7 @@ class MoviesViewModel @Inject constructor(
         return newFetchedMovieResult
     }
 
-    private fun fetchMoviesWithDetailsFromDB(filterParams: MovieFilterParams) :Flow<PagingData<MovieWithDetailsModel>>{
+    private fun fetchMoviesWithDetailsFromDB(filterParams: MovieFilterParams): Flow<PagingData<MovieWithDetailsModel>> {
         val lastMovieResult = lastFetchedMovieResultFromDB
         if (lastMovieResult != null) return lastMovieResult
 
@@ -69,7 +63,7 @@ class MoviesViewModel @Inject constructor(
             enablePlaceholders = false,
             initialLoadSize = 100
         ),
-            pagingSourceFactory = {moviesWithDetailsPagingSourceDB}
+            pagingSourceFactory = { moviesWithDetailsPagingSourceDB }
         ).flow.cachedIn(viewModelScope)
 
         lastFetchedMovieResultFromDB = newFetchedMovieResult
