@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sacramento.data.db.dao.MoviesDao
 import com.sacramento.domain.models.MoviePosterViewPagerModel
 import com.sacramento.domain.models.MoviesSortedByGenreContainerModel
 import com.sacramento.domain.usecases.movie_usecase.GetMoviesSortedByGenreUseCase
@@ -18,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getMoviesSortedByGenreUseCase: GetMoviesSortedByGenreUseCase,
-    private val getUpcomingMoviesUseCase: GetUpComingMoviesUseCase
+    private val getUpcomingMoviesUseCase: GetUpComingMoviesUseCase,
 ) : ViewModel() {
 
     private val _sortedMoviesByGenre =
@@ -37,12 +38,14 @@ class HomeViewModel @Inject constructor(
         _sortedMoviesByGenre.value = ResponseResult.Loading
 
         val handler = CoroutineExceptionHandler { coroutineContext, throwable ->
+            throwable.printStackTrace()
             _sortedMoviesByGenre.value = ResponseResult.Failure(
                 message = "Unknown error has occurred. Please check internet connection"
             )
         }
 
         viewModelScope.launch(handler) {
+
             val sortedMovies = async { getMoviesSortedByGenreUseCase.execute() }
             val upComingMovies = async { getUpcomingMoviesUseCase.execute(1) }
 

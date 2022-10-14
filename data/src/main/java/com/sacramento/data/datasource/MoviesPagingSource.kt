@@ -12,7 +12,7 @@ class MoviesPagingSource(
     private val moviesRepository: MoviesRepository
 ) : PagingSource<Int, MovieModel>() {
 
-    var movieName = ""
+   private  var movieName = ""
 
     fun setupMovieName(newMovieName: String) {
         movieName = newMovieName

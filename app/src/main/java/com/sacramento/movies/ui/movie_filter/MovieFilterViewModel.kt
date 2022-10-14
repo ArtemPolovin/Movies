@@ -62,15 +62,18 @@ class MovieFilterViewModel @Inject constructor(
         sharedPrefMovieFilter.saveReleaseYearCheckBoxState(false)
     }
 
-    fun saveGenreState(genreName: String, genreSpinnerPosition: Int) {
+    fun saveGenreState(genreName: String, genreSpinnerPosition: Int): String {
+        var genreId = ""
         movieGenresList.forEach {
             if (it.name == genreName) {
+                genreId = it.id
                 sharedPrefMovieCategory.saveGenreId(it.id)
                 sharedPrefMovieCategory.saveMovieCategory(it.name)
                 sharedPrefMovieFilter.saveGenreSpinnerPosition(genreSpinnerPosition)
                 sharedPrefMovieFilter.saveGenreCheckBoxState(true)
             }
         }
+        return genreId
     }
 
     fun clearGenreCache() {

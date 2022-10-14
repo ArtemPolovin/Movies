@@ -20,6 +20,9 @@
             app:destination="@id/moviesFilterFragment"
             app:enterAnim="@anim/enter_from_top"
             app:exitAnim="@anim/exit_to_bottom" />
+        <argument
+            android:name="filterParams"
+            app:argType="com.sacramento.data.utils.MovieFilterParams" />
 
     </fragment>
     <fragment
@@ -80,7 +83,7 @@
         android:name="com.sacramento.movies.ui.movie_filter.MoviesFilterFragment"
         tools:layout="@layout/fragment_movies_filter">
         <action
-            android:id="@+id/action_moviesFilterFragment_to_homeFragment"
+            android:id="@+id/action_moviesFilterFragment_to_moviesFragment"
             app:destination="@id/moviesFragment"
             app:popUpTo="@id/moviesFragment"
             app:popUpToInclusive="true" />
@@ -91,6 +94,7 @@
         android:name="com.sacramento.movies.ui.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
+
         <action
             android:id="@+id/action_homeFragment_to_moviesFragment"
             app:destination="@id/moviesFragment" />

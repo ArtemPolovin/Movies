@@ -185,7 +185,7 @@ class MovieDetailsFragment : Fragment() {
             when (it) {
                 is ResponseResult.Success -> {
                     similarMoviesAdapter.submitList(it.data)
-                }
+                }else -> null
             }
         }
     }
@@ -212,7 +212,7 @@ class MovieDetailsFragment : Fragment() {
             when (it) {
                 is ResponseResult.Success -> {
                     recommendedMoviesAdapter.submitList(it.data)
-                }
+                }else -> null
             }
         }
     }
@@ -239,7 +239,7 @@ class MovieDetailsFragment : Fragment() {
                         else createDeletedMovieIconStyle()
                         isSavedToWatchList = isNotSavedToWatchList
                     }
-                }
+                }else -> null
             }
         }
     }
