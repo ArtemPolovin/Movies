@@ -20,8 +20,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.sacramento.data.cache.SharedPrefMovieCategory
 import com.sacramento.data.cache.SharedPrefMovieFilter
+import com.sacramento.data.utils.MovieFilterParams
 import com.sacramento.domain.utils.ResponseResult
-import com.sacramento.movies.R
 import com.sacramento.movies.databinding.FragmentHomeBinding
 import com.sacramento.movies.ui.home.adapters.HomePosterViewPagerAdapter
 import com.sacramento.movies.ui.home.adapters.HomeVerticalAdapter
@@ -40,9 +40,6 @@ class HomeFragment : Fragment() {
     private lateinit var verticalAdapter: HomeVerticalAdapter
 
     private val viewModel: HomeViewModel by viewModels()
-
-    @Inject
-    lateinit var sharedPrefMovieCategory: SharedPrefMovieCategory
 
     @Inject
     lateinit var sharedPrefMovieFilter: SharedPrefMovieFilter
@@ -121,10 +118,10 @@ class HomeFragment : Fragment() {
     private fun openScreenWithAllMoviesWithGenre() {
         verticalAdapter.genreData.observe(viewLifecycleOwner) { genre ->
             if (genre != null) {
-                sharedPrefMovieCategory.saveMovieCategory(genre.genreName)
-                sharedPrefMovieCategory.saveGenreId(genre.genreId)
                 sharedPrefMovieFilter.clearFilterCache()
-                findNavController().navigate(R.id.action_homeFragment_to_moviesFragment)
+                val destination =
+                    HomeFragmentDirections.actionHomeFragmentToMoviesFragment(MovieFilterParams(movieCategory = genre.genreName, genreId = genre.genreId))
+                findNavController().navigate(destination)
             }
         }
     }

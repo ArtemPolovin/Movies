@@ -3,9 +3,8 @@ package com.sacramento.data.datasource
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.sacramento.data.cache.MovieCategories
+import com.sacramento.data.utils.MovieFilterParams
 import com.sacramento.data.utils.START_PAGE
-import com.sacramento.data.cache.SharedPrefMovieCategory
-import com.sacramento.data.cache.SharedPrefMovieFilter
 import com.sacramento.domain.models.MovieWithDetailsModel
 import com.sacramento.domain.repositories.MoviesRepository
 import retrofit2.HttpException
@@ -14,20 +13,24 @@ import java.lang.IllegalArgumentException
 
 
 class MoviesWithDetailsPagingSource(
-    private val movieRepository: MoviesRepository,
-    private val sharedPrefMovieCategory: SharedPrefMovieCategory,
-    private val shardPrefMovieFilter: SharedPrefMovieFilter
+    private val movieRepository: MoviesRepository
 ) : PagingSource<Int, MovieWithDetailsModel>() {
+
+    private var movieFilterParams: MovieFilterParams? = null
+
+    fun setUpFilter(newFilterParams: MovieFilterParams) {
+        movieFilterParams = newFilterParams
+    }
 
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieWithDetailsModel> {
         val page = params.key ?: START_PAGE
         val moviesWithDetailsList = mutableListOf<MovieWithDetailsModel>()
-        val movieCategory = sharedPrefMovieCategory.loadMovieCategory()
-        val genreId = sharedPrefMovieCategory.loadGenreId()
-        val rating = shardPrefMovieFilter.loadRating()
-        val releaseYear = shardPrefMovieFilter.loadReleaseYear()
-        val sortByPopulation = shardPrefMovieFilter.loadSortByPopularity()
+        val movieCategory = movieFilterParams?.movieCategory
+        val genreId = movieFilterParams?.genreId
+        val rating = movieFilterParams?.rating
+        val releaseYear = movieFilterParams?.releaseYear
+        val sortByPopulation = movieFilterParams?.sortByPopularity
 
         return try {
 
@@ -47,6 +50,8 @@ class MoviesWithDetailsPagingSource(
 
 
             }
+
+            //ORDER BY CASE WHEN :sorted NOT NULL THEN rating  END DESC
 
             LoadResult.Page(
                 data = moviesWithDetailsList,

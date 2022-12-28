@@ -11,8 +11,7 @@ import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
+import android.view.View.*
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.math.MathUtils
@@ -23,6 +22,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.appbar.AppBarLayout
 import com.sacramento.domain.models.MovieWithDetailsModel
 import com.sacramento.domain.models.SaveToWatchListModel
 import com.sacramento.domain.models.TrailerModel
@@ -35,7 +35,6 @@ import com.sacramento.movies.utils.BUNDLE_TRAILER_LIST_KEY
 import com.sacramento.movies.utils.KEY_MOVIE_ID
 import com.sacramento.movies.utils.MEDIA_TYPE_MOVIE
 import com.sacramento.movies.utils.putKSerializable
-import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlin.math.abs
@@ -62,8 +61,8 @@ class MovieDetailsFragment : Fragment() {
 
     private var isSavedToWatchList = false
 
-    companion object{
-        fun newInstance(movieId: Int?): MovieDetailsFragment{
+    companion object {
+        fun newInstance(movieId: Int?): MovieDetailsFragment {
             return MovieDetailsFragment().apply {
                 arguments = bundleOf(KEY_MOVIE_ID to movieId)
             }
@@ -84,6 +83,7 @@ class MovieDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        onCheckInternetConnection()
         checkMovieAccountState()
         checkMovieWithDetailsResponseState()
         openWebHomePage()
@@ -96,7 +96,7 @@ class MovieDetailsFragment : Fragment() {
         changeWatchListIconState()
         changePosterAlphaWhenScrolling()
 
-       // changeStartDestinationIfAppOpenedByNotification()
+        // changeStartDestinationIfAppOpenedByNotification()
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -105,9 +105,19 @@ class MovieDetailsFragment : Fragment() {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
+    private fun onCheckInternetConnection() {
+        if (viewModel.getInternetConnectionState()){
+            binding.textCheckInternetConnection.visibility = GONE
+            binding.groupButtons.visibility = VISIBLE
+        } else{
+            binding.textCheckInternetConnection.visibility = VISIBLE
+            binding.groupButtons.visibility = INVISIBLE
+        }
+    }
+
     private fun checkMovieWithDetailsResponseState() {
 
-        viewModel.fetchMovieDetails(movieId)
+        viewModel.getMovieDetails(movieId)
         viewModel.movieDetailsModel.observe(viewLifecycleOwner) {
             binding.groupErrorViews.visibility = GONE
             when (it) {
@@ -115,12 +125,15 @@ class MovieDetailsFragment : Fragment() {
                     binding.progressBar.visibility = VISIBLE
                 }
                 is ResponseResult.Failure -> {
+                    binding.scrollView.visibility = GONE
                     binding.textError.visibility = VISIBLE
                     binding.textError.text = it.message
                     binding.buttonRetry.visibility = VISIBLE
                 }
                 is ResponseResult.Success -> {
+                    binding.scrollView.visibility = VISIBLE
                     setupMovieDetailsScreen(it.data)
+                    // viewModel.getSimilarAndRecommendationMovies(it.data.genres?.split(",")?.first())
                 }
             }
         }
@@ -186,6 +199,7 @@ class MovieDetailsFragment : Fragment() {
                 is ResponseResult.Success -> {
                     similarMoviesAdapter.submitList(it.data)
                 }
+                else -> null
             }
         }
     }
@@ -213,6 +227,7 @@ class MovieDetailsFragment : Fragment() {
                 is ResponseResult.Success -> {
                     recommendedMoviesAdapter.submitList(it.data)
                 }
+                else -> null
             }
         }
     }
@@ -226,19 +241,22 @@ class MovieDetailsFragment : Fragment() {
     }
 
     private fun checkMovieAccountState() {
-        viewModel.getMovieAccountState(movieId)
-        viewModel.movieAccountState.observe(viewLifecycleOwner){
-            when (it) {
-               is ResponseResult.Failure ->{
-                   Log.i("TAG", it.message)
-                   findNavController().navigate(R.id.authorizationFragment)
-               }
-                is ResponseResult.Success ->{
-                    it.data.watchlist?.let { isNotSavedToWatchList ->
-                        if (isNotSavedToWatchList) createSavedMovieIconStyle()
-                        else createDeletedMovieIconStyle()
-                        isSavedToWatchList = isNotSavedToWatchList
+        if (viewModel.getInternetConnectionState()) {
+            viewModel.getMovieAccountState(movieId)
+            viewModel.movieAccountState.observe(viewLifecycleOwner) {
+                when (it) {
+                    is ResponseResult.Failure -> {
+                        Log.i("TAG", it.message)
+                        findNavController().navigate(R.id.authorizationFragment)
                     }
+                    is ResponseResult.Success -> {
+                        it.data.watchlist?.let { isNotSavedToWatchList ->
+                            if (isNotSavedToWatchList) createSavedMovieIconStyle()
+                            else createDeletedMovieIconStyle()
+                            isSavedToWatchList = isNotSavedToWatchList
+                        }
+                    }
+                    else -> null
                 }
             }
         }

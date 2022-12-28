@@ -8,9 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sacramento.data.cache.SharedPrefMovieCategory
+import com.sacramento.data.utils.MovieFilterParams
 import com.sacramento.domain.models.MovieWithDetailsModel
 import com.sacramento.movies.R
 import com.sacramento.movies.databinding.FragmentMoviesBinding
@@ -18,21 +20,26 @@ import com.sacramento.movies.ui.MainActivity
 import com.sacramento.movies.ui.movies.adapter.MoviesWithDetailsAdapter
 import com.sacramento.movies.utils.MovieLoadStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.lang.RuntimeException
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MoviesFragment : Fragment() {
 
     private var _binding: FragmentMoviesBinding? = null
-    private val binding: FragmentMoviesBinding get() =
-        _binding ?: throw RuntimeException("FragmentMoviesBinding = null")
+    private val binding: FragmentMoviesBinding
+        get() =
+            _binding ?: throw RuntimeException("FragmentMoviesBinding = null")
+
+    private var job: Job? = null
 
     private val viewModel: MoviesViewModel by viewModels()
 
     private lateinit var moviesAdapter: MoviesWithDetailsAdapter
+
+    private val args: MoviesFragmentArgs by navArgs()
 
     @Inject
     lateinit var sharedPrefMovieCategory: SharedPrefMovieCategory
@@ -50,9 +57,9 @@ class MoviesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         (requireActivity() as MainActivity).setupActionBar(binding.toolbar)
-
         binding.buttonRetry.setOnClickListener { moviesAdapter.retry() }
 
+        setRefreshListener()
         setupToolbar()
         setupAdapter()
         setupMoviesList()
@@ -62,14 +69,14 @@ class MoviesFragment : Fragment() {
     }
 
     private fun setupMoviesList() {
-
-        lifecycleScope.launch {
-            viewModel.fetchPopularMoviesWithDetails().collectLatest {
+        job?.cancel()
+        job = null
+        job = lifecycleScope.launch {
+            viewModel.getMovies(args.filterParams).collectLatest {
                 moviesAdapter.submitData(it)
             }
         }
     }
-
 
     private fun setupAdapter() {
         moviesAdapter = MoviesWithDetailsAdapter()
@@ -83,25 +90,27 @@ class MoviesFragment : Fragment() {
         }
 
         moviesAdapter.addLoadStateListener { loadState ->
-            binding.rvMovies?.let { it.isVisible = loadState.source.refresh is LoadState.NotLoading }
-            binding.progressBar?.let { it.isVisible = loadState.source.refresh is LoadState.Loading }
-            binding.textError?.let { it.isVisible = loadState.source.refresh is LoadState.Error }
-            binding.buttonRetry?.let { it.isVisible = loadState.source.refresh is LoadState.Error }
+            binding.rvMovies.isVisible = loadState.source.refresh is LoadState.NotLoading
+            binding.pullRefreshLayout.isRefreshing = loadState.source.refresh is LoadState.Loading
+            binding.textError.isVisible = loadState.source.refresh is LoadState.Error
+            binding.buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
         }
     }
 
     private fun openMovieDetailsScreen() {
-        moviesAdapter.onClickItem(object : MoviesWithDetailsAdapter.OnClickAdapterPopularMovieListener {
+        moviesAdapter.onClickItem(object :
+            MoviesWithDetailsAdapter.OnClickAdapterPopularMovieListener {
             override fun getMovie(movie: MovieWithDetailsModel) {
                 findNavController().navigate(
-                    MoviesFragmentDirections.actionMoviesFragmentToMovieDetailsFragment(movie.id))
+                    MoviesFragmentDirections.actionMoviesFragmentToMovieDetailsFragment(movie.id)
+                )
             }
 
         })
     }
 
     private fun setupToolbar() {
-        binding.toolbar.title = sharedPrefMovieCategory.loadMovieCategory()
+        binding.toolbar.title = args.filterParams.movieCategory ?: ""
         (activity as? AppCompatActivity)?.setSupportActionBar(binding.toolbar)
     }
 
@@ -113,7 +122,14 @@ class MoviesFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.filter -> {
-                findNavController().navigate(R.id.action_homeFragment_to_moviesFilterFragment)
+                val destination =
+                    MoviesFragmentDirections.actionMoviesFragmentToMoviesFilterFragment(
+                        MovieFilterParams(
+                            movieCategory = args.filterParams.movieCategory,
+                            genreId = args.filterParams.genreId
+                        )
+                    )
+                findNavController().navigate(destination)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -121,5 +137,13 @@ class MoviesFragment : Fragment() {
 
 
     }
+
+    private fun setRefreshListener() {
+        binding.pullRefreshLayout.setOnRefreshListener {
+            viewModel.clearLastFetchedData()
+            setupMoviesList()
+        }
+    }
+
 
 }

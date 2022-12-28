@@ -5,25 +5,25 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.recyclerview.widget.ListAdapter
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sacramento.domain.models.MovieModel
 import com.sacramento.movies.R
 import com.sacramento.movies.databinding.CellSavedMovieBinding
+import com.sacramento.movies.ui.search_movie_by_name.adapters.MoviesDiffUtilCallback
 
-class SavedMovieAdapter :
-    ListAdapter<MovieModel, SavedMovieAdapter.SavedMoviesViewHolder>(SavedMoviesDiffCallback()) {
-
-    private val _selectedMovie = MutableLiveData<MovieModel>()
-    val selectedMovie: LiveData<MovieModel> get() = _selectedMovie
+class SavedMovieAdapter : PagingDataAdapter<MovieModel, SavedMovieAdapter.SavedMoviesViewHolder>(
+    MoviesDiffUtilCallback()
+) {
 
     private val elementsIdList = mutableListOf<Int>()
     private val _selectedElementsId = MutableLiveData<List<Int>>()
     val selectedElementsId: LiveData<List<Int>> get() = _selectedElementsId
 
-    init {
-        setHasStableIds(true)
-    }
+    private val selectedItemsList = mutableListOf<Int>()
+
+    var onItemClickListener: ((movieModel: MovieModel?) -> Unit)? = null
+
 
     fun clearSelectedElementsList() {
         elementsIdList.clear()
@@ -37,16 +37,12 @@ class SavedMovieAdapter :
     }
 
     override fun onBindViewHolder(holder: SavedMoviesViewHolder, position: Int) {
-        val movieModel = getItem(position)
-
-        holder.bind(movieModel)
-        holder.click(movieModel)
-        holder.longClick(position)
-        holder.itemView.isSelected = elementsIdList.contains(getItemId(position).toInt())
-    }
-
-    override fun getItemId(position: Int): Long {
-        return getItem(position).movieId.toLong()
+        getItem(position)?.let { movieModel ->
+            holder.bind(movieModel)
+            holder.click(movieModel)
+            holder.longClick(movieModel.movieId, position)
+        }
+        holder.itemView.isSelected = selectedItemsList.contains(holder.layoutPosition)
     }
 
     inner class SavedMoviesViewHolder(private val binding: CellSavedMovieBinding) :
@@ -56,10 +52,13 @@ class SavedMovieAdapter :
             binding.movieWithDetailsBindingModel = movieModel
         }
 
-        fun longClick(itemPosition: Int) {
+        fun longClick(movieId: Int, itemPosition: Int) {
+
             itemView.setOnLongClickListener {
+
                 notifyItemChanged(itemPosition)
-                elementsIdList.add(itemId.toInt())
+                selectedItemsList.add(layoutPosition)
+                elementsIdList.add(movieId)
                 _selectedElementsId.value = elementsIdList
                 notifyItemChanged(layoutPosition)
                 true
@@ -67,13 +66,15 @@ class SavedMovieAdapter :
         }
 
         fun click(movieModel: MovieModel) {
+
             itemView.setOnClickListener {
                 if (itemView.isSelected) {
-                    elementsIdList.remove(itemId.toInt())
+                    selectedItemsList.remove(layoutPosition)
+                    elementsIdList.remove(movieModel.movieId)
                     _selectedElementsId.value = elementsIdList
                     itemView.isSelected = false
                 } else {
-                    _selectedMovie.value = movieModel
+                   onItemClickListener?.invoke(movieModel)
                 }
 
             }

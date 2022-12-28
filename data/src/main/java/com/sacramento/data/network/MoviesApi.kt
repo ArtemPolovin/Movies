@@ -85,7 +85,8 @@ interface MoviesApi {
     @GET("/3/account/{account_id}/watchlist/movies")
     suspend fun getWatchList(
         @Query("session_id") sessionId: String,
-        @Query("language") language: String?
+        @Query("language") language: String?,
+        @Query("page") page: Int
     ): Response<MoviesListApiModel>
 
     @GET("/3/movie/{movie_id}/account_states")

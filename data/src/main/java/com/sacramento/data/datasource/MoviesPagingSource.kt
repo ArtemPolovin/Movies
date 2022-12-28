@@ -5,14 +5,16 @@ import androidx.paging.PagingState
 import com.sacramento.data.utils.START_PAGE
 import com.sacramento.domain.models.MovieModel
 import com.sacramento.domain.repositories.MoviesRepository
+import com.sacramento.domain.usecases.movie_usecase.GetWatchListUseCase
 import retrofit2.HttpException
 import java.io.IOException
 
 class MoviesPagingSource(
-    private val moviesRepository: MoviesRepository
+    private val moviesRepository: MoviesRepository,
+    private val getWatchListUseCase: GetWatchListUseCase
 ) : PagingSource<Int, MovieModel>() {
 
-    var movieName = ""
+    private var movieName = ""
 
     fun setupMovieName(newMovieName: String) {
         movieName = newMovieName
@@ -22,7 +24,12 @@ class MoviesPagingSource(
 
         return try {
             val page = params.key ?: START_PAGE
-            val moviesList = moviesRepository.getMoviesByName(movieName = movieName, page = page)
+
+            val moviesList = if (movieName.isBlank()) {
+                getWatchListUseCase.execute(page)
+            } else {
+                moviesRepository.getMoviesByName(movieName = movieName, page = page)
+            }
 
             LoadResult.Page(
                 data = moviesList,

@@ -12,6 +12,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import com.sacramento.data.cache.SharedPrefMovieCategory
 import com.sacramento.data.cache.SharedPrefMovieFilter
+import com.sacramento.data.utils.MovieFilterParams
 import com.sacramento.domain.utils.ResponseResult
 import com.sacramento.movies.R
 import com.sacramento.movies.databinding.FragmentMovieCategoriesBinding
@@ -30,9 +31,6 @@ class MovieCategoriesFragment : Fragment() {
 
     private val viewModel: MovieCategoriesViewModel by viewModels()
     private lateinit var adapterMovieCategory: MoviesCategoriesAdapter
-
-    @Inject
-    lateinit var sharedPrefMovieCategory: SharedPrefMovieCategory
 
     @Inject
     lateinit var sharedPrefMovieFilter: SharedPrefMovieFilter
@@ -87,11 +85,11 @@ class MovieCategoriesFragment : Fragment() {
 
     private fun openMoviesPage() {
         adapterMovieCategory.movieCategory.observe(viewLifecycleOwner) {
-            sharedPrefMovieCategory.saveMovieCategory(it.categoryName)
-            sharedPrefMovieCategory.saveGenreId(it.genreId)
             sharedPrefMovieFilter.clearFilterCache()
             val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-            navController.navigate(ExploreFragmentDirections.actionExploreFragmentToMoviesFragment())
+            navController.navigate(ExploreFragmentDirections.actionExploreFragmentToMoviesFragment(
+                MovieFilterParams(movieCategory = it.categoryName,genreId = it.genreId)
+            ))
             //setNavigationResult(KEY_OPEN_MOVIES_PAGE, true)
         }
     }

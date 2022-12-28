@@ -2,17 +2,23 @@ package com.sacramento.movies.ui.saved_movie
 
 import android.os.Bundle
 import android.view.*
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
-import com.sacramento.domain.utils.ResponseResult
 import com.sacramento.movies.R
 import com.sacramento.movies.databinding.FragmentSavedMovieBinding
 import com.sacramento.movies.ui.MainActivity
 import com.sacramento.movies.ui.saved_movie.adapter.SavedMovieAdapter
+import com.sacramento.movies.utils.MovieLoadStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SavedMovieFragment : Fragment() {
@@ -23,11 +29,13 @@ class SavedMovieFragment : Fragment() {
             _binding ?: throw RuntimeException("FragmentSavedMovieBinding =- null")
 
     private val viewModel: SavedMovieViewModel by viewModels()
-    private lateinit var savedMoviesAdapter: SavedMovieAdapter
+    private val savedMoviesAdapter: SavedMovieAdapter by lazy { SavedMovieAdapter() }
 
     private var showDeleteMenuIcon = MutableLiveData<Boolean>()
 
     private var selectedMovieIdList = mutableListOf<Int>()
+
+    private var job: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +47,6 @@ class SavedMovieFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel.refreshIfWatchListWasChanged()
         (requireActivity() as MainActivity).setupActionBar(binding.toolbar)
 
         showDeleteMenuIcon.value = false
@@ -48,52 +55,43 @@ class SavedMovieFragment : Fragment() {
         setupSavedMoviesList()
         openMovieDetailsScreen()
         receiveSelectedItemsFromAdapter()
+        refreshSavedMoviesList()
     }
 
     private fun setupSavedMoviesList() {
-
-        viewModel.watchList.observe(viewLifecycleOwner) {
-            binding.groupHiddenItems.visibility = View.GONE
-            binding.rvSavedMovies.visibility = View.GONE
-
-            when (it) {
-                ResponseResult.Loading -> {
-                    binding.rvSavedMovies.visibility = View.VISIBLE
-                    binding.progressBar.visibility = View.VISIBLE
-                }
-                is ResponseResult.Failure -> {
-                    binding.buttonRetry.visibility = View.GONE
-                    binding.progressBar.visibility = View.GONE
-                    binding.textError.visibility = View.VISIBLE
-                    binding.textError.text = it.message
-                }
-                is ResponseResult.Success -> {
-                    binding.progressBar.visibility = View.GONE
-                    binding.rvSavedMovies.visibility = View.VISIBLE
-                    savedMoviesAdapter.submitList(it.data)
-                }
+        job?.cancel()
+        job = null
+        job = lifecycleScope.launch {
+            viewModel.getSavedMovies().collectLatest {
+                savedMoviesAdapter.submitData(it)
             }
         }
-
-
     }
 
     private fun setupAdapter() {
-        savedMoviesAdapter = SavedMovieAdapter()
-        binding.rvSavedMovies.run {
-            adapter = savedMoviesAdapter
+        binding.rvSavedMovies.apply {
+            adapter = savedMoviesAdapter.withLoadStateHeaderAndFooter(
+                header = MovieLoadStateAdapter { savedMoviesAdapter.retry() },
+                footer = MovieLoadStateAdapter { savedMoviesAdapter.retry() }
+            )
             layoutManager = GridLayoutManager(requireContext(), 2)
+        }
+        savedMoviesAdapter.addLoadStateListener { loadState ->
+            binding.progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+            binding.buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
+            binding.textError.isVisible = loadState.source.refresh is LoadState.Error
         }
     }
 
-
     private fun openMovieDetailsScreen() {
-        savedMoviesAdapter.selectedMovie.observe(viewLifecycleOwner) { selectedMovie ->
-            findNavController().navigate(
-                SavedMovieFragmentDirections.actionSavedMoviesToMovieDetailsFragment(
-                    selectedMovie.movieId
+        savedMoviesAdapter.onItemClickListener = { selectedMovie ->
+            if (selectedMovie != null) {
+                findNavController().navigate(
+                    SavedMovieFragmentDirections.actionSavedMoviesToMovieDetailsFragment(
+                        selectedMovie.movieId
+                    )
                 )
-            )
+            }
         }
     }
 
@@ -134,6 +132,14 @@ class SavedMovieFragment : Fragment() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
 
+    private fun refreshSavedMoviesList() {
+        viewModel.isSelectedMoviesDeleted.observe(viewLifecycleOwner) {
+            if (it) {
+                viewModel.clearLastFetchedMovieResult()
+                setupSavedMoviesList()
+            }
+        }
     }
 }

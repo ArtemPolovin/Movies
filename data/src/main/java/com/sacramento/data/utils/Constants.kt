@@ -28,3 +28,6 @@ const val SORT_BY_POPULARITY = "sort_by_popularity"
 const val POPULARITY_DATA = "popularity.desc"
 const val SORT_BY_POPULARITY_CHECK_BOX = "sort_by_popularity_check_box"
 const val TRENDING_MOVIE_ID = "trending_movie_id"
+const val YEAR = "yyyy"
+const val MONTH = "MM"
+const val LIMIT_ITEMS_PER_REQUEST = 20

@@ -4,22 +4,17 @@ import com.sacramento.data.apimodels.movie_details.MovieDetailsModelApi
 import com.sacramento.data.apimodels.movies.MoviesListApiModel
 import com.sacramento.data.apimodels.movies.Result
 import com.sacramento.data.cache.SettingsDataCache
-import com.sacramento.data.db.dao.MoviesDao
 import com.sacramento.data.mapers.MoviesApiMapper
-import com.sacramento.data.mapers.MoviesEntityMapper
 import com.sacramento.data.network.MoviesApi
 import com.sacramento.data.utils.SECOND_PAGE
 import com.sacramento.domain.models.*
 import com.sacramento.domain.repositories.MovieCategoriesRepository
+import com.sacramento.domain.repositories.MovieDBRepository
 import com.sacramento.domain.repositories.MoviesRepository
 import com.sacramento.domain.utils.ResponseResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -28,10 +23,9 @@ import java.io.IOException
 class MoviesRepositoryImpl(
     private val moviesApi: MoviesApi,
     private val moviesApiMapper: MoviesApiMapper,
-    private val moviesDao: MoviesDao,
-    private val movieEntityMapper: MoviesEntityMapper,
     private val settingsDataCache: SettingsDataCache,
-    private val movieCategoriesRepository: MovieCategoriesRepository
+    private val movieCategoriesRepository: MovieCategoriesRepository,
+    private val movieDbRepository: MovieDBRepository
 ) : MoviesRepository {
 
     // This function fetches list of popular movies from server and maps regular
@@ -81,7 +75,6 @@ class MoviesRepositoryImpl(
 
     // This function makes request for list of Similar movies for movie details screen
     override suspend fun getSimilarMovies(movieId: Int): ResponseResult<List<MovieModel>> {
-
         return try {
             val response = moviesApi.getSimilarMovies(movieId, settingsDataCache.getLanguage())
             if (response.isSuccessful) {
@@ -132,14 +125,16 @@ class MoviesRepositoryImpl(
         }
     }
 
-    override suspend fun getWatchList(sessionId: String): ResponseResult<List<MovieModel>> {
-        val response =
-            moviesApi.getWatchList(sessionId, language = settingsDataCache.getLanguage())
+    override suspend fun getWatchList(sessionId: String, page: Int): List<MovieModel> {
+        val response = moviesApi.getWatchList(
+            sessionId, language = settingsDataCache.getLanguage(),
+            page
+        )
         return if (response.isSuccessful) {
             response.body()?.let {
-                return@let ResponseResult.Success(moviesApiMapper.mapMovieApiToMovieModelList(it))
-            } ?: ResponseResult.Failure(message = "Response body of getting watch list is null")
-        } else ResponseResult.Failure(message = "Response of getting watch list is not success")
+                return@let moviesApiMapper.mapMovieApiToMovieModelList(it)
+            } ?: throw  IllegalArgumentException("Response body of getting watch list is null")
+        } else throw IllegalArgumentException("Response body of getting watch list is null")
     }
 
     override suspend fun getMovieAccountState(
@@ -157,7 +152,7 @@ class MoviesRepositoryImpl(
                     )
                 } ?: ResponseResult.Failure(message = "Get movie account state response is null")
             } else ResponseResult.Failure(message = "Get movie account state response is not successful")
-        } catch (e: RuntimeException) {
+        } catch (e: IOException) {
             e.printStackTrace()
             ResponseResult.Failure(message = "${e.message}")
         }
@@ -187,7 +182,7 @@ class MoviesRepositoryImpl(
                     return@let ResponseResult.Success(moviesApiMapper.mapTrailerApiToModelsList(it))
                 } ?: ResponseResult.Failure(message = "The response is empty")
             } else ResponseResult.Failure(message = "The response is ot successful")
-        } catch (e: RuntimeException) {
+        } catch (e: IOException) {
             e.printStackTrace()
             ResponseResult.Failure(message = "Some error has occurred from network request")
         }
@@ -195,12 +190,16 @@ class MoviesRepositoryImpl(
 
     override suspend fun getTrendingMovie(): ResponseResult<MovieModel> {
         return try {
-            val response = moviesApi.getTrendingMovie( language = settingsDataCache.getLanguage())
+            val response = moviesApi.getTrendingMovie(language = settingsDataCache.getLanguage())
             if (response.isSuccessful) {
                 response.body()?.let {
-                    return@let ResponseResult.Success(moviesApiMapper.mapTrendingMoviesListToMovieModel(it))
-                }?: ResponseResult.Failure(message = "The response is empty")
-            }else ResponseResult.Failure(message = "The response is ot successful")
+                    return@let ResponseResult.Success(
+                        moviesApiMapper.mapTrendingMoviesListToMovieModel(
+                            it
+                        )
+                    )
+                } ?: ResponseResult.Failure(message = "The response is empty")
+            } else ResponseResult.Failure(message = "The response is ot successful")
         } catch (e: IOException) {
             e.printStackTrace()
             ResponseResult.Failure(message = "Some error has occurred from network request")
@@ -237,7 +236,6 @@ class MoviesRepositoryImpl(
     // This function takes list of movie api models without details and maps
 // it to list of movies with details and returns it
     private suspend fun getMovieWithDetailsList(response: Response<MoviesListApiModel>): List<MovieWithDetailsModel> {
-
         return if (response.isSuccessful) {
             withContext(Dispatchers.IO) {
                 response.body()?.let { body ->
@@ -255,54 +253,13 @@ class MoviesRepositoryImpl(
 
     }
 
-
-    // This function inserts Movie with details  model to local database
-    override suspend fun saveMovieToEntity(movie: MovieWithDetailsModel) {
-        try {
-            moviesDao.insertSavedMovie(movieEntityMapper.mapMovieModelToEntity(movie))
-        } catch (e: Exception) {
-            println("mLog: ${e.printStackTrace()}")
-        }
-    }
-
-    // This function gets all saved movies from local database and maps it to Movie with details models list and return it
-    override suspend fun getMovieListFromDb(): Flow<ResponseResult<List<MovieWithDetailsModel>>> {
-        return flow {
-            moviesDao.getAllSavedMovies().collect { response ->
-                try {
-                    if (response.isNotEmpty()) {
-                        emit(
-                            ResponseResult.Success(
-                                movieEntityMapper.mapMovieEntityListToModelList(response)
-                            )
-                        )
-                    } else {
-                        emit(ResponseResult.Failure(message = "The list is empty"))
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    emit(ResponseResult.Failure(message = "Some error has occurred"))
-                }
-
-            }
-        }.flowOn(Dispatchers.Default)
-    }
-
-    // This function deletes movie from local database by movie id
-    override suspend fun deleteMovieById(movieId: List<Int>) {
-        try {
-            moviesDao.deleteSavedMovieById(movieId)
-        } catch (e: Exception) {
-            println("mLog: ${e.printStackTrace()}")
-        }
-    }
-
     // This function fetches movie details api  model by movie id
     private suspend fun getMovieDetailsForList(movieId: Int): MovieDetailsModelApi? {
 
         val response = moviesApi.getMoviesDetails(movieId, settingsDataCache.getLanguage())
         return if (response.isSuccessful) {
             response.body()?.let { body ->
+                movieDbRepository.insertMoviesToDB(body)
                 return@let body
             }
         } else {

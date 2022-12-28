@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Movies</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="text_genre_header">Genre:</string>
     <string name="text_popularity_header">Popularity:</string>
@@ -60,4 +59,5 @@
     <string name="explore_fragment_title">Explore</string>
     <string name="more_videos_text">More Videos</string>
     <string name="char_percent">%</string>
+    <string name="check_internet_connection">Check internet connection</string>
 </resources>
