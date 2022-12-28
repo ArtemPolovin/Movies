@@ -6,7 +6,7 @@ import retrofit2.HttpException
 import java.io.IOException
 
 class GetUpComingMoviesUseCase(private val moviesRepository: MoviesRepository) {
-    suspend fun execute(page: Int): List<MoviePosterViewPagerModel>? {
+    suspend fun execute(page: Int): List<MoviePosterViewPagerModel> {
       return  try {
            val moviesList =  moviesRepository.getUpcomingMoviesWithDetails(page)
           moviesList.take(10).map {
@@ -19,13 +19,13 @@ class GetUpComingMoviesUseCase(private val moviesRepository: MoviesRepository) {
           }
         } catch (e: IOException) {
             e.printStackTrace()
-          null
+          emptyList<MoviePosterViewPagerModel>()
         } catch (e: HttpException) {
             e.printStackTrace()
-          null
+          emptyList<MoviePosterViewPagerModel>()
         } catch (e: IllegalArgumentException){
         e.printStackTrace()
-          null
+          emptyList<MoviePosterViewPagerModel>()
     }
 }
 

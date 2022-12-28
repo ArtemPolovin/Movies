@@ -1,10 +1,9 @@
 package com.sacramento.data.db.tables.movie_tables
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 
-@Entity(tableName = "saved_movie", primaryKeys = ["movieId","language"])
-data class SavedMovieEntity(
+@Entity(tableName = "movie", primaryKeys = ["movieId","language"])
+data class MovieEntity(
     val movieId: Int,
     val language: String,
     val releaseData: String?,

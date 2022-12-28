@@ -12,12 +12,12 @@ import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sacramento.data.cache.SharedPrefMovieCategory
+import com.sacramento.data.utils.MovieFilterParams
 import com.sacramento.domain.models.MovieWithDetailsModel
 import com.sacramento.movies.R
 import com.sacramento.movies.databinding.FragmentMoviesBinding
 import com.sacramento.movies.ui.MainActivity
 import com.sacramento.movies.ui.movies.adapter.MoviesWithDetailsAdapter
-import com.sacramento.movies.ui.search_movie_by_name.SearchMovieByNameFragmentArgs
 import com.sacramento.movies.utils.MovieLoadStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -122,7 +122,14 @@ class MoviesFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.filter -> {
-                findNavController().navigate(R.id.action_homeFragment_to_moviesFilterFragment)
+                val destination =
+                    MoviesFragmentDirections.actionMoviesFragmentToMoviesFilterFragment(
+                        MovieFilterParams(
+                            movieCategory = args.filterParams.movieCategory,
+                            genreId = args.filterParams.genreId
+                        )
+                    )
+                findNavController().navigate(destination)
                 true
             }
             else -> super.onOptionsItemSelected(item)

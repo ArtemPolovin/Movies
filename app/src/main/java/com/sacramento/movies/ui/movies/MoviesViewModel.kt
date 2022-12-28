@@ -28,7 +28,6 @@ class MoviesViewModel @Inject constructor(
     fun getMovies(filterParams: MovieFilterParams): Flow<PagingData<MovieWithDetailsModel>> {
         return if (connectionHelper.isNetworkAvailable()) {
             fetchMoviesWithDetailsFromService(filterParams)
-            //fetchMoviesWithDetailsFromDB(filterParams)
         } else {
             fetchMoviesWithDetailsFromDB(filterParams)
         }

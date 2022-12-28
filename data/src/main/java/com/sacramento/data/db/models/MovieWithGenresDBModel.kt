@@ -5,10 +5,10 @@ import androidx.room.Junction
 import androidx.room.Relation
 import com.sacramento.data.db.tables.movie_tables.GenreEntity
 import com.sacramento.data.db.tables.movie_tables.MovieGenreCrossRef
-import com.sacramento.data.db.tables.movie_tables.SavedMovieEntity
+import com.sacramento.data.db.tables.movie_tables.MovieEntity
 
 data class MovieWithGenresDBModel(
-    @Embedded val movie: SavedMovieEntity,
+    @Embedded val movie: MovieEntity,
     @Relation(
         parentColumn = "movieId",
         entityColumn = "genreId",

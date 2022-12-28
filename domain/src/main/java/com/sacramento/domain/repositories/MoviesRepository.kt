@@ -37,7 +37,7 @@ interface MoviesRepository {
     suspend fun getSimilarMovies(movieId: Int): ResponseResult<List<MovieModel>>
     suspend fun getRecommendationsMovies(movieId: Int): ResponseResult<List<MovieModel>>
     suspend fun saveToWatchList(saveToWatchListModel: SaveToWatchListModel, sessionId: String)
-    suspend fun getWatchList(sessionId: String): ResponseResult<List<MovieModel>>
+    suspend fun getWatchList(sessionId: String,page: Int): List<MovieModel>
     suspend fun getMovieAccountState(
         sessionId: String,
         movieId: Int
