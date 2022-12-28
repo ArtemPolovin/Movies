@@ -2,6 +2,7 @@ package com.sacramento.movies.ui.move_details
 
 import androidx.lifecycle.*
 import com.sacramento.data.cache.WatchListChanges
+import com.sacramento.data.utils.ConnectionHelper
 import com.sacramento.domain.models.*
 import com.sacramento.domain.usecases.auth.LoadSessionIdUseCase
 import com.sacramento.domain.usecases.movie_usecase.*
@@ -19,7 +20,11 @@ class MovieDetailsViewModel @Inject constructor(
     private val saveOrDeleteMovieFromWatchListUseCase: SaveOrDeleteMovieFromWatchListUseCase,
     private val getMovieAccountStateUseCase: GetMovieAccountStateUseCase,
     private val watchListChanges: WatchListChanges,
-    private val getTrailerListUseCase: GetTrailerListUseCase
+    private val getTrailerListUseCase: GetTrailerListUseCase,
+    private val getMovieByIdFromDBUseCase: GetMovieByIdFromDBUseCase,
+    private val connectionHelper: ConnectionHelper,
+    private val getSimilarMoviesFromDBUseCase: GetSimilarMoviesFromDBUseCase,
+    private val getRecommendationsMoviesFromDBUseCase: GetRecommendationsMoviesFromDBUseCase
 ) : ViewModel() {
 
     private val _movieDetailsModel = MutableLiveData<ResponseResult<MovieWithDetailsModel>>()
@@ -44,8 +49,16 @@ class MovieDetailsViewModel @Inject constructor(
         }
     }
 
-    fun fetchMovieDetails(movieId: Int) {
+    fun getMovieDetails(movieId: Int) {
         _movieDetailsModel.value = ResponseResult.Loading
+        if (connectionHelper.isNetworkAvailable()) {
+            getMovieDetailsFromNetwork(movieId)
+        }else{
+            getMovieDetailsFromDb(movieId)
+        }
+    }
+
+   private fun getMovieDetailsFromNetwork(movieId: Int) {
         viewModelScope.launch {
             _movieDetailsModel.value = getMovieDetailsUseCase.execute(movieId)
             _similarMovies.value = getSimilarMoviesUseCase.execute(movieId)
@@ -54,9 +67,15 @@ class MovieDetailsViewModel @Inject constructor(
         }
     }
 
-     fun fetchTrailersFromNetwork(movieId: Int) {
-        _trailerList.value = ResponseResult.Loading
+    private fun getMovieDetailsFromDb(movieId: Int){
+        viewModelScope.launch {
+            _movieDetailsModel.value = getMovieByIdFromDBUseCase.execute(movieId)
+            _similarMovies.value = getSimilarMoviesFromDBUseCase.execute(movieId)
+            _recommendationsMovies.value = getRecommendationsMoviesFromDBUseCase.execute(movieId)
+        }
+    }
 
+     fun fetchTrailersFromNetwork(movieId: Int) {
         viewModelScope.launch {
             _trailerList.value = getTrailerListUseCase.execute(movieId)
         }
@@ -64,13 +83,18 @@ class MovieDetailsViewModel @Inject constructor(
 
 
     fun getMovieAccountState(movieId: Int) {
-        viewModelScope.launch {
-            _movieAccountState.value = getMovieAccountStateUseCase.execute(loadSessionIdUseCase.execute(), movieId)
+        if (connectionHelper.isNetworkAvailable()) {
+            viewModelScope.launch {
+                _movieAccountState.value = getMovieAccountStateUseCase.execute(loadSessionIdUseCase.execute(), movieId)
+            }
         }
+
     }
 
     fun saveWatchListChangesState() {
         watchListChanges.saveIsWatchListChanged(true)
     }
+
+    fun getInternetConnectionState() = connectionHelper.isNetworkAvailable()
 
 }

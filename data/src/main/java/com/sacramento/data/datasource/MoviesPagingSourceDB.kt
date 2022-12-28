@@ -22,11 +22,20 @@ class MoviesPagingSourceDB(
 
         return try {
             val page = params.key ?: 0
-            val moviesList = movieDBRepository.getMoviesByNameFromDB(
-                movieName = movieName,
-                limit = params.loadSize,
-                offset = page * params.loadSize
-            )
+
+            val moviesList = if (movieName.isBlank()) {
+                movieDBRepository.getSavedMovies(
+                    limit = params.loadSize,
+                    offset = page * params.loadSize
+                )
+            }else{
+                movieDBRepository.getMoviesByNameFromDB(
+                    movieName = movieName,
+                    limit = params.loadSize,
+                    offset = page * params.loadSize
+                )
+            }
+
 
             LoadResult.Page(
                 data = moviesList,

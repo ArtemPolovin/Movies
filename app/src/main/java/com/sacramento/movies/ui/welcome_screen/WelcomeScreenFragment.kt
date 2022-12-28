@@ -46,6 +46,7 @@ class WelcomeScreenFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         hideSystemUi(view)
+
         sharedPrefMovieCategory.clearMovieCategory()
         sharedPrefMovieFilter.clearFilterCache()
         delayWelcomeScreen()

@@ -73,7 +73,8 @@
                     android:paddingStart="8dp"
                     android:paddingTop="10dp"
                     android:paddingEnd="8dp"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:layout_editor_absoluteX="0dp">
 
                     <ImageView
                         android:id="@+id/imageView_save_movie"
@@ -232,6 +233,27 @@
                         app:layout_constraintStart_toEndOf="@+id/text_release_date_header"
                         tools:text="2021-06-24" />
 
+                    <TextView
+                        android:id="@+id/text_check_internet_connection"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/check_internet_connection"
+                        android:textSize="16sp"
+                        android:textColor="@color/text_error_color"
+                        app:drawableLeftCompat="@drawable/ic_earth"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintTop_toBottomOf="@id/rating_bar_movie"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+
+
+                    <androidx.constraintlayout.widget.Group
+                        android:id="@+id/group_buttons"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:constraint_referenced_ids="btn_watch_trailer, imageView_save_movie, text_save_movie_icon_text"
+                        tools:ignore="NotSibling" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -368,7 +390,6 @@
             android:layout_height="wrap_content"
             app:constraint_referenced_ids="text_error,button_retry,progress_bar"
             tools:ignore="NotSibling" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

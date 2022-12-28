@@ -75,7 +75,6 @@ class MoviesRepositoryImpl(
 
     // This function makes request for list of Similar movies for movie details screen
     override suspend fun getSimilarMovies(movieId: Int): ResponseResult<List<MovieModel>> {
-
         return try {
             val response = moviesApi.getSimilarMovies(movieId, settingsDataCache.getLanguage())
             if (response.isSuccessful) {
@@ -126,14 +125,16 @@ class MoviesRepositoryImpl(
         }
     }
 
-    override suspend fun getWatchList(sessionId: String): ResponseResult<List<MovieModel>> {
-        val response =
-            moviesApi.getWatchList(sessionId, language = settingsDataCache.getLanguage())
+    override suspend fun getWatchList(sessionId: String, page: Int): List<MovieModel> {
+        val response = moviesApi.getWatchList(
+            sessionId, language = settingsDataCache.getLanguage(),
+            page
+        )
         return if (response.isSuccessful) {
             response.body()?.let {
-                return@let ResponseResult.Success(moviesApiMapper.mapMovieApiToMovieModelList(it))
-            } ?: ResponseResult.Failure(message = "Response body of getting watch list is null")
-        } else ResponseResult.Failure(message = "Response of getting watch list is not success")
+                return@let moviesApiMapper.mapMovieApiToMovieModelList(it)
+            } ?: throw  IllegalArgumentException("Response body of getting watch list is null")
+        } else throw IllegalArgumentException("Response body of getting watch list is null")
     }
 
     override suspend fun getMovieAccountState(
@@ -151,7 +152,7 @@ class MoviesRepositoryImpl(
                     )
                 } ?: ResponseResult.Failure(message = "Get movie account state response is null")
             } else ResponseResult.Failure(message = "Get movie account state response is not successful")
-        } catch (e: RuntimeException) {
+        } catch (e: IOException) {
             e.printStackTrace()
             ResponseResult.Failure(message = "${e.message}")
         }
@@ -181,7 +182,7 @@ class MoviesRepositoryImpl(
                     return@let ResponseResult.Success(moviesApiMapper.mapTrailerApiToModelsList(it))
                 } ?: ResponseResult.Failure(message = "The response is empty")
             } else ResponseResult.Failure(message = "The response is ot successful")
-        } catch (e: RuntimeException) {
+        } catch (e: IOException) {
             e.printStackTrace()
             ResponseResult.Failure(message = "Some error has occurred from network request")
         }

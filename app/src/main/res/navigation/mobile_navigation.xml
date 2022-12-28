@@ -16,7 +16,7 @@
             app:enterAnim="@anim/enter_from_right"
             app:exitAnim="@anim/exit_to_right" />
         <action
-            android:id="@+id/action_homeFragment_to_moviesFilterFragment"
+            android:id="@+id/action_moviesFragment_to_moviesFilterFragment"
             app:destination="@id/moviesFilterFragment"
             app:enterAnim="@anim/enter_from_top"
             app:exitAnim="@anim/exit_to_bottom" />
@@ -87,6 +87,10 @@
             app:destination="@id/moviesFragment"
             app:popUpTo="@id/moviesFragment"
             app:popUpToInclusive="true" />
+
+        <argument
+            android:name="filterParams"
+            app:argType="com.sacramento.data.utils.MovieFilterParams" />
     </fragment>
 
     <fragment

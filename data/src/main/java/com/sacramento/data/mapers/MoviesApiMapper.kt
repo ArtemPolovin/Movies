@@ -113,7 +113,7 @@ class MoviesApiMapper {
     }
 
     fun mapTrendingMoviesListToMovieModel(movieApiModelsList: MoviesListApiModel): MovieModel {
-      val firstMovie = movieApiModelsList.results[0]
+      val firstMovie = movieApiModelsList.results.first()
         return MovieModel(
             movieId = firstMovie.id,
             poster = "${POSTER_BASE_URL}${firstMovie.poster_path}",

@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.sacramento.data.cache.SharedPrefMovieCategory
 import com.sacramento.data.cache.SharedPrefMovieFilter
 import com.sacramento.data.utils.MovieFilterParams
@@ -33,6 +34,8 @@ class MoviesFilterFragment : Fragment() {
     lateinit var sharedPrefMovieCategory: SharedPrefMovieCategory
 
     private val viewModel: MovieFilterViewModel by viewModels()
+
+    private val args: MoviesFilterFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -96,13 +99,13 @@ class MoviesFilterFragment : Fragment() {
         binding.btnSubmit.setOnClickListener {
             val rating = checkIfRatingIsMarked()
             val releaseYear = checkIfReleaseYearIsMarked()
-            val genrePair = checkIfGenreCheckBoxIsMarked()
+            val genre = checkIfGenreCheckBoxIsMarked()
             val sortedByPopularity = checkIfSortByPopularityIsMarked()
             val destination =
                 MoviesFilterFragmentDirections.actionMoviesFilterFragmentToMoviesFragment(
                     MovieFilterParams(
-                        movieCategory = genrePair?.first,
-                        genreId = genrePair?.second,
+                        movieCategory = genre.movieCategory,
+                        genreId = genre.genreId,
                         releaseYear = releaseYear,
                         sortByPopularity = sortedByPopularity,
                         rating = rating
@@ -134,16 +137,15 @@ class MoviesFilterFragment : Fragment() {
         return null
     }
 
-    private fun checkIfGenreCheckBoxIsMarked(): Pair<String, String>? {
-        if (binding.checkboxGenres.isChecked) {
-            binding.spinnerGenres.apply {
-                val genreName = selectedItem.toString()
-                val genreId = viewModel.saveGenreState(genreName, selectedItemPosition)
-                return Pair(genreName, genreId)
-            }
+    private fun checkIfGenreCheckBoxIsMarked(): MovieFilterParams {
+      return if (binding.checkboxGenres.isChecked) {
+          val genreName = binding.spinnerGenres.selectedItem.toString()
+          val genreId = viewModel.saveGenreState(genreName, binding.spinnerGenres.selectedItemPosition)
+          MovieFilterParams(movieCategory = genreName, genreId = genreId)
+        } else{
+          MovieFilterParams(movieCategory = args.filterParams.movieCategory, genreId = args.filterParams.genreId)
         }
-        viewModel.clearGenreCache()
-        return null
+       // viewModel.clearGenreCache()
     }
 
     private fun checkIfSortByPopularityIsMarked(): String? {
