@@ -1,4 +1,6 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:key="preferenceScreen">
 
 
     <ListPreference
@@ -14,6 +16,12 @@
         app:key="logOut"
         app:layout="@layout/cell_custom_setting"
         app:title="LOG OUT">
+    </Preference>
+
+    <Preference
+        app:key="login"
+        app:layout="@layout/cell_custom_setting"
+        app:title="LOG IN">
     </Preference>
 
 

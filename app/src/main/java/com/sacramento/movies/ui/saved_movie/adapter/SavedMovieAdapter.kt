@@ -27,6 +27,7 @@ class SavedMovieAdapter : PagingDataAdapter<MovieModel, SavedMovieAdapter.SavedM
 
     fun clearSelectedElementsList() {
         elementsIdList.clear()
+        selectedItemsList.clear()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SavedMoviesViewHolder {

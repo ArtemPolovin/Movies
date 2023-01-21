@@ -31,3 +31,4 @@ const val TRENDING_MOVIE_ID = "trending_movie_id"
 const val YEAR = "yyyy"
 const val MONTH = "MM"
 const val LIMIT_ITEMS_PER_REQUEST = 20
+const val GUEST_SESSION_ID_KEY = "guest_session_id_key"

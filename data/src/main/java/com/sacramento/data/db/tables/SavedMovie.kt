@@ -9,7 +9,7 @@ data class SavedMovieEntity(
     @PrimaryKey(autoGenerate = false)
     val movieId: Int,
     val movieName: String?,
-    val rating: Double?,
+    val rating: String?,
     val poster: String?,
     val vote_count: Int?
 ):SavedMovie

@@ -84,7 +84,8 @@ class MovieDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         onCheckInternetConnection()
-        checkMovieAccountState()
+        onCheckIfMovieSavedToWatchList()
+        //  checkIfMovieSavedToAccountWatchList()
         checkMovieWithDetailsResponseState()
         openWebHomePage()
         setupRecyclerViewForSimilarMovies()
@@ -93,7 +94,6 @@ class MovieDetailsFragment : Fragment() {
         setupRecommendedMoviesData()
         openScreenWithMovieDetailsByClickingSimilarMovie()
         openScreenWithMovieDetailsByClickingRecommendedMovie()
-        changeWatchListIconState()
         changePosterAlphaWhenScrolling()
 
         // changeStartDestinationIfAppOpenedByNotification()
@@ -106,10 +106,10 @@ class MovieDetailsFragment : Fragment() {
     }
 
     private fun onCheckInternetConnection() {
-        if (viewModel.getInternetConnectionState()){
+        if (viewModel.getInternetConnectionState()) {
             binding.textCheckInternetConnection.visibility = GONE
             binding.groupButtons.visibility = VISIBLE
-        } else{
+        } else {
             binding.textCheckInternetConnection.visibility = VISIBLE
             binding.groupButtons.visibility = INVISIBLE
         }
@@ -143,6 +143,8 @@ class MovieDetailsFragment : Fragment() {
         binding.groupErrorViews.visibility = GONE
 
         binding.movieWithDetailsModel = movieModel
+
+        changeWatchListIconState(movieModel)
 
         movieModel.homePageUrl?.let { underlineText(binding.textHomepageUrl, it) }
         getTrailerList(movieModel.id)
@@ -240,7 +242,12 @@ class MovieDetailsFragment : Fragment() {
         }
     }
 
-    private fun checkMovieAccountState() {
+    private fun onCheckIfMovieSavedToWatchList() {
+        if (viewModel.isUserLoggedIn()) checkIfMovieSavedToAccountWatchList()
+        else checkIfMovieSavedToGuestWatchList()
+    }
+
+    private fun checkIfMovieSavedToAccountWatchList() {
         if (viewModel.getInternetConnectionState()) {
             viewModel.getMovieAccountState(movieId)
             viewModel.movieAccountState.observe(viewLifecycleOwner) {
@@ -262,23 +269,55 @@ class MovieDetailsFragment : Fragment() {
         }
     }
 
-    private fun changeWatchListIconState() {
+    private fun checkIfMovieSavedToGuestWatchList() {
+        viewModel.checkIfGuestMovieSaved(movieId)
+        viewModel.isGuestMovieSaved.observe(viewLifecycleOwner) { isMovieSaved ->
+            if (isMovieSaved) createSavedMovieIconStyle()
+            else createDeletedMovieIconStyle()
+
+            isSavedToWatchList = isMovieSaved
+        }
+    }
+
+    private fun changeWatchListIconState(movieModel: MovieWithDetailsModel) {
+
         binding.imageViewSaveMovie.setOnClickListener {
-            isSavedToWatchList = if (!isSavedToWatchList) {
-                createSavedMovieIconStyle()
-                true
+
+            if (viewModel.isUserLoggedIn()) {
+                onSaveOrDeleteMovieFromWatchList()
             } else {
-                createDeletedMovieIconStyle()
-                false
+                onSaveOrDeleteMovieFromDbGuestSession(movieModel)
             }
-            viewModel.saveOrDeleteMovieFromWatchList(
-                SaveToWatchListModel(
-                    MEDIA_TYPE_MOVIE,
-                    movieId,
-                    isSavedToWatchList
-                )
+
+            // viewModel.saveWatchListChangesState()
+        }
+    }
+
+    private fun onSaveOrDeleteMovieFromWatchList() {
+        isSavedToWatchList = if (!isSavedToWatchList) {
+            createSavedMovieIconStyle()
+            true
+        } else {
+            createDeletedMovieIconStyle()
+            false
+        }
+        viewModel.saveOrDeleteMovieFromWatchList(
+            SaveToWatchListModel(
+                MEDIA_TYPE_MOVIE,
+                movieId,
+                isSavedToWatchList
             )
-            viewModel.saveWatchListChangesState()
+        )
+    }
+
+    private fun onSaveOrDeleteMovieFromDbGuestSession(movieModel: MovieWithDetailsModel) {
+        isSavedToWatchList = if (!isSavedToWatchList) {
+            createSavedMovieIconStyle()
+            viewModel.insertMovieToGuestWatchListDb(movieModel)
+            true
+        } else {
+            viewModel.deleteMovieFromGuestWatchListDb(movieModel.id)
+            false
         }
     }
 

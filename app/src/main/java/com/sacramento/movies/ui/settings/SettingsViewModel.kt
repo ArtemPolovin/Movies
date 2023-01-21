@@ -26,4 +26,8 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+     fun isUserLoggedIn(): Boolean {
+        return loadSessionIdUseCase.execute().isNotBlank()
+    }
+
 }

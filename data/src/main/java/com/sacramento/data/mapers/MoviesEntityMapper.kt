@@ -72,7 +72,7 @@ class MoviesEntityMapper(
              MovieModel(
                  movieId = movieEntity.movieId,
                  title = movieEntity.movieName,
-                 rating = movieEntity.rating?.toDouble(),
+                 rating = String.format("%.1f",movieEntity.rating),
                  poster = "$POSTER_BASE_URL${movieEntity.poster}",
                  voteCount = movieEntity.vote_count?.toInt(),
              )
@@ -84,7 +84,7 @@ class MoviesEntityMapper(
             MovieModel(
                 movieId = movieEntity.movie.movieId,
                 title = movieEntity.movie.movieName,
-                rating = movieEntity.movie.rating?.toDouble(),
+                rating = String.format("%.1f",movieEntity.movie.rating),
                 poster = "$POSTER_BASE_URL${movieEntity.movie.poster}",
                 voteCount = movieEntity.movie.vote_count?.toInt(),
             )
