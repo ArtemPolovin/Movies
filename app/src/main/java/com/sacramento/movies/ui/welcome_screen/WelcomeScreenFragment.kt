@@ -59,7 +59,8 @@ class WelcomeScreenFragment : Fragment() {
             if (viewModel.isAuthorized()) {
                 findNavController().navigate(R.id.homeFragment)
             } else {
-                findNavController().navigate(R.id.authorizationFragment)
+              //  findNavController().navigate(R.id.authorizationFragment)
+                findNavController().navigate(R.id.sessionSelectionFragment)
             }
 
         }

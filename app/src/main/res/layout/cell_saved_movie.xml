@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         tools:text="5.8"
-        android:text="@{movieWithDetailsBindingModel.rating.toString()}"
+        android:text="@{movieWithDetailsBindingModel.rating}"
         android:textColor="@color/text_movie_info_color"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/text_rating_header"

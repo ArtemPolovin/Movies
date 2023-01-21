@@ -7,7 +7,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.sacramento.data.cache.WatchListChanges
+import com.sacramento.data.datasource.GuestSessionPagingSource
 import com.sacramento.data.datasource.MoviesPagingSource
 import com.sacramento.data.datasource.MoviesPagingSourceDB
 import com.sacramento.data.utils.ConnectionHelper
@@ -16,6 +16,7 @@ import com.sacramento.domain.models.SaveToWatchListModel
 import com.sacramento.domain.usecases.auth.LoadSessionIdUseCase
 import com.sacramento.domain.usecases.movie_usecase.CleanSavedMoviesDbUseCase
 import com.sacramento.domain.usecases.movie_usecase.SaveOrDeleteMovieFromWatchListUseCase
+import com.sacramento.domain.usecases.movie_usecase.guest_session.DeleteListOfGuestWatchListUseCase
 import com.sacramento.movies.utils.DELETE_MOVIE
 import com.sacramento.movies.utils.MEDIA_TYPE_MOVIE
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +31,9 @@ class SavedMovieViewModel @Inject constructor(
     private val connectionHelper: ConnectionHelper,
     private val moviesPagingSource: MoviesPagingSource,
     private val moviesPagingSourceDB: MoviesPagingSourceDB,
-    private val cleanSavedMoviesDbUseCase: CleanSavedMoviesDbUseCase
+    private val cleanSavedMoviesDbUseCase: CleanSavedMoviesDbUseCase,
+    private val guestSessionPagingSource: GuestSessionPagingSource,
+    private val deleteListOfGuestWatchListUseCase: DeleteListOfGuestWatchListUseCase
 ) : ViewModel() {
 
     private val _isSelectedMoviesDeleted = MutableLiveData<Boolean>().apply { value = false }
@@ -39,10 +42,20 @@ class SavedMovieViewModel @Inject constructor(
 
     private var lastFetchedMovieResult: Flow<PagingData<MovieModel>>? = null
     private var lastFetchedMovieResultDB: Flow<PagingData<MovieModel>>? = null
+    private var lastFetchedMovieResultGuest: Flow<PagingData<MovieModel>>? = null
+
+    private fun isUserLoggedIn(): Boolean {
+        return loadSessionIdUseCase.execute().isNotBlank()
+    }
+
+    fun isNetworkAvailable(): Boolean {
+        return connectionHelper.isNetworkAvailable()
+    }
 
     fun getSavedMovies(): Flow<PagingData<MovieModel>> {
-        return if (connectionHelper.isNetworkAvailable()) {
-            fetchWatchListFromApi()
+        return if (isNetworkAvailable()) {
+            if (isUserLoggedIn()) fetchWatchListFromApi()
+            else fetchGuestWatchListFromDb()
         } else {
             fetchWatchListFromDB()
         }
@@ -81,6 +94,22 @@ class SavedMovieViewModel @Inject constructor(
         return newFetchedMoviesResult
     }
 
+    private fun fetchGuestWatchListFromDb(): Flow<PagingData<MovieModel>> {
+        val lastMovieResult = lastFetchedMovieResultGuest
+        if (lastMovieResult != null) return lastMovieResult
+
+        val newFetchedMoviesResult = Pager(config = PagingConfig(
+            pageSize = 30,
+            enablePlaceholders = false
+        ),
+            pagingSourceFactory = { guestSessionPagingSource }
+        ).flow.cachedIn(viewModelScope)
+
+        lastFetchedMovieResultGuest = newFetchedMoviesResult
+
+        return newFetchedMoviesResult
+    }
+
     private suspend fun saveOrDeleteMovieFromWatchList(saveToWatchListModel: SaveToWatchListModel) {
         saveOrDeleteMovieFromWatchListUseCase.execute(
             saveToWatchListModel,
@@ -89,6 +118,11 @@ class SavedMovieViewModel @Inject constructor(
     }
 
     fun deleteMoviesFromWatchList(moviesIdList: List<Int>) {
+        if (isUserLoggedIn()) deleteMovieFromWatchListAccount(moviesIdList)
+        else deleteMoviesFromGuestWatchListDb(moviesIdList)
+    }
+
+    private fun deleteMovieFromWatchListAccount(moviesIdList: List<Int>) {
         viewModelScope.launch {
             cleanSavedMoviesDbUseCase.execute()
             val b = launch {
@@ -103,8 +137,16 @@ class SavedMovieViewModel @Inject constructor(
         }
     }
 
+    private fun deleteMoviesFromGuestWatchListDb(movieIdList: List<Int>) {
+        viewModelScope.launch {
+            launch { deleteListOfGuestWatchListUseCase.execute(movieIdList) }.join()
+            _isSelectedMoviesDeleted.value = true
+        }
+    }
+
     fun clearLastFetchedMovieResult() {
         lastFetchedMovieResult = null
+        lastFetchedMovieResultGuest = null
     }
 
 }

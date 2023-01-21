@@ -76,7 +76,7 @@ class MoviesApiMapper {
                         poster = "${POSTER_BASE_URL}${result.poster_path}",
                         title = result.title,
                         voteCount = result.vote_count,
-                        rating = result.vote_average
+                        rating =  String.format("%.1f",result.vote_average)
                     )
                 )
             }
@@ -119,7 +119,7 @@ class MoviesApiMapper {
             poster = "${POSTER_BASE_URL}${firstMovie.poster_path}",
             title = firstMovie.title,
             voteCount = firstMovie.vote_count,
-            rating = firstMovie.vote_average
+            rating = String.format("%.1f",firstMovie.vote_average)
         )
     }
 

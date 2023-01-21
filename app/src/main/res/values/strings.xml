@@ -60,4 +60,6 @@
     <string name="more_videos_text">More Videos</string>
     <string name="char_percent">%</string>
     <string name="check_internet_connection">Check internet connection</string>
+    <string name="log_in">Log in</string>
+    <string name="guest">guest</string>
 </resources>

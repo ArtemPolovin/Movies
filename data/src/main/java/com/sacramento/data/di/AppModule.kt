@@ -6,17 +6,13 @@ import androidx.preference.PreferenceManager
 import androidx.room.Room
 import com.google.gson.Gson
 import com.sacramento.data.cache.*
-import com.sacramento.data.datasource.MoviesPagingSource
-import com.sacramento.data.datasource.MoviesPagingSourceDB
-import com.sacramento.data.datasource.MoviesWithDetailsPagingSource
-import com.sacramento.data.datasource.MoviesWithDetailsPagingSourceDB
+import com.sacramento.data.datasource.*
 import com.sacramento.data.db.AppDatabase
+import com.sacramento.data.db.dao.GuestSessionDao
 import com.sacramento.data.db.dao.MoviesDao
-import com.sacramento.data.mapers.ErrorLoginMapper
-import com.sacramento.data.mapers.MovieGenresMapper
-import com.sacramento.data.mapers.MoviesApiMapper
-import com.sacramento.data.mapers.MoviesEntityMapper
+import com.sacramento.data.mapers.*
 import com.sacramento.data.network.AuthMovieAPIService
+import com.sacramento.data.network.GuestSessionApiService
 import com.sacramento.data.network.MoviesApi
 import com.sacramento.data.repositories_impl.*
 import com.sacramento.data.utils.ConnectionHelper
@@ -25,6 +21,10 @@ import com.sacramento.data.utils.SHARED_PREF_MOVIE_FILTER
 import com.sacramento.domain.repositories.*
 import com.sacramento.domain.usecases.auth.*
 import com.sacramento.domain.usecases.movie_usecase.*
+import com.sacramento.domain.usecases.movie_usecase.guest_session.CheckIfGuestMovieIsSavedUseCase
+import com.sacramento.domain.usecases.movie_usecase.guest_session.DeleteListOfGuestWatchListUseCase
+import com.sacramento.domain.usecases.movie_usecase.guest_session.DeleteMovieFromGuestWatchListDbUseCase
+import com.sacramento.domain.usecases.movie_usecase.guest_session.InsertGuestSavedMovieToDbUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -94,6 +94,14 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideGuestSessionRepository(
+        guestSessionApi: GuestSessionApiService,
+        guestSessionMapper: GuestSessionMapper
+    ): GuestSessionRepository =
+        GuestSessionRepositoryImpl(guestSessionApi, guestSessionMapper)
+
+    @Provides
+    @Singleton
     fun provideCacheRepositoryImpl(
         sharedPref: SharedPreferences
     ): CacheRepository = CacheRepositoryImpl(sharedPref)
@@ -101,6 +109,13 @@ object AppModule {
     @Provides
     @Singleton
     fun provideCookieRepositoryImpl(): CookieRepository = CookieRepositoryImpl()
+
+    @Provides
+    @Singleton
+    fun provideGuestSessionDbRepositoryImpl(
+        guestDao: GuestSessionDao,
+        guestSessionMapper: GuestSessionMapper
+    ): GuestSessionDbRepository = GuestSessionDbRepositoryImpl(guestDao, guestSessionMapper)
 
 
     @Provides
@@ -125,6 +140,10 @@ object AppModule {
         MoviesPagingSource(movieRepository, getWatchListUseCase)
 
     @Provides
+    fun provideGuestSessionPagingSource(guestRepo: GuestSessionDbRepository) =
+        GuestSessionPagingSource(guestRepo)
+
+    @Provides
     @Singleton
     fun provideMoviesApi(): MoviesApi = MoviesApi()
 
@@ -134,15 +153,23 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideGuestSessionApiService(): GuestSessionApiService = GuestSessionApiService()
+
+    @Provides
+    @Singleton
     fun provideDatabase(@ApplicationContext context: Context) =
         Room.databaseBuilder(context, AppDatabase::class.java, "MovieDB")
-            .fallbackToDestructiveMigration()
+            //.fallbackToDestructiveMigration()
             // .addMigrations(AppDatabase.MIGRATION_2_3)
             .build()
 
     @Provides
     @Singleton
     fun provideMoviesDao(appDatabase: AppDatabase) = appDatabase.getMoviesDao()
+
+    @Provides
+    @Singleton
+    fun provideGuestSessionDao(appDatabase: AppDatabase) = appDatabase.getGuestSessionDao()
 
     @Provides
     fun provideMoviesApiMapper() = MoviesApiMapper()
@@ -160,6 +187,9 @@ object AppModule {
         @ApplicationContext context: Context,
         settingsDataCache: SettingsDataCache
     ) = MovieGenresMapper(gson, context, settingsDataCache)
+
+    @Provides
+    fun provideGuestSessionMapper() = GuestSessionMapper()
 
     @Provides
     fun provideDeleteMovieByIdFromDbUseCase(movieDBRepository: MovieDBRepository) =
@@ -288,6 +318,26 @@ object AppModule {
         CleanSavedMoviesDbUseCase(movieDBRepository)
 
     @Provides
+    fun provideGetGuestSessionUseCase(guestSessionRepo: GuestSessionRepository) =
+        GetGuestSessionUseCase(guestSessionRepo)
+
+    @Provides
+    fun provideInsertGuestSavedMovieToDbUseCase(guestSessionDbRepo: GuestSessionDbRepository) =
+        InsertGuestSavedMovieToDbUseCase(guestSessionDbRepo)
+
+    @Provides
+    fun provideCheckIfGuestMovieIsSavedUseCase(guestSessionDbRepo: GuestSessionDbRepository) =
+        CheckIfGuestMovieIsSavedUseCase(guestSessionDbRepo)
+
+    @Provides
+    fun provideDeleteMovieFromGuestWatchListDbUseCase(guestSessionDbRepo: GuestSessionDbRepository) =
+        DeleteMovieFromGuestWatchListDbUseCase(guestSessionDbRepo)
+
+    @Provides
+    fun provideDeleteListOfGuestWatchListUseCase(guestSessionDbRepo: GuestSessionDbRepository) =
+        DeleteListOfGuestWatchListUseCase(guestSessionDbRepo)
+
+    @Provides
     @Singleton
     fun provideSharedPreferences(
         @ApplicationContext context: Context
@@ -328,6 +378,11 @@ object AppModule {
     @Singleton
     fun provideSharedPrefTrendingMovieId(sharedPref: SharedPreferences) =
         SharedPrefTrendingMovieId(sharedPref)
+
+    @Provides
+    @Singleton
+    fun provideGuestSessionSharedPref(sharedPref: SharedPreferences) =
+        GuestSessionSharedPref(sharedPref)
 
 
     @Provides

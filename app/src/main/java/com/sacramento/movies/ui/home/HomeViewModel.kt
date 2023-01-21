@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sacramento.data.cache.GuestSessionSharedPref
 import com.sacramento.data.utils.ConnectionHelper
 import com.sacramento.domain.models.MoviePosterViewPagerModel
 import com.sacramento.domain.models.MoviesSortedByGenreContainerModel
@@ -24,7 +25,7 @@ class HomeViewModel @Inject constructor(
     private val getUpcomingMoviesUseCase: GetUpComingMoviesUseCase,
     private val getMoviesSortedByGenreFromDbUseCase: GetMoviesSortedByGenreFromDbUseCase,
     private val getUpComingMoviesFromDbUseCase: GetUpComingMoviesFromDbUseCase,
-    private val connectionHelper: ConnectionHelper,
+    private val connectionHelper: ConnectionHelper
 ) : ViewModel() {
 
     private val _sortedMoviesByGenre =
@@ -40,7 +41,6 @@ class HomeViewModel @Inject constructor(
             message = "Unknown error has occurred. Please check internet connection"
         )
     }
-
 
     init {
         refreshData()

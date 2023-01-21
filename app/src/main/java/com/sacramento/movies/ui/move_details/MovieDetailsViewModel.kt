@@ -1,11 +1,17 @@
 package com.sacramento.movies.ui.move_details
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.sacramento.data.cache.WatchListChanges
 import com.sacramento.data.utils.ConnectionHelper
 import com.sacramento.domain.models.*
 import com.sacramento.domain.usecases.auth.LoadSessionIdUseCase
 import com.sacramento.domain.usecases.movie_usecase.*
+import com.sacramento.domain.usecases.movie_usecase.guest_session.CheckIfGuestMovieIsSavedUseCase
+import com.sacramento.domain.usecases.movie_usecase.guest_session.DeleteMovieFromGuestWatchListDbUseCase
+import com.sacramento.domain.usecases.movie_usecase.guest_session.InsertGuestSavedMovieToDbUseCase
 import com.sacramento.domain.utils.ResponseResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -24,7 +30,10 @@ class MovieDetailsViewModel @Inject constructor(
     private val getMovieByIdFromDBUseCase: GetMovieByIdFromDBUseCase,
     private val connectionHelper: ConnectionHelper,
     private val getSimilarMoviesFromDBUseCase: GetSimilarMoviesFromDBUseCase,
-    private val getRecommendationsMoviesFromDBUseCase: GetRecommendationsMoviesFromDBUseCase
+    private val getRecommendationsMoviesFromDBUseCase: GetRecommendationsMoviesFromDBUseCase,
+    private val insertGuestSavedMovieToDbUseCase: InsertGuestSavedMovieToDbUseCase,
+    private val isGuestMovieSavedToDbUseCase: CheckIfGuestMovieIsSavedUseCase,
+    private val deleteMovieFromGuestWatchListDbUseCase: DeleteMovieFromGuestWatchListDbUseCase
 ) : ViewModel() {
 
     private val _movieDetailsModel = MutableLiveData<ResponseResult<MovieWithDetailsModel>>()
@@ -37,28 +46,44 @@ class MovieDetailsViewModel @Inject constructor(
     private val _recommendationsMovies = MutableLiveData<ResponseResult<List<MovieModel>>>()
     val recommendationsMovies: LiveData<ResponseResult<List<MovieModel>>> get() = _recommendationsMovies
 
-    private val _movieAccountState = MutableLiveData< ResponseResult<MovieAccountStateModel>>()
-    val movieAccountState: LiveData< ResponseResult<MovieAccountStateModel>> get() = _movieAccountState
+    private val _movieAccountState = MutableLiveData<ResponseResult<MovieAccountStateModel>>()
+    val movieAccountState: LiveData<ResponseResult<MovieAccountStateModel>> get() = _movieAccountState
 
     private val _trailerList = MutableLiveData<ResponseResult<List<TrailerModel>>>()
     val trailerList: LiveData<ResponseResult<List<TrailerModel>>> get() = _trailerList
 
+    private val _isGuestMovieSaved = MutableLiveData<Boolean>().apply { value = false }
+    val isGuestMovieSaved: LiveData<Boolean> get() = _isGuestMovieSaved
+
+    /*    fun saveOrDeleteMovieFromWatchList(saveToWatchListModel: SaveToWatchListModel) {
+           viewModelScope.launch {
+               saveOrDeleteMovieFromWatchListUseCase.execute(
+                   saveToWatchListModel,
+                   loadSessionIdUseCase.execute()
+               )
+           }
+       }*/
+
     fun saveOrDeleteMovieFromWatchList(saveToWatchListModel: SaveToWatchListModel) {
         viewModelScope.launch {
-            saveOrDeleteMovieFromWatchListUseCase.execute(saveToWatchListModel, loadSessionIdUseCase.execute())
+            saveOrDeleteMovieFromWatchListUseCase.execute(
+                saveToWatchListModel,
+                loadSessionIdUseCase.execute()
+            )
         }
+
     }
 
     fun getMovieDetails(movieId: Int) {
         _movieDetailsModel.value = ResponseResult.Loading
         if (connectionHelper.isNetworkAvailable()) {
             getMovieDetailsFromNetwork(movieId)
-        }else{
+        } else {
             getMovieDetailsFromDb(movieId)
         }
     }
 
-   private fun getMovieDetailsFromNetwork(movieId: Int) {
+    private fun getMovieDetailsFromNetwork(movieId: Int) {
         viewModelScope.launch {
             _movieDetailsModel.value = getMovieDetailsUseCase.execute(movieId)
             _similarMovies.value = getSimilarMoviesUseCase.execute(movieId)
@@ -67,7 +92,7 @@ class MovieDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun getMovieDetailsFromDb(movieId: Int){
+    private fun getMovieDetailsFromDb(movieId: Int) {
         viewModelScope.launch {
             _movieDetailsModel.value = getMovieByIdFromDBUseCase.execute(movieId)
             _similarMovies.value = getSimilarMoviesFromDBUseCase.execute(movieId)
@@ -75,7 +100,7 @@ class MovieDetailsViewModel @Inject constructor(
         }
     }
 
-     fun fetchTrailersFromNetwork(movieId: Int) {
+    fun fetchTrailersFromNetwork(movieId: Int) {
         viewModelScope.launch {
             _trailerList.value = getTrailerListUseCase.execute(movieId)
         }
@@ -85,10 +110,47 @@ class MovieDetailsViewModel @Inject constructor(
     fun getMovieAccountState(movieId: Int) {
         if (connectionHelper.isNetworkAvailable()) {
             viewModelScope.launch {
-                _movieAccountState.value = getMovieAccountStateUseCase.execute(loadSessionIdUseCase.execute(), movieId)
+                _movieAccountState.value =
+                    getMovieAccountStateUseCase.execute(loadSessionIdUseCase.execute(), movieId)
             }
         }
 
+    }
+
+    /*  fun saveMovie(mediaType: String, movieId: Int, isSavedToWatchList: Boolean) {
+          viewModelScope.launch {
+              if (loadSessionIdUseCase.execute().isNotBlank()) {
+                  saveOrDeleteMovieFromWatchList(
+                      SaveToWatchListModel(
+                          mediaType,
+                          movieId,
+                          isSavedToWatchList
+                      )
+                  )
+              } else {
+                  insertOrDeleteGuestMovieFromDb(movieId)
+              }
+          }
+      }*/
+
+    fun insertMovieToGuestWatchListDb(movieModel: MovieWithDetailsModel) {
+        viewModelScope.launch {
+            insertGuestSavedMovieToDbUseCase.execute(movieModel)
+        }
+
+    }
+
+    fun deleteMovieFromGuestWatchListDb(movieId: Int) {
+        viewModelScope.launch {
+            deleteMovieFromGuestWatchListDbUseCase.execute(movieId)
+        }
+    }
+
+    fun checkIfGuestMovieSaved(movieId: Int) {
+        // TODO: CREATE CHECKING IF GUEST MOVIE SAVED TO DB 
+        viewModelScope.launch {
+            _isGuestMovieSaved.value = isGuestMovieSavedToDbUseCase.execute(movieId)
+        }
     }
 
     fun saveWatchListChangesState() {
@@ -96,5 +158,9 @@ class MovieDetailsViewModel @Inject constructor(
     }
 
     fun getInternetConnectionState() = connectionHelper.isNetworkAvailable()
+
+    fun isUserLoggedIn(): Boolean {
+        return loadSessionIdUseCase.execute().isNotBlank()
+    }
 
 }

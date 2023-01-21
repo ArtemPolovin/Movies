@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-      //  if(savedInstanceState == null) checkIfAppLaunchedByNotification()
+        //  if(savedInstanceState == null) checkIfAppLaunchedByNotification()
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -73,13 +73,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun hideBottomNavBar() {
         navController.addOnDestinationChangedListener { _, distination, _ ->
-              when (distination.id) {
-                R.id.welcome_screen, R.id.moviesFilterFragment, R.id.authorizationFragment ->{
-                    binding.bottomNav.visibility =  View.GONE
+            when (distination.id) {
+                R.id.welcome_screen, R.id.moviesFilterFragment, R.id.authorizationFragment, R.id.sessionSelectionFragment -> {
+                    binding.bottomNav.visibility = View.GONE
                     binding.viewLine.visibility = View.GONE
                 }
                 else -> {
-                    binding.bottomNav.visibility =  View.VISIBLE
+                    binding.bottomNav.visibility = View.VISIBLE
                     binding.viewLine.visibility = View.VISIBLE
                 }
             }

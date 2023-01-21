@@ -39,4 +39,5 @@
     <color name="text_save_icon_color">#918D8D</color>
     <color name="button_watch_trailer_color">#41DADADA</color>
     <color name="view_line_gray">#E3E0E0</color>
+    <color name="session_button_background">#777777</color>
 </resources>

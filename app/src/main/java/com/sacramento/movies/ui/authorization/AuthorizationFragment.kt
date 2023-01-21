@@ -91,7 +91,6 @@ private val mWebChromeClient: WebChromeClient by lazy {
 
 @SuppressLint("SetJavaScriptEnabled")
 private fun openWebPageForAuthorization(savedInstanceState: Bundle?) {
-
     viewModel.requestToken.observe(viewLifecycleOwner) { requestToken ->
         binding.webView.apply {
             webViewClient = mWebViewClient
