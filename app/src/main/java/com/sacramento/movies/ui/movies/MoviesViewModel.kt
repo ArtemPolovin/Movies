@@ -27,13 +27,13 @@ class MoviesViewModel @Inject constructor(
 
     fun getMovies(filterParams: MovieFilterParams): Flow<PagingData<MovieWithDetailsModel>> {
         return if (connectionHelper.isNetworkAvailable()) {
-            fetchMoviesWithDetailsFromService(filterParams)
+            fetchMoviesWithDetailsFromServer(filterParams)
         } else {
             fetchMoviesWithDetailsFromDB(filterParams)
         }
     }
 
-    private fun fetchMoviesWithDetailsFromService(filterParams: MovieFilterParams): Flow<PagingData<MovieWithDetailsModel>> {
+    private fun fetchMoviesWithDetailsFromServer(filterParams: MovieFilterParams): Flow<PagingData<MovieWithDetailsModel>> {
         val lastMovieResult = lastFetchedMovieResultFromServer
         if (lastMovieResult != null) return lastMovieResult
 

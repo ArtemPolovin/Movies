@@ -56,28 +56,15 @@
             app:destination="@id/authorizationFragment"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_settings_to_sessionSelectionFragment"
+            app:destination="@id/sessionSelectionFragment" />
     </fragment>
     <fragment
         android:id="@+id/welcome_screen"
         android:name="com.sacramento.movies.ui.welcome_screen.WelcomeScreenFragment"
         android:label="fragment_welcome_screen"
-        tools:layout="@layout/fragment_welcome_screen">
-       <!-- <action
-            android:id="@+id/action_welcomeScreenFragment_to_nav_login_fragment"
-            app:destination="@id/nav_login_fragment"
-            app:popUpTo="@id/welcome_screen"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_welcome_screen_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:popUpTo="@id/welcome_screen"
-            app:popUpToInclusive="true"/>
-        <action
-            android:id="@+id/action_welcome_screen_to_Movie_details"
-            app:destination="@id/Movie_details"
-            app:popUpTo="@id/welcome_screen"
-            app:popUpToInclusive="true"/>-->
-    </fragment>
+        tools:layout="@layout/fragment_welcome_screen"/>
     <fragment
         android:id="@+id/moviesFilterFragment"
         android:name="com.sacramento.movies.ui.movie_filter.MoviesFilterFragment"
@@ -169,5 +156,10 @@
             app:popUpToInclusive="true"
             />
     </fragment>
+    <fragment
+        android:id="@+id/sessionSelectionFragment"
+        android:name="com.sacramento.movies.ui.session.SessionSelectionFragment"
+        android:label="fragment_session_selection"
+        tools:layout="@layout/fragment_session_selection" />
 
 </navigation>

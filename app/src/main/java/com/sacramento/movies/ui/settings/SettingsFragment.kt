@@ -12,9 +12,12 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceScreen
 import com.sacramento.data.cache.SharedPreferencesLoginRememberMe
 import com.sacramento.movies.R
+import com.sacramento.movies.utils.LOG_IN_KEY
 import com.sacramento.movies.utils.LOG_OUT_KEY
+import com.sacramento.movies.utils.PREFERENCE_SCREEN_KEY
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -45,6 +48,7 @@ class SettingsFragment : PreferenceFragmentCompat(),Preference.OnPreferenceClick
                 R.color.settings_background_color
             )
         )
+        showLoginOrLogoutButton()
         return view
 
     }
@@ -54,9 +58,25 @@ class SettingsFragment : PreferenceFragmentCompat(),Preference.OnPreferenceClick
         super.onStart()
     }
 
+    private fun showLoginOrLogoutButton() {
+        val preferenceScreen = findPreference<PreferenceScreen>(PREFERENCE_SCREEN_KEY)
+        val loginPref =  findPreference<Preference>(LOG_IN_KEY)
+        val logoutPref =  findPreference<Preference>(LOG_OUT_KEY)
+
+        if (viewModel.isUserLoggedIn()) {
+            loginPref?.let { preferenceScreen?.removePreference(it) }
+            logoutPref?.let { preferenceScreen?.addPreference(it) }
+        }else{
+            logoutPref?.let { preferenceScreen?.removePreference(it) }
+            loginPref?.let { preferenceScreen?.addPreference(it) }
+        }
+    }
+
+
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
         when (preference.key) {
             LOG_OUT_KEY -> showDialog()
+            LOG_IN_KEY -> openLoginScreen()
         }
         return super.onPreferenceTreeClick(preference)
     }
@@ -81,8 +101,13 @@ class SettingsFragment : PreferenceFragmentCompat(),Preference.OnPreferenceClick
 
     private fun logOut() {
         viewModel.isLoggedOut.observe(viewLifecycleOwner) {
-            if (it) findNavController().navigate(R.id.action_settings_to_authorizationFragment)
+           // if (it) findNavController().navigate(R.id.action_settings_to_authorizationFragment)
+            if (it) findNavController().navigate(R.id.action_settings_to_sessionSelectionFragment)
         }
+    }
+
+    private fun openLoginScreen() {
+        findNavController().navigate(R.id.authorizationFragment)
     }
 
     override fun onPreferenceClick(preference: Preference): Boolean {

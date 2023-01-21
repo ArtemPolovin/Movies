@@ -4,7 +4,6 @@ import com.sacramento.domain.models.MovieModel
 import com.sacramento.domain.repositories.MovieDBRepository
 import com.sacramento.domain.repositories.MoviesRepository
 import com.sacramento.domain.usecases.auth.LoadSessionIdUseCase
-import kotlinx.coroutines.delay
 
 class GetWatchListUseCase(
     private val moviesRepository: MoviesRepository,

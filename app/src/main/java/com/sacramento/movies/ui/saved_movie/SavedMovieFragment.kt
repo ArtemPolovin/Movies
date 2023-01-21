@@ -96,6 +96,10 @@ class SavedMovieFragment : Fragment() {
     }
 
     private fun receiveSelectedItemsFromAdapter() {
+        if (!viewModel.isNetworkAvailable()) {
+            showDeleteMenuIcon.value = false
+            return
+        }
         savedMoviesAdapter.selectedElementsId.observe(viewLifecycleOwner) {
             if (it.isEmpty()) {
                 showDeleteMenuIcon.value = false

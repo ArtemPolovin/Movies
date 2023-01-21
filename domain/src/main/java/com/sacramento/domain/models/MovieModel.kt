@@ -4,6 +4,6 @@ data class MovieModel(
     val movieId: Int,
     val poster: String?,
     val title: String?,
-    val rating: Double?,
+    val rating: String?,
     val voteCount: Int?
 )
