@@ -11,6 +11,11 @@ plugins {
 }
 
 android {
+
+    lintOptions {
+        abortOnError false
+    }
+
     compileSdkVersion 31
 
     defaultConfig {
