@@ -30,12 +30,14 @@ android {
         manifestPlaceholders = [
                 appAuthRedirectScheme: "my.oauth"
         ]
+        signingConfig signingConfigs.debug
     }
 
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
+            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
