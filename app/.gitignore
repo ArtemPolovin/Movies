@@ -2,3 +2,5 @@
 google-services.json
 lint-baseline.xml
 /release
+*.apk
+*.aab
