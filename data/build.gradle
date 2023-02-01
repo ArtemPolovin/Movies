@@ -2,19 +2,16 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    id 'kotlin-android-extensions'
     id 'dagger.hilt.android.plugin'
+    id 'kotlin-parcelize'
 }
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "30.0.2"
+    compileSdkVersion 31
 
     defaultConfig {
         minSdkVersion 23
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion 31
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -22,7 +19,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -37,58 +34,56 @@ android {
 
 dependencies {
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
     implementation project(path: ':domain')
 
+    implementation Deps.kotlin_stdlib
+
     // core-ktx
-    implementation core.coreKtx
+    implementation Deps.coreKtx
 
     //appcompat
-    implementation appcompat.appcompat
+    implementation Deps.appcompat
 
     // Google material design
-    implementation material.googleMaterial
+    implementation Deps.googleMaterial
 
     //constraintLayout
-    implementation constraintlayout.constraintlayout
+    implementation Deps.constraintlayout
 
     //junit
-    testImplementation junit.junit
+    testImplementation Deps.junit
 
     //test.ext JUnit
-    androidTestImplementation testExt.junit
+    androidTestImplementation Deps.junit
 
     //espresso
-    androidTestImplementation espresso.espressoCore
+    androidTestImplementation Deps.espressoCore
 
     //Retrofit2
-    implementation retrofit2.retrofit
-    implementation retrofit2.converterGson
+    implementation Deps.retrofit
+    implementation Deps.converterGson
 
     // Dagger Hilt
-    implementation daggerHilt.daggerHilt
-    kapt daggerHilt.daggerHiltCompiler
+    implementation Deps.daggerHilt
+    kapt Deps.daggerHiltCompiler
 
-    def paging_version = "3.1.0-alpha01"
-    implementation "androidx.paging:paging-runtime-ktx:3.1.0-alpha01"
+    //Paging
+    implementation Deps.paging
 
     //Coroutines
-    implementation coroutines.coroutinesCore
-    implementation coroutines.coroutinesAndroid
+    implementation Deps.coroutinesCore
+    implementation Deps.coroutinesAndroid
 
     //Room
-    implementation room.roomRuntime
-    kapt room.roomCompiler
-    implementation room.roomKtx
-
-    // Jackson
-    implementation 'com.squareup.retrofit2:converter-jackson:2.9.0'
+    implementation Deps.roomRuntime
+    kapt Deps.roomCompiler
+    implementation Deps.roomKtx
 
     //SharedPrefManager
-    implementation 'androidx.preference:preference-ktx:1.1.1'
+    implementation Deps.pref_ktx
 
-
-
+    implementation Deps.retrofit_kotlin_coroutines_adapter
 
 
 

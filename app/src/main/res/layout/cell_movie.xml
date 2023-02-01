@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="movieWithDetailsBindingModel"
+            type="com.sacramento.domain.models.MovieWithDetailsModel" />
+    </data>
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/movie_cell_background"
-    android:layout_margin="8dp"
     android:foreground="@drawable/ripple_effect"
+    android:layout_margin="8dp"
     android:padding="13dp">
 
 
@@ -15,6 +23,7 @@
         android:layout_height="wrap_content"
         android:stepSize="0.1"
         android:numStars="10"
+        android:rating="@{movieWithDetailsBindingModel.rating}"
         style="?android:attr/ratingBarStyleSmall"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -23,7 +32,8 @@
         android:id="@+id/text_rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="5.8"
+        tools:text="5.8"
+        android:text="@{movieWithDetailsBindingModel.rating.toString()}"
         android:textColor="@color/text_movie_info_color"
         android:textSize="16sp"
         android:layout_marginStart="8dp"
@@ -36,7 +46,8 @@
         android:id="@+id/text_vote_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="(245)"
+        tools:text="(245)"
+        android:text="@{`(`+movieWithDetailsBindingModel.voteCount+`)`}"
         android:textColor="@color/vote_count_text_color"
         android:layout_marginStart="8dp"
         app:layout_constraintStart_toEndOf="@id/text_rating"
@@ -51,6 +62,7 @@
         android:layout_height="200dp"
         android:scaleType="fitXY"
         android:layout_marginTop="12dp"
+        app:loadImage="@{movieWithDetailsBindingModel.poster}"
         app:layout_constraintTop_toBottomOf="@+id/rating_bar_movie"
         app:layout_constraintStart_toStartOf="parent"/>
 
@@ -60,7 +72,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="13dp"
         android:fontFamily="@font/aclonica"
-        android:text="The Hateful Eight"
+        tools:text="The Hateful Eight"
+        android:text="@{movieWithDetailsBindingModel.movieName}"
         android:textColor="@color/text_movie_info_color"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -80,7 +93,8 @@
         android:id="@+id/text_genre"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="comedy, triller, drama, criminal"
+        tools:text="comedy, triller, drama, criminal"
+        android:text="@{movieWithDetailsBindingModel.genres}"
         android:textColor="@color/text_movie_info_color"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -100,7 +114,8 @@
         android:id="@+id/text_popularity"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="245.243"
+        tools:text="245.243"
+        android:text="@{movieWithDetailsBindingModel.popularityScore}"
         android:textColor="@color/text_movie_info_color"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -120,7 +135,8 @@
         android:id="@+id/text_release_date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="2021-06-24"
+        tools:text="2021-06-24"
+        android:text="@{movieWithDetailsBindingModel.releaseData}"
         android:layout_marginStart="8dp"
         android:textColor="@color/text_movie_info_color"
         android:textStyle="bold"
@@ -128,9 +144,6 @@
         app:layout_constraintStart_toEndOf="@+id/text_release_date_header"
         app:layout_constraintBottom_toBottomOf="@+id/text_release_date_header" />
 
-
-
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

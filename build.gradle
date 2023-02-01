@@ -6,11 +6,13 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.2'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "com.google.dagger:hilt-android-gradle-plugin:2.33-beta"
-        classpath "org.jetbrains.kotlin:kotlin-serialization:1.4.32"
-        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.3.5"
+        classpath 'com.android.tools.build:gradle:7.3.0'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.21'
+        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.40.1'
+        classpath "org.jetbrains.kotlin:kotlin-serialization:1.6.21"
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.5.2"
+        classpath 'com.google.gms:google-services:4.3.14'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.2'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -27,102 +29,5 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-ext.versions = [
-        coreKtx          : "1.3.2",
-        appcompat        : "1.2.0",
-        material         : "1.4.0",
-        constraintlayout : "2.0.4",
-        junit            : "4.12",
-        junitTest        : "1.1.2",
-        espressoCore     : "3.3.0",
-        navFragment      : "2.2.2",
-        recyclerView     : "1.2.1",
-        retrofit         : "2.9.0",
-        //   retrofitRx      : "2.3.0",
-        //  rxjava2         : "2.2.12",
-        // rxjava2Android  : "2.1.1",
-        daggerHilt       : "2.33-beta",
-        glide            : "4.12.0",
-        serializationJson: "1.2.1",
-        coroutines       : "1.4.1",
-        room             : "2.3.0",
-        gson            : "2.8.6"
-]
-
-
-ext.core = [
-        coreKtx: "androidx.core:core-ktx:$versions.coreKtx"
-]
-
-ext.appcompat = [
-        appcompat: "androidx.appcompat:appcompat:$versions.appcompat"
-]
-
-ext.material = [
-        googleMaterial: "com.google.android.material:material:$versions.material"
-]
-
-ext.constraintlayout = [
-        constraintlayout: "androidx.constraintlayout:constraintlayout:$versions.constraintlayout"
-]
-
-ext.junit = [
-        junit: "junit:junit:$versions.junit"
-]
-
-ext.testExt = [
-        junit: "androidx.test.ext:junit:$versions.junitTest"
-]
-
-ext.espresso = [
-        espressoCore: "androidx.test.espresso:espresso-core:$versions.espressoCore"
-]
-
-ext.navigationFragment = [
-        navFragment    : "androidx.navigation:navigation-fragment-ktx:$versions.navFragment",
-        navigationUi   : "androidx.navigation:navigation-ui:$versions.navFragment",
-        navigationUiKtx: "androidx.navigation:navigation-ui-ktx:$versions.navFragment"
-]
-
-ext.recyclerView = [
-        recyclerView: "androidx.recyclerview:recyclerview:$versions.recyclerView"
-]
-
-ext.retrofit2 = [
-        retrofit     : "com.squareup.retrofit2:retrofit:$versions.retrofit",
-        converterGson: "com.squareup.retrofit2:converter-gson:$versions.retrofit"
-]
-
-ext.daggerHilt = [
-        daggerHilt        : "com.google.dagger:hilt-android:$versions.daggerHilt",
-        daggerHiltCompiler: "com.google.dagger:hilt-compiler:$versions.daggerHilt"
-]
-
-ext.recyclerView = [
-        recyclerView: "androidx.recyclerview:recyclerview:$versions.recyclerView"
-]
-
-ext.glide = [
-        glide: "com.github.bumptech.glide:glide:$versions.glide"
-]
-
-ext.serializationJson = [
-        serialization: "org.jetbrains.kotlinx:kotlinx-serialization-json:$versions.serializationJson"
-]
-
-ext.coroutines = [
-        coroutinesCore   : "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines",
-        coroutinesAndroid: "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutines"
-]
-
-ext.room = [
-        roomRuntime : "androidx.room:room-runtime:$versions.room",
-        roomCompiler: "androidx.room:room-compiler:$versions.room",
-        roomKtx:       "androidx.room:room-ktx:$versions.room"
-]
-
-ext.gson = [
-        gson: "com.google.code.gson:gson:$versions.gson"
-]
 
 

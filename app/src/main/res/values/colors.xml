@@ -36,4 +36,8 @@
     <color name="submit_button_color">#62A037</color>
     <color name="vote_count_text_color">#94AFAEAE</color>
     <color name="vertical_cell_title_background_color">#7EC0C0C0</color>
+    <color name="text_save_icon_color">#918D8D</color>
+    <color name="button_watch_trailer_color">#41DADADA</color>
+    <color name="view_line_gray">#E3E0E0</color>
+    <color name="session_button_background">#777777</color>
 </resources>

@@ -25,6 +25,14 @@
         app:itemIconTint="@color/backgrount_bottom_navigation_selector"
         app:itemTextColor="@color/backgrount_bottom_navigation_selector"
         app:menu="@menu/bottom_nav_menu"
+        app:layout_constraintBottom_toTopOf="@id/view_line"/>
+
+    <View
+        android:id="@+id/view_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/view_line_gray"
         app:layout_constraintBottom_toBottomOf="parent"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:padding="8dp">
 
     <androidx.cardview.widget.CardView
@@ -32,7 +33,7 @@
         android:id="@+id/text_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Popular"
+        tools:text="Popular"
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_marginTop="8dp"
