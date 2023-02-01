@@ -1,5 +1,4 @@
 /build
 google-services.json
 lint-baseline.xml
-/release/
-debug
+/release
