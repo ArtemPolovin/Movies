@@ -27,6 +27,7 @@
 -keep class com.sacramento.domain.models.LogoutRequestBodyModel {*;}
 -keep class com.sacramento.domain.models.SaveToWatchListModel {*;}
 -keep class com.sacramento.domain.models.SaveToWatchListResponseModel {*;}
+-keep class com.sacramento.data.utils.MovieFilterParams {*;}
 
 # Kotlin serialization looks up the generated serializer classes through a function on companion
 # objects. The companions are looked up reflectively so we need to explicitly keep these functions.
