@@ -7,20 +7,20 @@
     <string name="text_header_overview">Overview:</string>
     <string name="text_home_pahe_url">Homepage URL:</string>
     <string name="button_retry">Retry</string>
-    <string name="text_erro">Some error has occured</string>
+    <string name="text_erro">Some error has occurred</string>
     <string name="retry">Retry</string>
     <string name="menu_title_save_movie">Save movie</string>
     <string name="title_home">Home</string>
     <string name="title_watch_list">Watch list</string>
     <string name="rating_header_text">Rating:</string>
-    <string name="menu_title_delete_movie">Delete moive</string>
+    <string name="menu_title_delete_movie">Delete movie</string>
     <string name="text_header_login">Login</string>
     <string name="text_hint_user_name">user name</string>
     <string name="text_hint_password">password</string>
     <string name="text_btn_login">login</string>
     <string name="text_new_user">New user?</string>
     <string name="text_signup">Sign Up on Web page</string>
-    <string name="text_log_out">Log out</string>
+    <string name="text_log_out">LOG OUT</string>
     <string name="text_remember_me">Remember me</string>
     <string name="title_movie_explore">Explore</string>
     <!-- Preference Titles -->
@@ -60,6 +60,7 @@
     <string name="more_videos_text">More Videos</string>
     <string name="char_percent">%</string>
     <string name="check_internet_connection">Check internet connection</string>
-    <string name="log_in">Log in</string>
+    <string name="log_in">LOG IN</string>
     <string name="guest">guest</string>
+    <string name="language">LANGUAGE</string>
 </resources>

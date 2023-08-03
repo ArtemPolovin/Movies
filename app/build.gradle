@@ -12,9 +12,6 @@ plugins {
 
 android {
 
-    lintOptions {
-        abortOnError false
-    }
 
     compileSdkVersion 31
 
@@ -56,7 +53,9 @@ android {
 
     lint {
         baseline = file("lint-baseline.xml")
+        abortOnError false
     }
+    namespace 'com.sacramento.movies'
 
 }
 
@@ -82,6 +81,10 @@ dependencies {
 
     implementation Deps.pref_ktx
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'android.arch.navigation:navigation-fragment-ktx:1.0.0'
+    implementation 'android.arch.navigation:navigation-ui-ktx:1.0.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
 
     //junit
     testImplementation Deps.junit

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">चलचित्र</string>
+    <string name="hello_blank_fragment">हैलो खाली टुकड़ा</string>
+    <string name="text_genre_header">शैली:</string>
+    <string name="text_popularity_header">लोकप्रियता:</string>
+    <string name="text_release_date_header">रिलीज़ की तारीख:</string>
+    <string name="text_header_overview">अवलोकन:</string>
+    <string name="text_home_pahe_url">होम पेज यूआरएल:</string>
+    <string name="button_retry">पुन: प्रयास करें</string>
+    <string name="text_erro">कुछ त्रुटि हुई है</string>
+    <string name="retry">पुन: प्रयास करें</string>
+    <string name="menu_title_save_movie">मूवी सेव करें</string>
+    <string name="title_home">घर</string>
+    <string name="title_watch_list">देखने की सूची</string>
+    <string name="rating_header_text">रेटिंग:</string>
+    <string name="menu_title_delete_movie">मूवी हटाएं</string>
+    <string name="text_header_login">लॉग इन करें</string>
+    <string name="text_hint_user_name">उपयोगकर्ता नाम</string>
+    <string name="text_hint_password">पासवर्ड</string>
+    <string name="text_btn_login">लॉग इन करें</string>
+    <string name="text_new_user">नए उपयोगकर्ता?</string>
+    <string name="text_signup">वेब पेज पर साइन अप करें</string>
+    <string name="text_log_out">लॉग आउट</string>
+    <string name="text_remember_me">पहचाना की नहीं</string>
+    <string name="title_movie_explore">अन्वेषण करना</string>
+    <!-- Preference Titles -->
+    <string name="messages_header">संदेशों</string>
+    <string name="sync_header">साथ-साथ करना</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">आपका हस्ताक्षर</string>
+    <string name="reply_title">डिफ़ॉल्ट उत्तर क्रिया</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">समय-समय पर ईमेल सिंक करें</string>
+    <string name="attachment_title">इनकमिंग अटैचमेंट डाउनलोड करें</string>
+    <string name="attachment_summary_on">इनकमिंग ईमेल के लिए स्वचालित रूप से अटैचमेंट डाउनलोड करें
+    </string>
+    <string name="attachment_summary_off">मैन्युअल रूप से अनुरोध किए जाने पर ही अटैचमेंट डाउनलोड करें</string>
+    <string name="title_movie_settings">समायोजन</string>
+    <string name="text_log_out_question">क्या आप लॉग आउट करना चाहते हैं?</string>
+    <string name="text_button_yes">हाँ</string>
+    <string name="text_button_no">नहीं</string>
+    <string name="filter_menu_title_string">फ़िल्टर</string>
+    <string name="check_box_rate_text">न्यूनतम रेटिंग संख्या</string>
+    <string name="filter_text_title">फ़िल्टर</string>
+    <string name="button_submit_text">जमा करना</string>
+    <string name="check_box_release_year_text">विशिष्ट रिलीज वर्ष</string>
+    <string name="release_year_edit_text_hint">2005</string>
+    <string name="check_box_genres_text">शैली</string>
+    <string name="check_box_popularity_text">लोकप्रियता के आधार पर छाँटें</string>
+    <string name="count_of_poster">%s / %s</string>
+    <string name="similar_movies_header">इसी तरह की फिल्में</string>
+    <string name="recommendations_movies_header">आप इसे भी पसंद कर सकते हैं</string>
+    <string name="save_to_watch_list">देखने की सूची में सहेजें</string>
+    <string name="saved_in_watch_list">निगरानी सूची में सहेजा गया</string>
+    <string name="search_view_hint">फिल्में खोजें</string>
+    <string name="button_watch_trailer_text">ट्रेलर देखें</string>
+    <string name="explore_fragment_title">अन्वेषण करना</string>
+    <string name="more_videos_text">ज्यादा वीडियो</string>
+    <string name="char_percent">%</string>
+    <string name="check_internet_connection">इंटरनेट कनेक्शन की जाँच करें</string>
+    <string name="log_in">लॉग इन करें</string>
+    <string name="guest">अतिथि</string>
+    <string name="language">भाषा</string>
+</resources>

@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/moviesFragment"
         android:name="com.sacramento.movies.ui.movies.MoviesFragment"
-        android:label="Home"
+        android:label="@string/app_name"
         tools:layout="@layout/fragment_movies">
         <action
             android:id="@+id/action_moviesFragment_to_movieDetailsFragment"
@@ -28,7 +28,7 @@
     <fragment
         android:id="@+id/saved_movies"
         android:name="com.sacramento.movies.ui.saved_movie.SavedMovieFragment"
-        android:label="Watch list"
+        android:label="@string/title_watch_list"
         tools:layout="@layout/fragment_saved_movie">
         <action
             android:id="@+id/action_saved_movies_to_movieDetailsFragment"
@@ -50,7 +50,7 @@
     <fragment
         android:id="@+id/settings"
         android:name="com.sacramento.movies.ui.settings.SettingsFragment"
-        android:label="Settings">
+        android:label="@string/title_movie_settings">
         <action
             android:id="@+id/action_settings_to_authorizationFragment"
             app:destination="@id/authorizationFragment"
@@ -83,7 +83,7 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.sacramento.movies.ui.home.HomeFragment"
-        android:label="fragment_home"
+        android:label="@string/title_home"
         tools:layout="@layout/fragment_home" >
 
         <action
@@ -98,7 +98,7 @@
     <fragment
         android:id="@+id/explore_fragment"
         android:name="com.sacramento.movies.ui.explore.ExploreFragment"
-        android:label="fragment_explore"
+        android:label="@string/title_movie_explore"
         tools:layout="@layout/fragment_explore" >
         <action
             android:id="@+id/action_explore_fragment_to_moviesFragment"

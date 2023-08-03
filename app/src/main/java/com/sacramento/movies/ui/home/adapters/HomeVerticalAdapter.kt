@@ -24,9 +24,8 @@ class HomeVerticalAdapter :
     val clickedMovieId: LiveData<Int> get() = _clickedMovieId
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VerticalRVViewHolder {
-        val binding: CellHomeVerticalBinding = DataBindingUtil.inflate(
+        val binding = CellHomeVerticalBinding.inflate(
             LayoutInflater.from(parent.context),
-            R.layout.cell_home_vertical,
             parent,
             false
         )
@@ -41,18 +40,15 @@ class HomeVerticalAdapter :
         holder.getMovieId()
     }
 
-    inner class VerticalRVViewHolder(binding: CellHomeVerticalBinding) :
+    inner class VerticalRVViewHolder(val binding: CellHomeVerticalBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
-        private val sortedMoviesByGenreBinding = binding
         private val homeHorizontalAdapter = HomeHorizontalAdapter()
 
         fun bind(rvVerticalModel: MoviesSortedByGenreContainerModel) {
-
-            sortedMoviesByGenreBinding.sortedByGenreMovieBindingModel = rvVerticalModel
+            binding.textGenre.text = rvVerticalModel.genreName
 
             itemView.apply {
-                sortedMoviesByGenreBinding.rvHorizontal.apply {
+                binding.rvHorizontal.apply {
                     adapter = homeHorizontalAdapter
                     layoutManager =
                         LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -62,7 +58,7 @@ class HomeVerticalAdapter :
         }
 
         fun onClickItem(rvVerticalModel: MoviesSortedByGenreContainerModel) {
-            sortedMoviesByGenreBinding.titleContainer.setOnClickListener {
+            binding.titleContainer.setOnClickListener {
                 _genreData.value = rvVerticalModel
             }
         }

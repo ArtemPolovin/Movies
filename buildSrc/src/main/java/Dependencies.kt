@@ -3,7 +3,7 @@ object Versions {
     const val coreKtx = "1.3.2"
     const val appcompat = "1.2.0"
     const val material = "1.4.0"
-    const val constraintlayout = "2.0.4"
+    const val constraintlayout = "2.1.4"
     const val junit = "4.12"
     const val junitTest = "1.1.2"
     const val espressoCore = "3.3.0"

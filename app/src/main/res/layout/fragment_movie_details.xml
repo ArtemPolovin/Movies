@@ -82,6 +82,7 @@
                         android:layout_height="40dp"
                         android:clickable="true"
                         android:src="@drawable/ic_save"
+                        android:gravity= "center"
                         app:layout_constraintEnd_toEndOf="@+id/text_save_movie_icon_text"
                         app:layout_constraintStart_toStartOf="@id/text_save_movie_icon_text"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -113,7 +114,6 @@
                         android:id="@+id/btn_watch_trailer"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
-                        android:layout_marginEnd="30dp"
                         android:background="@drawable/background_button_watch_trailer"
                         android:text="@string/button_watch_trailer_text"
                         android:textSize="12sp"

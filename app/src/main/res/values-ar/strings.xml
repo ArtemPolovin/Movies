@@ -1,0 +1,66 @@
+<resources>
+    <string name="app_name">Movies</string>
+    <string name="hello_blank_fragment">مرحبا جزء فارغ</string>
+    <string name="text_genre_header">النوع:</string>
+    <string name="text_popularity_header">شعبية:</string>
+    <string name="text_release_date_header">تاريخ الافراج عنه:</string>
+    <string name="text_header_overview">ملخص:</string>
+    <string name="text_home_pahe_url">رابط الصفحة الرئيسية:</string>
+    <string name="button_retry">أعد المحاولة</string>
+    <string name="text_erro">حدث خطأ ما</string>
+    <string name="retry">أعد المحاولة</string>
+    <string name="menu_title_save_movie">حفظ الفيلم</string>
+    <string name="title_home">بيت</string>
+    <string name="title_watch_list">قائمة المراقبة</string>
+    <string name="rating_header_text">تقييم:</string>
+    <string name="menu_title_delete_movie">حذف الفيلم</string>
+    <string name="text_header_login">تسجيل الدخول</string>
+    <string name="text_hint_user_name">اسم المستخدم</string>
+    <string name="text_hint_password">كلمة المرور</string>
+    <string name="text_btn_login">تسجيل الدخول</string>
+    <string name="text_new_user">مستخدم جديد؟</string>
+    <string name="text_signup">قم بالتسجيل على صفحة الويب</string>
+    <string name="text_log_out">تسجيل خروج</string>
+    <string name="text_remember_me">تذكرنى</string>
+    <string name="title_movie_explore">يستكشف</string>
+    <!-- Preference Titles -->
+    <string name="messages_header">رسائل</string>
+    <string name="sync_header">مزامنة</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">توقيعك</string>
+    <string name="reply_title">إجراء الرد الافتراضي</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">مزامنة البريد الإلكتروني بشكل دوري</string>
+    <string name="attachment_title">تحميل المرفقات الواردة</string>
+    <string name="attachment_summary_on">تنزيل المرفقات تلقائيًا لرسائل البريد الإلكتروني الواردة
+    </string>
+    <string name="attachment_summary_off">قم بتنزيل المرفقات فقط عند الطلب يدويًا</string>
+    <string name="title_movie_settings">إعدادات</string>
+    <string name="text_log_out_question">هل أنت متأكد أنك تريد تسجيل الخروج؟</string>
+    <string name="text_button_yes">نعم</string>
+    <string name="text_button_no">لا</string>
+    <string name="filter_menu_title_string">منقي</string>
+    <string name="check_box_rate_text">رقم التصنيف الأدنى</string>
+    <string name="filter_text_title">منقي</string>
+    <string name="button_submit_text">يُقدِّم</string>
+    <string name="check_box_release_year_text">سنة الإصدار المحددة</string>
+    <string name="release_year_edit_text_hint">e.g 2005</string>
+    <string name="check_box_genres_text">النوع</string>
+    <string name="check_box_popularity_text">الترتيب حسب الشعبية</string>
+    <string name="count_of_poster">%s / %s</string>
+    <string name="similar_movies_header">أفلام مماثلة</string>
+    <string name="recommendations_movies_header">قد يعجبك ايضا</string>
+    <string name="save_to_watch_list">حفظ في قائمة المراقبة</string>
+    <string name="saved_in_watch_list">تم الحفظ في قائمة المراقبة</string>
+    <string name="search_view_hint">ابحث عن الأفلام</string>
+    <string name="button_watch_trailer_text">مشاهدة اعلان</string>
+    <string name="explore_fragment_title">يستكشف</string>
+    <string name="more_videos_text">فيديوهات اكثر</string>
+    <string name="char_percent">%</string>
+    <string name="check_internet_connection">تحقق من اتصال الإنترنت</string>
+    <string name="log_in">تسجيل الدخول</string>
+    <string name="guest">ضيف</string>
+    <string name="language">لغة</string>
+</resources>

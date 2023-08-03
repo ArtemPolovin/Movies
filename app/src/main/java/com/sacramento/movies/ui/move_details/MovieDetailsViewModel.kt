@@ -55,15 +55,6 @@ class MovieDetailsViewModel @Inject constructor(
     private val _isGuestMovieSaved = MutableLiveData<Boolean>().apply { value = false }
     val isGuestMovieSaved: LiveData<Boolean> get() = _isGuestMovieSaved
 
-    /*    fun saveOrDeleteMovieFromWatchList(saveToWatchListModel: SaveToWatchListModel) {
-           viewModelScope.launch {
-               saveOrDeleteMovieFromWatchListUseCase.execute(
-                   saveToWatchListModel,
-                   loadSessionIdUseCase.execute()
-               )
-           }
-       }*/
-
     fun saveOrDeleteMovieFromWatchList(saveToWatchListModel: SaveToWatchListModel) {
         viewModelScope.launch {
             saveOrDeleteMovieFromWatchListUseCase.execute(
@@ -117,22 +108,6 @@ class MovieDetailsViewModel @Inject constructor(
 
     }
 
-    /*  fun saveMovie(mediaType: String, movieId: Int, isSavedToWatchList: Boolean) {
-          viewModelScope.launch {
-              if (loadSessionIdUseCase.execute().isNotBlank()) {
-                  saveOrDeleteMovieFromWatchList(
-                      SaveToWatchListModel(
-                          mediaType,
-                          movieId,
-                          isSavedToWatchList
-                      )
-                  )
-              } else {
-                  insertOrDeleteGuestMovieFromDb(movieId)
-              }
-          }
-      }*/
-
     fun insertMovieToGuestWatchListDb(movieModel: MovieWithDetailsModel) {
         viewModelScope.launch {
             insertGuestSavedMovieToDbUseCase.execute(movieModel)
@@ -147,7 +122,6 @@ class MovieDetailsViewModel @Inject constructor(
     }
 
     fun checkIfGuestMovieSaved(movieId: Int) {
-        // TODO: CREATE CHECKING IF GUEST MOVIE SAVED TO DB 
         viewModelScope.launch {
             _isGuestMovieSaved.value = isGuestMovieSavedToDbUseCase.execute(movieId)
         }

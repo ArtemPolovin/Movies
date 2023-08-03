@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Movies</string>
+    <string name="hello_blank_fragment">Hola fragmento en blanco</string>
+    <string name="text_genre_header">Género:</string>
+    <string name="text_popularity_header">Popularidad:</string>
+    <string name="text_release_date_header">Fecha de lanzamiento:</string>
+    <string name="text_header_overview">Descripción general:</string>
+    <string name="text_home_pahe_url">URL de la Pagina Principal:</string>
+    <string name="button_retry">Rever</string>
+    <string name="text_erro">Ha ocurrido algún error</string>
+    <string name="retry">Rever</string>
+    <string name="menu_title_save_movie">Guardar la película</string>
+    <string name="title_home">Hogar</string>
+    <string name="title_watch_list">lista de observación</string>
+    <string name="rating_header_text">Clasificación:</string>
+    <string name="menu_title_delete_movie">Eliminar película</string>
+    <string name="text_header_login">Acceso</string>
+    <string name="text_hint_user_name">nombre de usuario</string>
+    <string name="text_hint_password">contraseña</string>
+    <string name="text_btn_login">acceso</string>
+    <string name="text_new_user">¿Nueva usuaria?</string>
+    <string name="text_signup">Regístrese en la página web</string>
+    <string name="text_log_out">Cerrar sesión</string>
+    <string name="text_remember_me">Acuérdate de mí</string>
+    <string name="title_movie_explore">Explorar</string>
+    <!-- Preference Titles -->
+    <string name="messages_header">Mensajes</string>
+    <string name="sync_header">sincronizar</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Su firma</string>
+    <string name="reply_title">Acción de respuesta predeterminada</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sincroniza el correo electrónico periódicamente</string>
+    <string name="attachment_title">Descargar archivos adjuntos entrantes</string>
+    <string name="attachment_summary_on">Descargar automáticamente archivos adjuntos para correos electrónicos entrantes
+    </string>
+    <string name="attachment_summary_off">Solo descargue archivos adjuntos cuando se solicite manualmente</string>
+    <string name="title_movie_settings">Ajustes</string>
+    <string name="text_log_out_question">¿Estás segura de que quieres cerrar sesión?</string>
+    <string name="text_button_yes">Sí</string>
+    <string name="text_button_no">No</string>
+    <string name="filter_menu_title_string">Filtrar</string>
+    <string name="check_box_rate_text">Número mínimo de calificación</string>
+    <string name="filter_text_title">Filtrar</string>
+    <string name="button_submit_text">Entregar</string>
+    <string name="check_box_release_year_text">Año de lanzamiento específico</string>
+    <string name="release_year_edit_text_hint">2005</string>
+    <string name="check_box_genres_text">Género</string>
+    <string name="check_box_popularity_text">Ordenar por popularidad</string>
+    <string name="count_of_poster">%s / %s</string>
+    <string name="similar_movies_header">Películas similares</string>
+    <string name="recommendations_movies_header">También podría gustarte</string>
+    <string name="save_to_watch_list">Guardar en la lista de observación</string>
+    <string name="saved_in_watch_list">Guardado en la lista de observación</string>
+    <string name="search_view_hint">Buscar películas</string>
+    <string name="button_watch_trailer_text">Ver el trailer</string>
+    <string name="explore_fragment_title">Explorar</string>
+    <string name="more_videos_text">Más videos</string>
+    <string name="char_percent">%</string>
+    <string name="check_internet_connection">Comprobar la conexión a Internet</string>
+    <string name="log_in">Acceso</string>
+    <string name="guest">invitada` </string>
+    <string name="language">idioma</string>
+</resources>

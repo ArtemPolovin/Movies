@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Фильмы</string>
+    <string name="hello_blank_fragment">Привет бланк фрагмент</string>
+    <string name="text_genre_header">Жанр:</string>
+    <string name="text_popularity_header">Популярные:</string>
+    <string name="text_release_date_header">Дата выхода:</string>
+    <string name="text_header_overview">Описание:</string>
+    <string name="text_home_pahe_url">Домашняя страница URL:</string>
+    <string name="button_retry">Перезагрузить</string>
+    <string name="text_erro">Произашла ошибка</string>
+    <string name="retry">Перезагрузить</string>
+    <string name="menu_title_save_movie">Сохранить фильм</string>
+    <string name="title_home">Дом</string>
+    <string name="title_watch_list">Список просмотров</string>
+    <string name="rating_header_text">Рейтинг:</string>
+    <string name="menu_title_delete_movie">Удалить фильм</string>
+    <string name="text_header_login">Логин</string>
+    <string name="text_hint_user_name">имя пользователя</string>
+    <string name="text_hint_password">пароль</string>
+    <string name="text_btn_login">логин</string>
+    <string name="text_new_user">Новый пользователь?</string>
+    <string name="text_signup">Зарегестрироваться на вэб странице</string>
+    <string name="text_log_out">Выйти</string>
+    <string name="text_remember_me">Запомнить</string>
+    <string name="title_movie_explore">Поиск</string>
+    <!-- Preference Titles -->
+    <string name="messages_header">Сообщение</string>
+    <string name="sync_header">Синхронизировать</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Ваша подпись</string>
+    <string name="reply_title">Действие ответа по умолчанию</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Периодически синхронизируйте электронную почту</string>
+    <string name="attachment_title">Загружать входящие вложения</string>
+    <string name="attachment_summary_on">Автоматически загружать вложения для входящих писем
+    </string>
+    <string name="attachment_summary_off">Загружать вложения только по запросу вручную</string>
+    <string name="title_movie_settings">Настройки</string>
+    <string name="text_log_out_question">Вы действительно хотите выйти?</string>
+    <string name="text_button_yes">Да</string>
+    <string name="text_button_no">Нет</string>
+    <string name="filter_menu_title_string">Фильтр</string>
+    <string name="check_box_rate_text">Минимальный рейтинг</string>
+    <string name="filter_text_title">Фильтр</string>
+    <string name="button_submit_text">Отправить</string>
+    <string name="check_box_release_year_text">Конкретный год выпуска</string>
+    <string name="release_year_edit_text_hint">пример 2005</string>
+    <string name="check_box_genres_text">Жанр</string>
+    <string name="check_box_popularity_text">Сортировать по популярности</string>
+    <string name="count_of_poster">%s / %s</string>
+    <string name="similar_movies_header">Похожие фильмы</string>
+    <string name="recommendations_movies_header">Вам также может понравиться</string>
+    <string name="save_to_watch_list">Сохранить в список просмотра</string>
+    <string name="saved_in_watch_list">Удалить из списка просмотра</string>
+    <string name="search_view_hint">Найти фильм</string>
+    <string name="button_watch_trailer_text">Смотреть трейлер</string>
+    <string name="explore_fragment_title">Поиск</string>
+    <string name="more_videos_text">Ещё видео</string>
+    <string name="char_percent">%</string>
+    <string name="check_internet_connection">Проверьте интернет-соединение</string>
+    <string name="log_in">Войти</string>
+    <string name="guest">гость</string>
+    <string name="language">Язык</string>
+</resources>
