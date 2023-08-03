@@ -9,9 +9,11 @@ import com.sacramento.data.db.tables.movie_tables.MovieEntity
 import com.sacramento.data.db.tables.movie_tables.MovieGenreCrossRef
 import com.sacramento.data.utils.DEFAULT_ENGLISH_LANGUAGE_VALUE
 import com.sacramento.data.utils.POSTER_BASE_URL
+import com.sacramento.data.utils.roundFloat
 import com.sacramento.domain.models.MovieModel
 import com.sacramento.domain.models.MovieWithDetailsModel
 import com.sacramento.domain.models.SavedMovie
+import kotlin.math.roundToInt
 
 class MoviesEntityMapper(
     private val settingsDataCache: SettingsDataCache
@@ -25,7 +27,8 @@ class MoviesEntityMapper(
             releaseData = movie.release_date,
             popularityScore = movie.popularity,
             movieName = movie.title,
-            rating = String.format("%.1f", movie.vote_average).toFloat(),
+            //rating = String.format("%.1f", movie.vote_average).toFloat(),
+            rating = roundFloat(movie.vote_average),
             poster = movie.poster_path,
             overview = movie.overview,
             backdropPoster = movie.backdrop_path,

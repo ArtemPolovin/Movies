@@ -3,10 +3,12 @@ package com.sacramento.movies.ui.movies.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.sacramento.domain.models.MovieWithDetailsModel
 import com.sacramento.movies.R
 import com.sacramento.movies.databinding.CellMovieBinding
@@ -23,9 +25,8 @@ class MoviesWithDetailsAdapter :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesViewHolder {
-        val binding: CellMovieBinding = DataBindingUtil.inflate(
+        val binding =  CellMovieBinding.inflate(
             LayoutInflater.from(parent.context),
-            R.layout.cell_movie,
             parent,
             false
         )
@@ -55,7 +56,21 @@ class MoviesWithDetailsAdapter :
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(movieWithDetailsModel: MovieWithDetailsModel) {
-            binding.movieWithDetailsBindingModel = movieWithDetailsModel
+            binding.apply {
+                ratingBarMovie.rating = movieWithDetailsModel.rating ?: 0f
+                textRating.text = movieWithDetailsModel.rating.toString()
+                textVoteCount.text = "(${movieWithDetailsModel.voteCount})"
+                setupImage(movieWithDetailsModel.poster?: "",imageMoviePoster)
+                textMovieName.text = movieWithDetailsModel.movieName
+                textGenre.text = movieWithDetailsModel.genres
+                textPopularity.text = movieWithDetailsModel.popularityScore
+                textReleaseDate.text = movieWithDetailsModel.releaseData
+            }
+        }
+        private fun setupImage(imageUrl: String, image: ImageView) {
+            Glide.with(context)
+                .load(imageUrl)
+                .into(image)
         }
 
         fun onClick(movieWithDetailsModel: MovieWithDetailsModel) {

@@ -10,18 +10,18 @@
         app:layout="@layout/cell_custom_setting"
         app:key="language"
         app:summary="%s"
-        app:title="LANGUAGE" />
+        app:title="@string/language"/>
 
     <Preference
         app:key="logOut"
         app:layout="@layout/cell_custom_setting"
-        app:title="LOG OUT">
+        app:title="@string/text_log_out">
     </Preference>
 
     <Preference
         app:key="login"
         app:layout="@layout/cell_custom_setting"
-        app:title="LOG IN">
+        app:title="@string/log_in">
     </Preference>
 
 

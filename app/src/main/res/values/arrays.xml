@@ -3,11 +3,38 @@
     <string-array name="language_entries">
         <item>English</item>
         <item>Russian</item>
+        <item>Spanish</item>
+        <item>Mandarin</item>
+        <item>Hindi</item>
+        <item>French</item>
+        <item>Arabic</item>
+        <item>Bengali</item>
+        <item>Portuguese</item>
+        <item>Indonesian</item>
+        <item>Urdu</item>
+        <item>Japanese</item>
+        <item>German</item>
+        <item>Turkish</item>
+        <item>Korean</item>
+
     </string-array>
 
     <string-array name="language_values">
-        <item>en-US</item>
-        <item>ru-RU</item>
+        <item>en</item>
+        <item>ru</item>
+        <item>es</item>
+        <item>zh</item>
+        <item>hi</item>
+        <item>fr</item>
+        <item>ar</item>
+        <item>bn</item>
+        <item>pt</item>
+        <item>id</item>
+        <item>ur</item>
+        <item>ja</item>
+        <item>de</item>
+        <item>tr</item>
+        <item>ko</item>
     </string-array>
 
     <string-array name="rating">

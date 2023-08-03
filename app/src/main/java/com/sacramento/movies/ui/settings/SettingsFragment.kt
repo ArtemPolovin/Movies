@@ -1,6 +1,8 @@
 package com.sacramento.movies.ui.settings
 
 import android.app.Dialog
+import android.content.Context
+import android.content.res.Configuration
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,19 +12,22 @@ import android.widget.Button
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
 import com.sacramento.data.cache.SharedPreferencesLoginRememberMe
 import com.sacramento.movies.R
+import com.sacramento.movies.utils.LANGUAGE_KEY
 import com.sacramento.movies.utils.LOG_IN_KEY
 import com.sacramento.movies.utils.LOG_OUT_KEY
 import com.sacramento.movies.utils.PREFERENCE_SCREEN_KEY
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SettingsFragment : PreferenceFragmentCompat(),Preference.OnPreferenceClickListener {
+class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener {
 
     @Inject
     lateinit var sharedPreferencesLoginRememberMe: SharedPreferencesLoginRememberMe
@@ -58,17 +63,37 @@ class SettingsFragment : PreferenceFragmentCompat(),Preference.OnPreferenceClick
         super.onStart()
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        changeLanguage()
+    }
+
     private fun showLoginOrLogoutButton() {
         val preferenceScreen = findPreference<PreferenceScreen>(PREFERENCE_SCREEN_KEY)
-        val loginPref =  findPreference<Preference>(LOG_IN_KEY)
-        val logoutPref =  findPreference<Preference>(LOG_OUT_KEY)
+        val loginPref = findPreference<Preference>(LOG_IN_KEY)
+        val logoutPref = findPreference<Preference>(LOG_OUT_KEY)
 
         if (viewModel.isUserLoggedIn()) {
             loginPref?.let { preferenceScreen?.removePreference(it) }
             logoutPref?.let { preferenceScreen?.addPreference(it) }
-        }else{
+        } else {
             logoutPref?.let { preferenceScreen?.removePreference(it) }
             loginPref?.let { preferenceScreen?.addPreference(it) }
+        }
+    }
+
+    private fun changeLanguage() {
+        val language = findPreference<ListPreference>(LANGUAGE_KEY)
+
+        language?.setOnPreferenceChangeListener { _, newValue ->
+            val lan: String = newValue as String
+            val resources = requireContext().resources
+            val metrics = resources.displayMetrics
+            val configuration = resources.configuration
+            configuration.locale = Locale(lan)
+            resources.updateConfiguration(configuration, metrics)
+            onConfigurationChanged(configuration)
+            true
         }
     }
 
@@ -101,7 +126,6 @@ class SettingsFragment : PreferenceFragmentCompat(),Preference.OnPreferenceClick
 
     private fun logOut() {
         viewModel.isLoggedOut.observe(viewLifecycleOwner) {
-           // if (it) findNavController().navigate(R.id.action_settings_to_authorizationFragment)
             if (it) findNavController().navigate(R.id.action_settings_to_sessionSelectionFragment)
         }
     }
