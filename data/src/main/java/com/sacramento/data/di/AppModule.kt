@@ -144,6 +144,9 @@ object AppModule {
         GuestSessionPagingSource(guestRepo)
 
     @Provides
+    fun provideMovieReviewsPagingSource( movieRepository: MoviesRepository) = ReviewsPagingSource(movieRepository)
+
+    @Provides
     @Singleton
     fun provideMoviesApi(): MoviesApi = MoviesApi()
 
@@ -336,6 +339,9 @@ object AppModule {
     @Provides
     fun provideDeleteListOfGuestWatchListUseCase(guestSessionDbRepo: GuestSessionDbRepository) =
         DeleteListOfGuestWatchListUseCase(guestSessionDbRepo)
+
+    @Provides
+    fun provideGetMovieReviewsUseCase(moviesRepository: MoviesRepository) = GetMovieReviewsUseCase(moviesRepository)
 
     @Provides
     @Singleton

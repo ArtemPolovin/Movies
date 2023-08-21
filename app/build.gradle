@@ -28,6 +28,11 @@ android {
                 appAuthRedirectScheme: "my.oauth"
         ]
         signingConfig signingConfigs.debug
+
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file("local.properties").newDataInputStream())
+        buildConfigField "String","TMDB_APY_KEY", "\"${properties.getProperty("TMDB_APY_KEY")}\""
+
     }
 
     buildTypes {

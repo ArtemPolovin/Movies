@@ -114,6 +114,11 @@
     <navigation android:id="@+id/Movie_details"
         app:startDestination="@id/movieDetailsFragment">
 
+        <fragment
+            android:id="@+id/reviewFragment"
+            android:name="com.sacramento.movies.ui.review.ReviewFragment"
+            android:label="fragment_review"
+            tools:layout="@layout/fragment_review" />
         <argument
             android:name="movieId"
             app:argType="integer" />
@@ -134,6 +139,12 @@
             <action
                 android:id="@+id/action_movieDetailsFragment_to_trailer"
                 app:destination="@id/trailer" />
+            <action
+                android:id="@+id/action_movieDetailsFragment_to_reviewFragment"
+                app:destination="@id/reviewFragment" />
+            <action
+                android:id="@+id/action_movieDetailsFragment_to_allReviewsFragment"
+                app:destination="@id/allReviewsFragment" />
 
         </fragment>
         <activity
@@ -143,7 +154,26 @@
             tools:layout="@layout/activity_watch_trailer" >
         </activity>
 
+        <fragment
+            android:id="@+id/allReviewsFragment"
+            android:name="com.sacramento.movies.ui.review.AllReviewsFragment"
+            android:label="fragment_all_reviews"
+            tools:layout="@layout/fragment_all_reviews" >
+            <argument
+                android:name="movieId"
+                app:argType="integer" />
+            <action
+                android:id="@+id/action_allReviewsFragment_to_reviewFragment"
+                app:destination="@id/reviewFragment" />
+        </fragment>
+
     </navigation>
+
+    <fragment
+        android:id="@+id/reviewFragment"
+        android:name="com.sacramento.movies.ui.review.ReviewFragment"
+        android:label="fragment_review"
+        tools:layout="@layout/fragment_review" />
     <fragment
         android:id="@+id/authorizationFragment"
         android:name="com.sacramento.movies.ui.authorization.AuthorizationFragment"
