@@ -133,7 +133,7 @@ class MoviesRepositoryImpl(
         return if (response.isSuccessful) {
             response.body()?.let {
                 return@let moviesApiMapper.mapMovieApiToMovieModelList(it)
-            } ?: throw  IllegalArgumentException("Response body of getting watch list is null")
+            } ?: throw IllegalArgumentException("Response body of getting watch list is null")
         } else throw IllegalArgumentException("Response body of getting watch list is null")
     }
 
@@ -246,10 +246,10 @@ class MoviesRepositoryImpl(
                         }
                     }
                     moviesWithDetailsList.awaitAll()
-                } ?: throw  IllegalArgumentException("An unknown error occured")
+                } ?: throw IllegalArgumentException("An unknown error occured")
             }
 
-        } else throw  IllegalArgumentException("${response.errorBody()?.string()}")
+        } else throw IllegalArgumentException("${response.errorBody()?.string()}")
 
     }
 
@@ -322,6 +322,21 @@ class MoviesRepositoryImpl(
             e.printStackTrace()
             ResponseResult.Failure(message = "The unknown error. Check the internet connection")
         }
+    }
+
+    override suspend fun getReviews(
+        page: Int,
+        movieId: Int
+    ): List<ReviewModel> {
+            val response = moviesApi.getMovieReviews(
+                movieId = movieId,
+                page = page
+            )
+        return if (response.isSuccessful) {
+                response.body()?.let {
+                    return@let moviesApiMapper.mapReviewsApiToModel(it)
+                }?:throw IllegalArgumentException("The response is empty")
+            }else throw IllegalArgumentException("The response is not successful")
     }
 
 

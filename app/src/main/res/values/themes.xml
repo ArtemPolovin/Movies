@@ -50,4 +50,9 @@
     <color name="toolbar_color_control_normal">#FFFFFF</color>
     <color name="navigation_bar_color">#FFFFFF</color>
     <color name="white_toolbar_text">#ECECEC</color>
+
+    <style name="roundedImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
 </resources>

@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.math.MathUtils
 import androidx.core.os.bundleOf
@@ -22,8 +23,10 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.android.material.appbar.AppBarLayout
 import com.sacramento.domain.models.MovieWithDetailsModel
+import com.sacramento.domain.models.ReviewModel
 import com.sacramento.domain.models.SaveToWatchListModel
 import com.sacramento.domain.models.TrailerModel
 import com.sacramento.domain.utils.ResponseResult
@@ -31,6 +34,7 @@ import com.sacramento.movies.MovieDetailsArgs
 import com.sacramento.movies.R
 import com.sacramento.movies.databinding.FragmentMovieDetailsBinding
 import com.sacramento.movies.ui.move_details.adapter.MoviesAdapter
+import com.sacramento.movies.utils.BUNDLE_REVIEW_KEY
 import com.sacramento.movies.utils.BUNDLE_TRAILER_LIST_KEY
 import com.sacramento.movies.utils.KEY_MOVIE_ID
 import com.sacramento.movies.utils.MEDIA_TYPE_MOVIE
@@ -76,7 +80,7 @@ class MovieDetailsFragment : Fragment() {
         setHasOptionsMenu(true)
 
         _binding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_movie_details, container, false)
+            FragmentMovieDetailsBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -124,12 +128,14 @@ class MovieDetailsFragment : Fragment() {
                 is ResponseResult.Loading -> {
                     binding.progressBar.visibility = VISIBLE
                 }
+
                 is ResponseResult.Failure -> {
                     binding.scrollView.visibility = GONE
                     binding.textError.visibility = VISIBLE
                     binding.textError.text = it.message
                     binding.buttonRetry.visibility = VISIBLE
                 }
+
                 is ResponseResult.Success -> {
                     binding.scrollView.visibility = VISIBLE
                     setupMovieDetailsScreen(it.data)
@@ -140,14 +146,39 @@ class MovieDetailsFragment : Fragment() {
     }
 
     private fun setupMovieDetailsScreen(movieModel: MovieWithDetailsModel) {
+        setupMovieReview()
         binding.groupErrorViews.visibility = GONE
 
-        binding.movieWithDetailsModel = movieModel
+        binding.apply {
+            loadImage(movieModel.backdropImage ?: "", imageMovieDetails)
+            ratingBarMovie.rating = movieModel.rating ?: 0f
+            textRatingDetails.text = movieModel.rating.toString()
+            textVoteCountDetails.text = "(${movieModel.voteCount})"
+            textMovieNameDetails.text = movieModel.movieName
+            textGenre.text = movieModel.genres
+            textPopularity.text = movieModel.popularityScore
+            textReleaseDate.text = movieModel.releaseData
+            textOverview.text = movieModel.overview
+            textHomepageUrl.text = movieModel.homePageUrl
+        }
 
         changeWatchListIconState(movieModel)
 
         movieModel.homePageUrl?.let { underlineText(binding.textHomepageUrl, it) }
         getTrailerList(movieModel.id)
+    }
+
+    private fun loadImage(imageUrl: String, image: ImageView) {
+        Glide.with(requireContext())
+            .load(imageUrl)
+            .into(image)
+    }
+
+    private fun loadRoundImage(imageUrl: String, image: ImageView) {
+        Glide.with(requireContext())
+            .load(imageUrl)
+            .error(R.drawable.ic_avatar)
+            .into(image)
     }
 
     private fun getTrailerList(movieId: Int) {
@@ -159,9 +190,11 @@ class MovieDetailsFragment : Fragment() {
                     showWatchTrailerButton(it.data)
                     openScreenWithTrailer(it.data)
                 }
+
                 is ResponseResult.Failure -> {
                     binding.btnWatchTrailer.visibility = GONE
                 }
+
                 else -> binding.btnWatchTrailer.visibility = GONE
             }
         }
@@ -201,6 +234,7 @@ class MovieDetailsFragment : Fragment() {
                 is ResponseResult.Success -> {
                     similarMoviesAdapter.submitList(it.data)
                 }
+
                 else -> null
             }
         }
@@ -229,6 +263,7 @@ class MovieDetailsFragment : Fragment() {
                 is ResponseResult.Success -> {
                     recommendedMoviesAdapter.submitList(it.data)
                 }
+
                 else -> null
             }
         }
@@ -256,6 +291,7 @@ class MovieDetailsFragment : Fragment() {
                         Log.i("TAG", it.message)
                         findNavController().navigate(R.id.authorizationFragment)
                     }
+
                     is ResponseResult.Success -> {
                         it.data.watchlist?.let { isNotSavedToWatchList ->
                             if (isNotSavedToWatchList) createSavedMovieIconStyle()
@@ -263,6 +299,7 @@ class MovieDetailsFragment : Fragment() {
                             isSavedToWatchList = isNotSavedToWatchList
                         }
                     }
+
                     else -> null
                 }
             }
@@ -347,6 +384,60 @@ class MovieDetailsFragment : Fragment() {
 
             findNavController().navigate(R.id.action_movieDetailsFragment_to_trailer, bundle)
         }
+    }
+
+    private fun setupMovieReview() {
+        viewModel.getFirstMovieReview(movieId)
+        viewModel.movieReview?.observe(viewLifecycleOwner) {
+            when (it) {
+                is ResponseResult.Failure -> {
+                    binding.incLayoutReview.review.visibility = GONE
+                    binding.textAllReviews.visibility = GONE
+                }
+                is ResponseResult.Success -> {
+                    binding.incLayoutReview.review.visibility = VISIBLE
+                    binding.textAllReviews.visibility = VISIBLE
+                    setupReview(it.data)
+                }
+            }
+        }
+    }
+
+    private fun setupReview(reviews: List<ReviewModel>) {
+        val reviewModel = reviews[0]
+        binding.incLayoutReview.apply {
+            review.visibility = VISIBLE
+            loadRoundImage(reviewModel.avatarPath ?: "", imageAvatar)
+            txtUserName.text = reviewModel.userName
+            txtRating.text = reviewModel.rating
+            txtWrittenDate.text =
+                "Written by ${reviewModel.userName} on ${reviewModel.createdAt}"
+            txtContent.text = reviewModel.content
+
+            review.setOnClickListener { openReview(reviewModel) }
+        }
+        binding.txtReviews.text = "Reviews  ${reviews.size}"
+
+        if(reviews.size < 2) binding.textAllReviews.visibility = GONE
+        
+        binding.textAllReviews.setOnClickListener {
+            openAllReviews()
+        }
+
+
+
+    }
+
+    private fun openReview(review: ReviewModel) {
+        val bundle = Bundle()
+        bundle.putKSerializable(BUNDLE_REVIEW_KEY, review)
+        findNavController().navigate(R.id.action_movieDetailsFragment_to_reviewFragment, bundle)
+    }
+
+    private fun openAllReviews() {
+        findNavController().navigate(
+            MovieDetailsFragmentDirections.actionMovieDetailsFragmentToAllReviewsFragment(movieId)
+        )
     }
 
     private fun changePosterAlphaWhenScrolling() {

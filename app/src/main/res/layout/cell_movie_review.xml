@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/review"
+    android:background="@drawable/background_review"
+    android:clickable="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="4dp"
+    android:layout_margin="8dp">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/image_avatar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:shapeAppearanceOverlay="@style/roundedImageView"
+            android:scaleType="fitXY"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@color/black" />
+
+        <TextView
+            android:id="@+id/txt_user_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/image_avatar"
+            app:layout_constraintTop_toTopOf="@+id/image_avatar"
+            tools:text="A review by Chris Sawin" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_background"
+            android:padding="2dp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toStartOf="@+id/txt_user_name"
+            app:layout_constraintTop_toBottomOf="@+id/txt_user_name">
+
+            <ImageView
+                android:id="@+id/image_star"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_star"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/txt_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/image_star"
+                app:layout_constraintStart_toEndOf="@+id/image_star"
+                app:layout_constraintTop_toTopOf="@+id/image_star"
+                tools:text="1.0" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/txt_written_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/rating"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/rating"
+            app:layout_constraintTop_toTopOf="@+id/rating"
+            tools:text="Written by Chris Sawing on July 21,2023" />
+
+
+        <TextView
+            android:id="@+id/txt_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:textStyle="italic"
+            android:textColor="@color/white_transparent_review_text"
+            android:layout_marginTop="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/image_avatar"
+            tools:text="Barbie reels you in with its silly humor and fantastical ideas. The war of Kens during the last sdflsdf sdfasd sdafa sadfa lkj sadfa d sdaf lk as asdf sadf sdf sdaf sadf sadf  sdf l jl sdf ;lk sdfsa  lkj asdflkj " />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>

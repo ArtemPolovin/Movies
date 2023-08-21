@@ -4,8 +4,10 @@ import com.sacramento.data.apimodels.movie_details.MovieDetailsModelApi
 import com.sacramento.data.apimodels.movie_state.MovieAccountStateApiModel
 import com.sacramento.data.apimodels.movies.MoviesListApiModel
 import com.sacramento.data.apimodels.movies.Result
+import com.sacramento.data.apimodels.reviews.ReviewsApiModel
 import com.sacramento.data.apimodels.trailers.TrailersApiModel
 import com.sacramento.data.utils.POSTER_BASE_URL
+import com.sacramento.data.utils.convertDate
 import com.sacramento.data.utils.roundFloat
 import com.sacramento.domain.models.*
 import kotlin.math.roundToInt
@@ -36,7 +38,7 @@ class MoviesApiMapper {
                 popularityScore = movieApiModel.popularity.toString(),
                 movieName = movieApiModel.title,
                 //rating =  String.format("%.1f",movieApiModel.vote_average),
-                rating =  roundFloat(movieApiModel.vote_average),
+                rating = roundFloat(movieApiModel.vote_average),
                 poster = "${POSTER_BASE_URL}${movieApiModel.poster_path}",
                 backdropImage = "${POSTER_BASE_URL}${movieApiModel.backdrop_path}",
                 overview = movieApiModel.overview,
@@ -55,8 +57,8 @@ class MoviesApiMapper {
             releaseData = movieDetailsModelApi.release_date,
             popularityScore = movieDetailsModelApi.popularity.toString(),
             movieName = movieDetailsModelApi.title,
-           // rating =  String.format("%.1f",movieDetailsModelApi.vote_average),
-            rating =  roundFloat(movieDetailsModelApi.vote_average),
+            // rating =  String.format("%.1f",movieDetailsModelApi.vote_average),
+            rating = roundFloat(movieDetailsModelApi.vote_average),
             poster = "${POSTER_BASE_URL}${movieDetailsModelApi.poster_path}",
             backdropImage = "${POSTER_BASE_URL}${movieDetailsModelApi.backdrop_path}",
             overview = movieDetailsModelApi.overview,
@@ -116,15 +118,29 @@ class MoviesApiMapper {
     }
 
     fun mapTrendingMoviesListToMovieModel(movieApiModelsList: MoviesListApiModel): MovieModel {
-      val firstMovie = movieApiModelsList.results.first()
+        val firstMovie = movieApiModelsList.results.first()
         return MovieModel(
             movieId = firstMovie.id,
             poster = "${POSTER_BASE_URL}${firstMovie.poster_path}",
             title = firstMovie.title,
             voteCount = firstMovie.vote_count,
-            rating = String.format("%.1f",firstMovie.vote_average)
+            rating = String.format("%.1f", firstMovie.vote_average)
         )
     }
 
+    fun mapReviewsApiToModel(reviewsApiModel: ReviewsApiModel): List<ReviewModel> {
+        return reviewsApiModel.results.map {
+            ReviewModel(
+                id = it.id,
+                authorName = it.author_details.name,
+                userName = it.author_details.username,
+                avatarPath = "${POSTER_BASE_URL}${it.author_details.avatar_path}",
+                rating = it.author_details.rating.toString(),
+                content = it.content,
+                //createdAt = it.created_at
+                createdAt = convertDate(it.created_at)
+            )
+        }
+    }
 
 }

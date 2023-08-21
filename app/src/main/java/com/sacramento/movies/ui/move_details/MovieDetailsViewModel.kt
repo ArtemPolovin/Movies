@@ -33,7 +33,8 @@ class MovieDetailsViewModel @Inject constructor(
     private val getRecommendationsMoviesFromDBUseCase: GetRecommendationsMoviesFromDBUseCase,
     private val insertGuestSavedMovieToDbUseCase: InsertGuestSavedMovieToDbUseCase,
     private val isGuestMovieSavedToDbUseCase: CheckIfGuestMovieIsSavedUseCase,
-    private val deleteMovieFromGuestWatchListDbUseCase: DeleteMovieFromGuestWatchListDbUseCase
+    private val deleteMovieFromGuestWatchListDbUseCase: DeleteMovieFromGuestWatchListDbUseCase,
+    private val getMovieReviewsUseCase: GetMovieReviewsUseCase
 ) : ViewModel() {
 
     private val _movieDetailsModel = MutableLiveData<ResponseResult<MovieWithDetailsModel>>()
@@ -54,6 +55,16 @@ class MovieDetailsViewModel @Inject constructor(
 
     private val _isGuestMovieSaved = MutableLiveData<Boolean>().apply { value = false }
     val isGuestMovieSaved: LiveData<Boolean> get() = _isGuestMovieSaved
+
+    private var _movieReview : MutableLiveData<ResponseResult<List<ReviewModel>>>? = null
+    val movieReview : LiveData<ResponseResult<List<ReviewModel>>>?get() = _movieReview
+
+    fun getFirstMovieReview(movieId: Int) {
+        if (_movieReview == null) {
+            _movieReview = MutableLiveData()
+            getReview(movieId)
+        }
+    }
 
     fun saveOrDeleteMovieFromWatchList(saveToWatchListModel: SaveToWatchListModel) {
         viewModelScope.launch {
@@ -136,5 +147,12 @@ class MovieDetailsViewModel @Inject constructor(
     fun isUserLoggedIn(): Boolean {
         return loadSessionIdUseCase.execute().isNotBlank()
     }
+
+    private fun getReview(movieId: Int) {
+        viewModelScope.launch {
+            _movieReview?.value = getMovieReviewsUseCase.execute(page = 1,movieId)
+        }
+    }
+
 
 }

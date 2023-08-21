@@ -10,11 +10,15 @@ android {
     compileSdkVersion 31
 
     defaultConfig {
-        minSdkVersion 23
+        minSdkVersion 26
         targetSdkVersion 31
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file("local.properties").newDataInputStream())
+        buildConfigField "String","TMDB_APY_KEY", "\"${properties.getProperty("TMDB_APY_KEY")}\""
     }
 
     buildTypes {

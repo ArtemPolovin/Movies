@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:fitsSystemWindows="true">
-
-    <data>
-
-        <variable
-            name="movieWithDetailsModel"
-            type="com.sacramento.domain.models.MovieWithDetailsModel" />
-    </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/movie_details_screen_background_color"
@@ -27,8 +20,7 @@
                 android:id="@+id/image_movie_details"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:scaleType="fitXY"
-                app:loadImage="@{movieWithDetailsModel.backdropImage}" />
+                android:scaleType="fitXY"/>
 
             <View
                 android:id="@+id/view_image_shadow"
@@ -104,7 +96,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:numStars="10"
-                        android:rating="@{movieWithDetailsModel.rating}"
                         android:stepSize="0.1"
                         android:theme="@style/MyRatingBar"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -127,7 +118,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
-                        android:text="@{movieWithDetailsModel.rating.toString()}"
                         android:textColor="@color/text_movie_info_color"
                         android:textSize="20sp"
                         app:layout_constraintBottom_toBottomOf="@+id/rating_bar_movie"
@@ -140,7 +130,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
-                        android:text="@{ `(`+movieWithDetailsModel.voteCount+`)`}"
                         android:textColor="@color/vote_count_text_color"
                         app:layout_constraintBottom_toBottomOf="@+id/text_rating_details"
                         app:layout_constraintEnd_toStartOf="@+id/text_rating_details"
@@ -153,7 +142,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="25dp"
                         android:fontFamily="@font/aclonica"
-                        android:text="@{movieWithDetailsModel.movieName}"
                         android:textColor="@color/white"
                         android:textSize="23sp"
                         app:layout_constraintStart_toStartOf="parent"
@@ -175,7 +163,6 @@
                         android:id="@+id/text_genre"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@{movieWithDetailsModel.genres}"
                         android:textColor="@color/text_movie_info_color"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -199,7 +186,6 @@
                         android:id="@+id/text_popularity"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@{movieWithDetailsModel.popularityScore}"
                         android:textColor="@color/text_movie_info_color"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -224,7 +210,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="@{movieWithDetailsModel.releaseData}"
                         android:textColor="@color/text_movie_info_color"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -255,6 +240,52 @@
                         app:constraint_referenced_ids="btn_watch_trailer, imageView_save_movie, text_save_movie_icon_text"
                         tools:ignore="NotSibling" />
 
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:layout_editor_absoluteX="1dp"
+                        tools:layout_editor_absoluteY="-301dp">
+
+                        <TextView
+                            android:id="@+id/text_error"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_erro"
+                            android:textColor="@color/text_error_color"
+                            android:textSize="22sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <Button
+                            android:id="@+id/button_retry"
+                            android:layout_width="260dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="40dp"
+                            android:text="@string/button_retry"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/text_error" />
+
+                        <ProgressBar
+                            android:id="@+id/progress_bar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.constraintlayout.widget.Group
+                            android:id="@+id/group_error_views"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:constraint_referenced_ids="text_error,button_retry,progress_bar"
+                            tools:ignore="NotSibling" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
@@ -275,7 +306,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:paddingBottom="12dp"
-                    android:text="@{movieWithDetailsModel.overview}"
                     android:textColor="@color/text_movie_info_color"
                     android:textSize="15sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -298,9 +328,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:paddingBottom="18dp"
-                    android:text="@{movieWithDetailsModel.homePageUrl}"
-                    android:textColor="@color/text_url_color"
+                    android:textColor="@color/text_clicable_details_screen"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toEndOf="@+id/text_homepage_url_header"
                     app:layout_constraintTop_toTopOf="@+id/text_homepage_url_header"
                     tools:text="sdlfjdsk sdlfkdsjf ldskfjsldkf ssdfds ds fsdf sad fdsaf dsf sdf d" />
@@ -337,7 +367,6 @@
                     app:layout_constraintStart_toStartOf="@id/text_similar_movies_header"
                     app:layout_constraintTop_toBottomOf="@id/rv_similar_movies" />
 
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_recommendations_movies"
                     android:layout_width="match_parent"
@@ -345,54 +374,47 @@
                     android:layout_marginTop="16dp"
                     android:paddingBottom="12dp"
                     app:layout_constraintTop_toBottomOf="@id/text_recommendations_movies_header" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="80dp"
+                    android:layout_marginTop="80dp"
+                    android:orientation="vertical"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/rv_recommendations_movies">
+
+                    <TextView
+                        android:id="@+id/txt_reviews"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/alegreya_sans_bold_italic"
+                        android:textSize="20sp"
+                        android:layout_marginStart="8dp"
+                        android:textColor="@color/white"
+                        tools:text = "Reviews"/>
+
+                    <include
+                        android:id="@+id/incLayoutReview"
+                        layout="@layout/cell_movie_review"/>
+
+                    <TextView
+                        android:id="@+id/text_all_reviews"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/ripple_clickable_text_screen_details"
+                        android:text="@string/read_all_reviews"
+                        android:fontFamily="@font/alegreya_sans_bold_italic"
+                        android:textSize="20sp"
+                        android:textColor="@color/text_clicable_details_screen"/>
+                </LinearLayout>
+
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/text_error"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/text_erro"
-            android:textColor="@color/text_error_color"
-            android:textSize="22sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/button_retry"
-            android:layout_width="260dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:text="@string/button_retry"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_error" />
-
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/group_error_views"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:constraint_referenced_ids="text_error,button_retry,progress_bar"
-            tools:ignore="NotSibling" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-</layout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -48,4 +48,10 @@ interface MoviesRepository {
     suspend fun getTrendingMovie(): ResponseResult<MovieModel>
     suspend fun getMoviePoster(url: String): ResponseResult<ResponseBody>
 
+    suspend fun getReviews(
+        page: Int,
+        movieId: Int
+    ): List<ReviewModel>
+
+
 }

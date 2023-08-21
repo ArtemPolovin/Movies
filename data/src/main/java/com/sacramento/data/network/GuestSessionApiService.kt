@@ -1,7 +1,7 @@
 package com.sacramento.data.network
 
+import com.sacramento.data.BuildConfig
 import com.sacramento.data.apimodels.guest_session.GuestSessionApiModel
-import com.sacramento.data.utils.API_KEY
 import com.sacramento.data.utils.MOVIES_API_BASE_URL
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -21,7 +21,7 @@ interface GuestSessionApiService {
                 val url = chain.request()
                     .url()
                     .newBuilder()
-                    .addQueryParameter("api_key", API_KEY)
+                    .addQueryParameter("api_key", BuildConfig.TMDB_APY_KEY)
                     .build()
                 val request = chain.request()
                     .newBuilder()

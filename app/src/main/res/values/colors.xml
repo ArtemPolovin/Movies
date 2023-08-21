@@ -14,7 +14,7 @@
     <color name="text_movie_info_color">#CCCCCC</color>
     <color name="movie_details_screen_background_color">#000033</color>
     <color name="text_info_header_color">#A3A2A2</color>
-    <color name="text_url_color">#2668EE</color>
+    <color name="text_clicable_details_screen">#2668EE</color>
     <color name="home_page_toolbar_color">#1C3D5E</color>
     <color name="color_details_screen_toolbar">#3F5983</color>
     <color name="cell_saved_movie_background_color">#6B818181</color>
@@ -40,4 +40,8 @@
     <color name="button_watch_trailer_color">#41DADADA</color>
     <color name="view_line_gray">#E3E0E0</color>
     <color name="session_button_background">#777777</color>
+    <color name="review_background">#25FFFFFF</color>
+    <color name="avatar_stroke_color">#A9FF0D</color>
+    <color name="white_transparent">#57FFFFFF</color>
+    <color name="white_transparent_review_text">#ADFFFFFF</color>
 </resources>

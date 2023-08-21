@@ -1,10 +1,10 @@
 package com.sacramento.data.network
 
+import com.sacramento.data.BuildConfig
 import com.sacramento.data.apimodels.auth.LoginResponseApiModel
 import com.sacramento.data.apimodels.auth.LogoutApiModel
 import com.sacramento.data.apimodels.auth.RequestTokenApiModel
 import com.sacramento.data.apimodels.auth.SessionIdApiModel
-import com.sacramento.data.utils.API_KEY
 import com.sacramento.data.utils.MOVIES_API_BASE_URL
 import com.sacramento.domain.models.LoginBodyModel
 import com.sacramento.domain.models.LogoutRequestBodyModel
@@ -36,7 +36,7 @@ interface AuthMovieAPIService {
                 val url = chain.request()
                     .url()
                     .newBuilder()
-                    .addQueryParameter("api_key", API_KEY)
+                    .addQueryParameter("api_key", BuildConfig.TMDB_APY_KEY)
                     .build()
                 val request = chain.request()
                     .newBuilder()

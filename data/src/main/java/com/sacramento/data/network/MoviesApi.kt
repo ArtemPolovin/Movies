@@ -5,11 +5,12 @@ import com.sacramento.data.apimodels.movie_details.MovieDetailsModelApi
 import com.sacramento.data.apimodels.movie_state.MovieAccountStateApiModel
 import com.sacramento.data.apimodels.movies.MoviesListApiModel
 import com.sacramento.data.apimodels.trailers.TrailersApiModel
-import com.sacramento.data.utils.API_KEY
 import com.sacramento.data.utils.MOVIES_API_BASE_URL
 import com.sacramento.domain.models.SaveToWatchListModel
 import com.sacramento.domain.models.SaveToWatchListResponseModel
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import com.sacramento.data.BuildConfig
+import com.sacramento.data.apimodels.reviews.ReviewsApiModel
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
@@ -114,6 +115,12 @@ interface MoviesApi {
     @GET
     suspend fun getMoviePoster(@Url url: String): Response<ResponseBody>
 
+    @GET("/3/movie/{movie_id}/reviews")
+    suspend fun getMovieReviews(
+        @Path("movie_id") movieId: Int,
+        @Query("page") page: Int
+    ):Response<ReviewsApiModel>
+
 
     companion object {
         operator fun invoke(): MoviesApi {
@@ -121,7 +128,7 @@ interface MoviesApi {
                 val url = chain.request()
                     .url()
                     .newBuilder()
-                    .addQueryParameter("api_key", API_KEY)
+                    .addQueryParameter("api_key", BuildConfig.TMDB_APY_KEY)
                     .build()
                 val request = chain.request()
                     .newBuilder()

@@ -63,4 +63,6 @@
     <string name="log_in">LOG IN</string>
     <string name="guest">guest</string>
     <string name="language">LANGUAGE</string>
+    <string name="a_review_by">A review by</string>
+    <string name="read_all_reviews">Read All Reviews\n</string>
 </resources>
